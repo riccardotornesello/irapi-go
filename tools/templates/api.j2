@@ -1,0 +1,19 @@
+package api
+
+import (
+	"riccardotornesello.it/sharedtelemetry/iracing/irapi/client"
+	{% for category in categories %}"riccardotornesello.it/sharedtelemetry/iracing/irapi/tools/output/sdk/{{category["package_name"]}}"
+    {% endfor %}
+)
+
+type IRacingApi struct {
+    {% for category in categories %}{{category["camel_category"]}} *{{category["package_name"]}}.{{category["struct_name"]}}
+    {% endfor %}
+}
+
+func NewIRacingApi(apiClient *client.ApiClient) *IRacingApi {
+	return &IRacingApi{
+        {% for category in categories %}{{category["camel_category"]}}: &{{category["package_name"]}}.{{category["struct_name"]}}{Client: apiClient},
+        {% endfor %}
+	}
+}

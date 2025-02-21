@@ -1,0 +1,15 @@
+package {{ package_name }}
+
+import (
+	"io"
+)
+
+func (api *{{ client_struct_name }}) {{ method_name }}() (io.ReadCloser, error) {
+	url := "{{ endpoint }}"
+	body, err := api.Client.Get(url)
+	if err != nil {
+		return nil, err
+	}
+
+	return body, nil
+}
