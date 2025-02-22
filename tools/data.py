@@ -26,7 +26,55 @@ OVERRIDES = {
         "road": {"format": "csv"},
         "sports_car": {"format": "csv"},
     },
+    "hosted": {
+        "combined_sessions": {
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "sessions": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "count_by_car_id": {
+                                    "type": "object",
+                                    "patternProperties": {r"^\d+$": None},
+                                },
+                                "count_by_car_class_id": {
+                                    "type": "object",
+                                    "patternProperties": {r"^\d+$": None},
+                                },
+                            },
+                        },
+                    }
+                },
+            },
+        },
+    },
     "league": {
+        "cust_league_sessions": {
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "sessions": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "count_by_car_id": {
+                                    "type": "object",
+                                    "patternProperties": {r"^\d+$": None},
+                                },
+                                "count_by_car_class_id": {
+                                    "type": "object",
+                                    "patternProperties": {r"^\d+$": None},
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
         "get": {
             "params": {
                 "league_id": 4403,
@@ -112,6 +160,9 @@ OVERRIDES = {
         },
     },
     "series": {
+        "assets": {
+            "schema": {"type": "object", "patternProperties": {r"^\d+$": None}},
+        },
         "seasons": {
             "schema": {
                 "type": "array",
@@ -125,7 +176,7 @@ OVERRIDES = {
                     },
                 },
             },
-        }
+        },
     },
     "stats": {
         "params": {
@@ -140,6 +191,11 @@ OVERRIDES = {
             "params": {
                 "team_id": 381567,
             },
+        },
+    },
+    "track": {
+        "assets": {
+            "schema": {"type": "object", "patternProperties": {r"^\d+$": None}},
         },
     },
 }
