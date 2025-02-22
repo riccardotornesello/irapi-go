@@ -1,3 +1,8 @@
+"""
+This module contains functions to generate Go structs from JSON schemas.
+"""
+
+
 def generate_key(key):
     if key.isdigit():
         key = f"Field{key}"
@@ -34,7 +39,7 @@ def convert_schema_to_struct(schema, json_name=None, chunks_struct_name=None):
 
     if t == "array":
         if not "items" in schema:
-            print("Warning: array without items")
+            print(f"Warning: array without items in key {json_name}")
             data += "[]interface{}"
         else:
             data += "[]"

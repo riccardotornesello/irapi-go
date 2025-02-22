@@ -1,3 +1,7 @@
+"""
+These functions converts the iRacing API definition into a more usable format.
+"""
+
 import json
 import os
 
@@ -22,12 +26,20 @@ def parse_notes(endpoint_data):
 
 
 def parse_parameters(endpoint_data):
+
     parameters = endpoint_data.get("parameters", {})
+
+    # Check that the types are known
+    # TODO: move to a file with the map to go types
+    known_types = ["string", "number", "boolean", "numbers"]
+    for k, v in parameters.items():
+        if v["type"] not in known_types:
+            raise Exception(f"Unknown type: {v['type']}")
 
     return [
         {
             "key": k,
-            "type": v["type"],  # TODO: check that the types are known
+            "type": v["type"],
             "required": v.get("required", False),
             "notes": parse_notes(v),
         }

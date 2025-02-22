@@ -1,3 +1,8 @@
+"""
+These functions perform requests to the iRacing API and save the responses to files.
+These responses are used to generate the schemas for the API calls.
+"""
+
 import os
 import json
 

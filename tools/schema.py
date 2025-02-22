@@ -1,3 +1,7 @@
+"""
+Generate JSON schemas from the responses.
+"""
+
 import os
 import json
 

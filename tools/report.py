@@ -1,3 +1,8 @@
+"""
+This is used to generate a report of the endpoints that have been processed.
+In later updates it should also generate a documentation.
+"""
+
 import json
 import os
 

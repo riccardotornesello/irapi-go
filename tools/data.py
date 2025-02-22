@@ -1,6 +1,9 @@
-# Add here some examples of the parameters that are used in the API calls
-# This is used to generate the schemas for the API calls
-# It is also possible to add some schema adjustments here, to convert objects to maps, and to add some request overrides
+"""
+Add here some examples of the parameters that are used in the API calls
+This is used to generate the schemas for the API calls
+It is also possible to add some schema adjustments here, to convert objects to maps, and to add some request overrides
+"""
+
 OVERRIDES = {
     "car": {
         "assets": {

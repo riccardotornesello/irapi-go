@@ -1,3 +1,7 @@
+"""
+This module contains the function to authenticate with the iRacing API.
+"""
+
 import requests
 import hashlib
 import base64

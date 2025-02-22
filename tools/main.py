@@ -84,6 +84,10 @@ def main():
             endpoint_file = f"output/api/{category}/{endpoint}.go"
             test_file = f"output/api/{category}/{endpoint}_test.go"
 
+            endpoint_url = endpoint_data["link"].replace(
+                "https://members-ng.iracing.com", ""
+            )
+
             camel_endpoint = "".join([x.title() for x in endpoint.split("_")])
             method_name = "Get" + camel_category + camel_endpoint
             if method_name[-3:] == "Get":
@@ -127,7 +131,7 @@ def main():
                     "chunks_struct": chunks_struct,
                     "client_struct_name": camel_category + "Api",
                     "method_name": method_name,
-                    "endpoint": endpoint_data["link"],
+                    "endpoint": endpoint_url,
                     "params_struct": params_struct,
                     "params_struct_name": camel_category + camel_endpoint + "Params",
                     "requires_optional": requires_optional,
@@ -146,7 +150,7 @@ def main():
                     "struct": struct,
                     "client_struct_name": camel_category + "Api",
                     "method_name": method_name,
-                    "endpoint": endpoint_data["link"],
+                    "endpoint": endpoint_url,
                     "notes": endpoint_data["notes"],
                 }
 
