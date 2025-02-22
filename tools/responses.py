@@ -34,7 +34,7 @@ def get_responses(session, endpoints, cached=False):
                     f"Failed to fetch response for {category}__{endpoint}: {response.text}"
                 )
 
-            if not data["skip_s3"]:
+            if data["s3_cache"]:
                 s3_url = response.json()["link"]
                 response = session.get(s3_url)
 

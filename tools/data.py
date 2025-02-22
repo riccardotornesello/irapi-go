@@ -76,3 +76,38 @@ SCHEMA_ADJUSTMENTS = {
         }
     },
 }
+
+REQUEST_OVERRIDES = {
+    "constants": {
+        "categories": {
+            "s3_cache": False,
+        },
+        "divisions": {
+            "s3_cache": False,
+        },
+        "event_types": {
+            "s3_cache": False,
+        },
+    },
+    "driver_stats_by_category": {
+        "dirt_oval": {"format": "csv"},
+        "dirt_road": {"format": "csv"},
+        "formula_car": {"format": "csv"},
+        "oval": {"format": "csv"},
+        "road": {"format": "csv"},
+        "sports_car": {"format": "csv"},
+    },
+    "league": {
+        "roster": {
+            "s3_cache": False,
+        },
+    },
+    "member": {
+        "awards": {
+            "s3_cache": False,
+        },
+        "award_instances": {
+            "s3_cache": False,
+        },
+    },
+}

@@ -1,8 +1,15 @@
 import json
 import os
 
+from data import REQUEST_OVERRIDES
+
 
 def parse_notes(endpoint_data):
+    """
+    Gets the notes from the endpoint or the parameter's data and returns a list of notes.
+    The list is empty if there are no notes.
+    """
+
     notes = endpoint_data.get("note")
 
     if not notes:
@@ -14,38 +21,18 @@ def parse_notes(endpoint_data):
     return notes
 
 
-def parse_format(category):
-    if category == "driver_stats_by_category":
-        return "csv"
-    return "json"
-
-
 def parse_parameters(endpoint_data):
     parameters = endpoint_data.get("parameters", {})
 
     return [
         {
             "key": k,
-            "type": v["type"],
+            "type": v["type"],  # TODO: check that the types are known
             "required": v.get("required", False),
             "notes": parse_notes(v),
         }
         for k, v in parameters.items()
     ]
-
-
-# TODO: move to data file
-def skip_s3(category, endpoint):
-    if category == "constants":
-        return True
-
-    if category == "member" and endpoint in ["awards", "award_instances"]:
-        return True
-
-    if category == "league" and endpoint == "roster":
-        return True
-
-    return False
 
 
 def get_api_definition(session, cached=False):
@@ -71,12 +58,14 @@ def generate_endpoints(api_definition):
         endpoints[category] = {}
 
         for endpoint, data in category_endpoints.items():
+            endpoint_overrides = REQUEST_OVERRIDES.get(category, {}).get(endpoint, {})
+
             endpoints[category][endpoint] = {
                 "link": data["link"],
                 "notes": parse_notes(data),
                 "parameters": parse_parameters(data),
-                "format": parse_format(category),
-                "skip_s3": skip_s3(category, endpoint),
+                "format": endpoint_overrides.get("format", "json"),
+                "s3_cache": endpoint_overrides.get("s3_cache", True),
             }
 
     with open("output/endpoints.json", "w") as f:
