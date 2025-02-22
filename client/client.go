@@ -119,11 +119,15 @@ func (c *ApiClient) Get(path string) (io.ReadCloser, error) {
 		c.retryAfter = time.Unix(rateLimitResetInt, 0).Add(2 * time.Second)
 	}
 
-	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("error getting %s: %s", path, resp.Status)
-	}
-
 	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("error getting %s: %d", path, resp.StatusCode)
+		}
+		return nil, fmt.Errorf("error getting %s: %d - %s", path, resp.StatusCode, string(body))
+	}
 
 	response := &IRacingResponse{}
 	err = json.NewDecoder(resp.Body).Decode(response)
