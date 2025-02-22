@@ -3,7 +3,7 @@ import json
 
 from genson import SchemaBuilder
 
-from data import SCHEMA_ADJUSTMENTS
+from data import OVERRIDES
 
 
 def gen_schemas():
@@ -17,8 +17,11 @@ def gen_schemas():
         builder = SchemaBuilder()
 
         # Manual adjustements
-        if category in SCHEMA_ADJUSTMENTS and endpoint in SCHEMA_ADJUSTMENTS[category]:
-            builder.add_schema(SCHEMA_ADJUSTMENTS[category][endpoint])
+        schema_overrides = (
+            OVERRIDES.get(category, {}).get(endpoint, {}).get("schema", {})
+        )
+        if schema_overrides:
+            builder.add_schema(schema_overrides)
 
         builder.add_object(json.load(open(f"output/responses/{file}")))
 

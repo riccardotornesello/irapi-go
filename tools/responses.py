@@ -1,7 +1,7 @@
 import os
 import json
 
-from data import PARAMETERS
+from data import OVERRIDES
 
 
 def get_responses(session, endpoints, cached=False):
@@ -12,9 +12,11 @@ def get_responses(session, endpoints, cached=False):
             if cached and os.path.exists(file_path):
                 continue
 
-            if any(p["required"] for p in data["parameters"]) and (
-                not category in PARAMETERS or not endpoint in PARAMETERS[category]
-            ):
+            param_values = (
+                OVERRIDES.get(category, {}).get(endpoint, {}).get("params", {})
+            )
+
+            if any(p["required"] for p in data["parameters"]) and not param_values:
                 print(f"Skipping {category}__{endpoint} because it requires parameters")
                 continue
 
@@ -25,9 +27,7 @@ def get_responses(session, endpoints, cached=False):
             print(f"Fetching response for {category}__{endpoint}")
 
             url = data["link"]
-            response = session.get(
-                url, params=PARAMETERS.get(category, {}).get(endpoint, {})
-            )
+            response = session.get(url, params=param_values)
 
             if response.status_code != 200:
                 raise Exception(

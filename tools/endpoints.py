@@ -1,7 +1,7 @@
 import json
 import os
 
-from data import REQUEST_OVERRIDES
+from data import OVERRIDES
 
 
 def parse_notes(endpoint_data):
@@ -58,7 +58,7 @@ def generate_endpoints(api_definition):
         endpoints[category] = {}
 
         for endpoint, data in category_endpoints.items():
-            endpoint_overrides = REQUEST_OVERRIDES.get(category, {}).get(endpoint, {})
+            endpoint_overrides = OVERRIDES.get(category, {}).get(endpoint, {})
 
             endpoints[category][endpoint] = {
                 "link": data["link"],

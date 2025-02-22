@@ -71,7 +71,7 @@ def convert_schema_to_struct(schema, json_name=None, chunks_struct_name=None):
     elif t == "boolean":
         data += "bool"
     elif t == "null":
-        print("Warning: null type")
+        print(f"Warning: null type in key {json_name}")
         data += "interface{}"
     else:
         raise Exception(f"Unknown type {t} in key {json_name}")
