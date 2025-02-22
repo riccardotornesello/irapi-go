@@ -16,6 +16,9 @@ type {{ chunks_struct_name }} {{ chunks_struct }}
 
 type {{ struct_name }} {{ struct }}
 
+{% for note in notes %}
+// {{ note }}
+{% endfor %}
 func (api *{{ client_struct_name }}) {{ method_name }}({% if params_struct %}params {{ params_struct_name }}{% endif %}) (*{{ struct_name }}, error) {
 	{% if params_struct %}paramsString, err := query.Values(params)
 	if err != nil {

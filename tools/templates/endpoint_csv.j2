@@ -4,6 +4,9 @@ import (
 	"io"
 )
 
+{% for note in notes %}
+// {{ note }}
+{% endfor %}
 func (api *{{ client_struct_name }}) {{ method_name }}() (io.ReadCloser, error) {
 	url := "{{ endpoint }}"
 	body, err := api.Client.Get(url)

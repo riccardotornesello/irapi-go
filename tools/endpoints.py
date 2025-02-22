@@ -2,14 +2,16 @@ import json
 import os
 
 
-def parse_note(endpoint_data):
-    note = endpoint_data.get("note")
+def parse_notes(endpoint_data):
+    notes = endpoint_data.get("note")
 
-    # If note is a list, concatenate it
-    if isinstance(note, list):
-        note = " ".join(note)
+    if not notes:
+        return []
 
-    return note
+    if not isinstance(notes, list):
+        notes = [notes]
+
+    return notes
 
 
 def parse_format(category):
@@ -26,17 +28,21 @@ def parse_parameters(endpoint_data):
             "key": k,
             "type": v["type"],
             "required": v.get("required", False),
-            "note": v.get("note"),
+            "notes": parse_notes(v),
         }
         for k, v in parameters.items()
     ]
 
 
+# TODO: move to data file
 def skip_s3(category, endpoint):
     if category == "constants":
         return True
 
-    if category == "member" and endpoint == "awards":
+    if category == "member" and endpoint in ["awards", "award_instances"]:
+        return True
+
+    if category == "league" and endpoint == "roster":
         return True
 
     return False
@@ -67,9 +73,13 @@ def generate_endpoints(api_definition):
         for endpoint, data in category_endpoints.items():
             endpoints[category][endpoint] = {
                 "link": data["link"],
-                "note": parse_note(data),
+                "notes": parse_notes(data),
                 "parameters": parse_parameters(data),
                 "format": parse_format(category),
                 "skip_s3": skip_s3(category, endpoint),
             }
+
+    with open("output/endpoints.json", "w") as f:
+        json.dump(endpoints, f, indent=2)
+
     return endpoints
