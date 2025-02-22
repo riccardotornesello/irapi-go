@@ -20,7 +20,7 @@ type CarclassGetResponse []struct {
 }
 
 func (api *CarclassApi) GetCarclass() (*CarclassGetResponse, error) {
-	url := "https://members-ng.iracing.com/data/carclass/get"
+	url := "/data/carclass/get"
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

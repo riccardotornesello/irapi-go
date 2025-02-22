@@ -26,7 +26,7 @@ func (api *MemberApi) GetMemberAwards(params MemberAwardsParams) (*MemberAwardsR
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/member/awards?" + paramsString.Encode()
+	url := "/data/member/awards?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

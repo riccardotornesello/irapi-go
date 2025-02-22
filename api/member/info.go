@@ -155,7 +155,7 @@ type MemberInfoResponse struct {
 
 // Always the authenticated member.
 func (api *MemberApi) GetMemberInfo() (*MemberInfoResponse, error) {
-	url := "https://members-ng.iracing.com/data/member/info"
+	url := "/data/member/info"
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

@@ -11,7 +11,7 @@ type ConstantsEventTypesResponse []struct {
 
 // Constant; returned directly as an array of objects
 func (api *ConstantsApi) GetConstantsEventTypes() (*ConstantsEventTypesResponse, error) {
-	url := "https://members-ng.iracing.com/data/constants/event_types"
+	url := "/data/constants/event_types"
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

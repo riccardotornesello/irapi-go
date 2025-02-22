@@ -144,7 +144,7 @@ func (api *MemberApi) GetMemberProfile(params MemberProfileParams) (*MemberProfi
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/member/profile?" + paramsString.Encode()
+	url := "/data/member/profile?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

@@ -5,7 +5,7 @@ import (
 )
 
 func (api *DriverStatsByCategoryApi) GetDriverStatsByCategoryDirtOval() (io.ReadCloser, error) {
-	url := "https://members-ng.iracing.com/data/driver_stats_by_category/dirt_oval"
+	url := "/data/driver_stats_by_category/dirt_oval"
 	body, err := api.Client.Get(url)
 	if err != nil {
 		return nil, err

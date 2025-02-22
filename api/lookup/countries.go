@@ -10,7 +10,7 @@ type LookupCountriesResponse []struct {
 }
 
 func (api *LookupApi) GetLookupCountries() (*LookupCountriesResponse, error) {
-	url := "https://members-ng.iracing.com/data/lookup/countries"
+	url := "/data/lookup/countries"
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

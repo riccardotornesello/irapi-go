@@ -11,7 +11,7 @@ type ConstantsDivisionsResponse []struct {
 
 // Constant; returned directly as an array of objects
 func (api *ConstantsApi) GetConstantsDivisions() (*ConstantsDivisionsResponse, error) {
-	url := "https://members-ng.iracing.com/data/constants/divisions"
+	url := "/data/constants/divisions"
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

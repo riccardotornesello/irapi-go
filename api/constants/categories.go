@@ -11,7 +11,7 @@ type ConstantsCategoriesResponse []struct {
 
 // Constant; returned directly as an array of objects
 func (api *ConstantsApi) GetConstantsCategories() (*ConstantsCategoriesResponse, error) {
-	url := "https://members-ng.iracing.com/data/constants/categories"
+	url := "/data/constants/categories"
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

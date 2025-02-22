@@ -26,7 +26,7 @@ func (api *StatsApi) GetStatsMemberDivision(params StatsMemberDivisionParams) (*
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/stats/member_division?" + paramsString.Encode()
+	url := "/data/stats/member_division?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

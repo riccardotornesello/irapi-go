@@ -22,7 +22,7 @@ type LookupLicensesResponse []struct {
 }
 
 func (api *LookupApi) GetLookupLicenses() (*LookupLicensesResponse, error) {
-	url := "https://members-ng.iracing.com/data/lookup/licenses"
+	url := "/data/lookup/licenses"
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

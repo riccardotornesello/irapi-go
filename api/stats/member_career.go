@@ -39,7 +39,7 @@ func (api *StatsApi) GetStatsMemberCareer(params StatsMemberCareerParams) (*Stat
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/stats/member_career?" + paramsString.Encode()
+	url := "/data/stats/member_career?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

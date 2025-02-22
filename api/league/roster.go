@@ -28,7 +28,7 @@ func (api *LeagueApi) GetLeagueRoster(params LeagueRosterParams) (*LeagueRosterR
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/league/roster?" + paramsString.Encode()
+	url := "/data/league/roster?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

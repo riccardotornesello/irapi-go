@@ -62,7 +62,7 @@ func (api *LeagueApi) GetLeagueDirectory(params LeagueDirectoryParams) (*LeagueD
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/league/directory?" + paramsString.Encode()
+	url := "/data/league/directory?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

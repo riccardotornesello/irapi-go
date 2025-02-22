@@ -45,7 +45,7 @@ func (api *StatsApi) GetStatsMemberRecap(params StatsMemberRecapParams) (*StatsM
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/stats/member_recap?" + paramsString.Encode()
+	url := "/data/stats/member_recap?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

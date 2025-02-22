@@ -245,7 +245,7 @@ func (api *SeriesApi) GetSeriesSeasons(params SeriesSeasonsParams) (*SeriesSeaso
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/series/seasons?" + paramsString.Encode()
+	url := "/data/series/seasons?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

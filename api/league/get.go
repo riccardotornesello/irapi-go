@@ -83,7 +83,7 @@ func (api *LeagueApi) GetLeague(params LeagueGetParams) (*LeagueGetResponse, err
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/league/get?" + paramsString.Encode()
+	url := "/data/league/get?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

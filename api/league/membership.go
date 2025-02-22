@@ -28,7 +28,7 @@ func (api *LeagueApi) GetLeagueMembership(params LeagueMembershipParams) (*Leagu
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/league/membership?" + paramsString.Encode()
+	url := "/data/league/membership?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

@@ -28,7 +28,7 @@ func (api *MemberApi) GetMemberAwardInstances(params MemberAwardInstancesParams)
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/member/award_instances?" + paramsString.Encode()
+	url := "/data/member/award_instances?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

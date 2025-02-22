@@ -26,7 +26,7 @@ func (api *StatsApi) GetStatsMemberSummary(params StatsMemberSummaryParams) (*St
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/stats/member_summary?" + paramsString.Encode()
+	url := "/data/stats/member_summary?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

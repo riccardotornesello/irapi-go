@@ -39,7 +39,7 @@ func (api *MemberApi) GetMember(params MemberGetParams) (*MemberGetResponse, err
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/member/get?" + paramsString.Encode()
+	url := "/data/member/get?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

@@ -26,7 +26,7 @@ func (api *LookupApi) GetLookupClubHistory(params LookupClubHistoryParams) (*Loo
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/lookup/club_history?" + paramsString.Encode()
+	url := "/data/lookup/club_history?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

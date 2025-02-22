@@ -58,7 +58,7 @@ func (api *LeagueApi) GetLeagueSeasonStandings(params LeagueSeasonStandingsParam
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/league/season_standings?" + paramsString.Encode()
+	url := "/data/league/season_standings?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

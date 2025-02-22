@@ -274,7 +274,7 @@ type HostedSessionsResponse struct {
 
 // Sessions that can be joined as a driver. Without spectator and non-league pending sessions for the user.
 func (api *HostedApi) GetHostedSessions() (*HostedSessionsResponse, error) {
-	url := "https://members-ng.iracing.com/data/hosted/sessions"
+	url := "/data/hosted/sessions"
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

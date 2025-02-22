@@ -226,7 +226,7 @@ func (api *ResultsApi) GetResults(params ResultsGetParams) (*ResultsGetResponse,
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/results/get?" + paramsString.Encode()
+	url := "/data/results/get?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

@@ -31,7 +31,7 @@ type TrackAssetsResponse map[string]struct {
 
 // image paths are relative to https://images-static.iracing.com/
 func (api *TrackApi) GetTrackAssets() (*TrackAssetsResponse, error) {
-	url := "https://members-ng.iracing.com/data/track/assets"
+	url := "/data/track/assets"
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

@@ -27,7 +27,7 @@ type CarAssetsResponse map[string]struct {
 
 // image paths are relative to https://images-static.iracing.com/
 func (api *CarApi) GetCarAssets() (*CarAssetsResponse, error) {
-	url := "https://members-ng.iracing.com/data/car/assets"
+	url := "/data/car/assets"
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

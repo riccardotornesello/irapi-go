@@ -30,7 +30,7 @@ type SeriesGetResponse []struct {
 }
 
 func (api *SeriesApi) GetSeries() (*SeriesGetResponse, error) {
-	url := "https://members-ng.iracing.com/data/series/get"
+	url := "/data/series/get"
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

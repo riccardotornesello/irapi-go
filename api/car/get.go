@@ -271,7 +271,7 @@ type CarGetResponse []struct {
 }
 
 func (api *CarApi) GetCar() (*CarGetResponse, error) {
-	url := "https://members-ng.iracing.com/data/car/get"
+	url := "/data/car/get"
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

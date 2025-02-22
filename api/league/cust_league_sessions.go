@@ -313,7 +313,7 @@ func (api *LeagueApi) GetLeagueCustLeagueSessions(params LeagueCustLeagueSession
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/league/cust_league_sessions?" + paramsString.Encode()
+	url := "/data/league/cust_league_sessions?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

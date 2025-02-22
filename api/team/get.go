@@ -77,7 +77,7 @@ func (api *TeamApi) GetTeam(params TeamGetParams) (*TeamGetResponse, error) {
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/team/get?" + paramsString.Encode()
+	url := "/data/team/get?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

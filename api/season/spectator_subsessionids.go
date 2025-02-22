@@ -22,7 +22,7 @@ func (api *SeasonApi) GetSeasonSpectatorSubsessionids(params SeasonSpectatorSubs
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/season/spectator_subsessionids?" + paramsString.Encode()
+	url := "/data/season/spectator_subsessionids?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

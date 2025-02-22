@@ -30,7 +30,7 @@ func (api *MemberApi) GetMemberChartData(params MemberChartDataParams) (*MemberC
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/member/chart_data?" + paramsString.Encode()
+	url := "/data/member/chart_data?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

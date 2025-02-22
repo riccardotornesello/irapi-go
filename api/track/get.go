@@ -65,7 +65,7 @@ type TrackGetResponse []struct {
 }
 
 func (api *TrackApi) GetTrack() (*TrackGetResponse, error) {
-	url := "https://members-ng.iracing.com/data/track/get"
+	url := "/data/track/get"
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

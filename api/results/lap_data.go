@@ -112,7 +112,7 @@ func (api *ResultsApi) GetResultsLapData(params ResultsLapDataParams) (*ResultsL
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/results/lap_data?" + paramsString.Encode()
+	url := "/data/results/lap_data?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

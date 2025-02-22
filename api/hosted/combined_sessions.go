@@ -305,7 +305,7 @@ func (api *HostedApi) GetHostedCombinedSessions(params HostedCombinedSessionsPar
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/hosted/combined_sessions?" + paramsString.Encode()
+	url := "/data/hosted/combined_sessions?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

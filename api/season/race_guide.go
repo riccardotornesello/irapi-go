@@ -34,7 +34,7 @@ func (api *SeasonApi) GetSeasonRaceGuide(params SeasonRaceGuideParams) (*SeasonR
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/season/race_guide?" + paramsString.Encode()
+	url := "/data/season/race_guide?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {

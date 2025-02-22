@@ -31,7 +31,7 @@ func (api *LeagueApi) GetLeagueGetPointsSystems(params LeagueGetPointsSystemsPar
 		return nil, err
 	}
 
-	url := "https://members-ng.iracing.com/data/league/get_points_systems?" + paramsString.Encode()
+	url := "/data/league/get_points_systems?" + paramsString.Encode()
 
 	respBody, err := api.Client.Get(url)
 	if err != nil {
