@@ -50,6 +50,29 @@ OVERRIDES = {
                 },
             },
         },
+        "sessions": {
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "sessions": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "count_by_car_id": {
+                                    "type": "object",
+                                    "patternProperties": {r"^\d+$": None},
+                                },
+                                "count_by_car_class_id": {
+                                    "type": "object",
+                                    "patternProperties": {r"^\d+$": None},
+                                },
+                            },
+                        },
+                    }
+                },
+            },
+        },
     },
     "league": {
         "cust_league_sessions": {

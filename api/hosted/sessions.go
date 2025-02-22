@@ -5,9 +5,10 @@ import (
 )
 
 type HostedSessionsResponse struct {
-	Subscribed bool `json:"subscribed"`
-	Sessions   []struct {
-		Admins []struct {
+	Sessions []struct {
+		CountByCarId      map[string]int `json:"count_by_car_id"`
+		CountByCarClassId map[string]int `json:"count_by_car_class_id"`
+		Admins            []struct {
 			CustId      int    `json:"cust_id"`
 			DisplayName string `json:"display_name"`
 			Helmet      struct {
@@ -45,87 +46,13 @@ type HostedSessionsResponse struct {
 		Category                 string `json:"category"`
 		CategoryId               int    `json:"category_id"`
 		ConsecCautionsSingleFile bool   `json:"consec_cautions_single_file"`
-		CountByCarClassId        struct {
-			Field58948 int `json:"58948"`
-			Field58949 int `json:"58949"`
-			Field60992 int `json:"60992"`
-			Field0     int `json:"0"`
-			Field2268  int `json:"2268"`
-			Field2708  int `json:"2708"`
-			Field4073  int `json:"4073"`
-			Field4000  int `json:"4000"`
-			Field4024  int `json:"4024"`
-			Field4025  int `json:"4025"`
-			Field4046  int `json:"4046"`
-			Field74    int `json:"74"`
-			Field2978  int `json:"2978"`
-			Field117   int `json:"117"`
-			Field2523  int `json:"2523"`
-			Field4011  int `json:"4011"`
-			Field4029  int `json:"4029"`
-			Field4012  int `json:"4012"`
-		} `json:"count_by_car_class_id"`
-		CountByCarId struct {
-			Field112 int `json:"112"`
-			Field119 int `json:"119"`
-			Field122 int `json:"122"`
-			Field135 int `json:"135"`
-			Field143 int `json:"143"`
-			Field146 int `json:"146"`
-			Field147 int `json:"147"`
-			Field150 int `json:"150"`
-			Field153 int `json:"153"`
-			Field157 int `json:"157"`
-			Field189 int `json:"189"`
-			Field96  int `json:"96"`
-			Field148 int `json:"148"`
-			Field36  int `json:"36"`
-			Field186 int `json:"186"`
-			Field187 int `json:"187"`
-			Field169 int `json:"169"`
-			Field188 int `json:"188"`
-			Field85  int `json:"85"`
-			Field139 int `json:"139"`
-			Field54  int `json:"54"`
-			Field111 int `json:"111"`
-			Field123 int `json:"123"`
-			Field155 int `json:"155"`
-			Field132 int `json:"132"`
-			Field133 int `json:"133"`
-			Field156 int `json:"156"`
-			Field173 int `json:"173"`
-			Field176 int `json:"176"`
-			Field184 int `json:"184"`
-			Field185 int `json:"185"`
-			Field194 int `json:"194"`
-			Field195 int `json:"195"`
-			Field59  int `json:"59"`
-			Field144 int `json:"144"`
-			Field5   int `json:"5"`
-			Field160 int `json:"160"`
-			Field178 int `json:"178"`
-			Field43  int `json:"43"`
-			Field172 int `json:"172"`
-			Field165 int `json:"165"`
-			Field168 int `json:"168"`
-			Field67  int `json:"67"`
-			Field33  int `json:"33"`
-			Field140 int `json:"140"`
-			Field141 int `json:"141"`
-			Field99  int `json:"99"`
-			Field128 int `json:"128"`
-			Field159 int `json:"159"`
-			Field170 int `json:"170"`
-			Field174 int `json:"174"`
-			Field196 int `json:"196"`
-		} `json:"count_by_car_id"`
-		DamageModel           int  `json:"damage_model"`
-		DisallowVirtualMirror bool `json:"disallow_virtual_mirror"`
-		DoNotCountCautionLaps bool `json:"do_not_count_caution_laps"`
-		DoNotPaintCars        bool `json:"do_not_paint_cars"`
-		DriverChangeRule      int  `json:"driver_change_rule"`
-		DriverChanges         bool `json:"driver_changes"`
-		Elig                  struct {
+		DamageModel              int    `json:"damage_model"`
+		DisallowVirtualMirror    bool   `json:"disallow_virtual_mirror"`
+		DoNotCountCautionLaps    bool   `json:"do_not_count_caution_laps"`
+		DoNotPaintCars           bool   `json:"do_not_paint_cars"`
+		DriverChangeRule         int    `json:"driver_change_rule"`
+		DriverChanges            bool   `json:"driver_changes"`
+		Elig                     struct {
 			SessionFull     bool  `json:"session_full"`
 			CanSpot         bool  `json:"can_spot"`
 			CanWatch        bool  `json:"can_watch"`
@@ -341,7 +268,8 @@ type HostedSessionsResponse struct {
 			Description                          string `json:"description"`
 		} `json:"heat_ses_info"`
 	} `json:"sessions"`
-	Success bool `json:"success"`
+	Subscribed bool `json:"subscribed"`
+	Success    bool `json:"success"`
 }
 
 // Sessions that can be joined as a driver. Without spectator and non-league pending sessions for the user.
