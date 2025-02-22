@@ -11,6 +11,7 @@ from endpoints import generate_endpoints, get_api_definition
 from responses import get_responses
 from schema import gen_schemas
 from structs import convert_schema_to_struct, generate_parameters_struct
+from report import generate_report
 
 
 def main():
@@ -23,13 +24,13 @@ def main():
     )
 
     # Clean the output folder
-    shutil.rmtree("output/sdk", ignore_errors=True)
+    shutil.rmtree("output/api", ignore_errors=True)
     shutil.rmtree("output/schemas", ignore_errors=True)
 
     os.makedirs("output", exist_ok=True)
     os.makedirs("output/schemas", exist_ok=True)
     os.makedirs("output/responses", exist_ok=True)
-    os.makedirs("output/sdk", exist_ok=True)
+    os.makedirs("output/api", exist_ok=True)
 
     # Get the API definition
     api_definition = get_api_definition(session, cached=True)
@@ -61,12 +62,12 @@ def main():
     for category, category_endpoints in endpoints.items():
         camel_category = "".join([x.title() for x in category.split("_")])
 
-        os.makedirs(f"output/sdk/{category}")
+        os.makedirs(f"output/api/{category}")
 
         # Generate the client file
         struct_name = camel_category + "Api"
 
-        with open(f"output/sdk/{category}/main.go", "w") as f:
+        with open(f"output/api/{category}/main.go", "w") as f:
             f.write(
                 client_template.render(package_name=category, struct_name=struct_name)
             )
@@ -80,8 +81,8 @@ def main():
         )
 
         for endpoint, endpoint_data in category_endpoints.items():
-            endpoint_file = f"output/sdk/{category}/{endpoint}.go"
-            test_file = f"output/sdk/{category}/{endpoint}_test.go"
+            endpoint_file = f"output/api/{category}/{endpoint}.go"
+            test_file = f"output/api/{category}/{endpoint}_test.go"
 
             camel_endpoint = "".join([x.title() for x in endpoint.split("_")])
             method_name = "Get" + camel_category + camel_endpoint
@@ -130,6 +131,7 @@ def main():
                     "params_struct": params_struct,
                     "params_struct_name": camel_category + camel_endpoint + "Params",
                     "requires_optional": requires_optional,
+                    "notes": endpoint_data["notes"],
                 }
 
                 with open(endpoint_file, "w") as f:
@@ -145,6 +147,7 @@ def main():
                     "client_struct_name": camel_category + "Api",
                     "method_name": method_name,
                     "endpoint": endpoint_data["link"],
+                    "notes": endpoint_data["notes"],
                 }
 
                 with open(endpoint_file, "w") as f:
@@ -156,15 +159,17 @@ def main():
             else:
                 print(f"Unknown format: {endpoint_data['format']}")
 
-    with open("output/sdk/api.go", "w") as f:
+    with open("output/api.go", "w") as f:
         f.write(api_template.render(categories=categories))
 
     # Format the output
     subprocess.call(
-        ["go", "fmt", "./output/sdk/..."],
+        ["go", "fmt", "./output/api/..."],
         stdout=open(os.devnull, "w"),
         stderr=subprocess.STDOUT,
     )
+
+    generate_report()
 
 
 main()
