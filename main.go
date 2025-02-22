@@ -1,22 +1,22 @@
 package irapi
 
 import (
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/api/car"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/api/carclass"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/api/constants"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/api/driver_stats_by_category"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/api/hosted"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/api/league"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/api/lookup"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/api/member"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/api/results"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/api/season"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/api/series"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/api/stats"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/api/team"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/api/time_attack"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/api/track"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/client"
+	"github.com/riccardotornesello/irapi-go/api/car"
+	"github.com/riccardotornesello/irapi-go/api/carclass"
+	"github.com/riccardotornesello/irapi-go/api/constants"
+	"github.com/riccardotornesello/irapi-go/api/driver_stats_by_category"
+	"github.com/riccardotornesello/irapi-go/api/hosted"
+	"github.com/riccardotornesello/irapi-go/api/league"
+	"github.com/riccardotornesello/irapi-go/api/lookup"
+	"github.com/riccardotornesello/irapi-go/api/member"
+	"github.com/riccardotornesello/irapi-go/api/results"
+	"github.com/riccardotornesello/irapi-go/api/season"
+	"github.com/riccardotornesello/irapi-go/api/series"
+	"github.com/riccardotornesello/irapi-go/api/stats"
+	"github.com/riccardotornesello/irapi-go/api/team"
+	"github.com/riccardotornesello/irapi-go/api/time_attack"
+	"github.com/riccardotornesello/irapi-go/api/track"
+	"github.com/riccardotornesello/irapi-go/client"
 )
 
 type IRacingApiClient struct {

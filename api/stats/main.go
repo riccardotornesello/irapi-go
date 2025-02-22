@@ -1,6 +1,6 @@
 package stats
 
-import "riccardotornesello.it/sharedtelemetry/iracing/irapi/client"
+import "github.com/riccardotornesello/irapi-go/client"
 
 type StatsApi struct {
 	Client *client.ApiClient

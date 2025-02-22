@@ -1,6 +1,6 @@
 package carclass
 
-import "riccardotornesello.it/sharedtelemetry/iracing/irapi/client"
+import "github.com/riccardotornesello/irapi-go/client"
 
 type CarclassApi struct {
 	Client *client.ApiClient

@@ -1,6 +1,6 @@
 package time_attack
 
-import "riccardotornesello.it/sharedtelemetry/iracing/irapi/client"
+import "github.com/riccardotornesello/irapi-go/client"
 
 type TimeAttackApi struct {
 	Client *client.ApiClient

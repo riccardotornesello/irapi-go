@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/joho/godotenv"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/client"
+	"github.com/riccardotornesello/irapi-go/client"
 )
 
 func TestGetLeagueRoster(t *testing.T) {

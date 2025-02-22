@@ -1,6 +1,6 @@
 package member
 
-import "riccardotornesello.it/sharedtelemetry/iracing/irapi/client"
+import "github.com/riccardotornesello/irapi-go/client"
 
 type MemberApi struct {
 	Client *client.ApiClient

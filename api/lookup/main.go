@@ -1,6 +1,6 @@
 package lookup
 
-import "riccardotornesello.it/sharedtelemetry/iracing/irapi/client"
+import "github.com/riccardotornesello/irapi-go/client"
 
 type LookupApi struct {
 	Client *client.ApiClient

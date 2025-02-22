@@ -1,6 +1,6 @@
 package results
 
-import "riccardotornesello.it/sharedtelemetry/iracing/irapi/client"
+import "github.com/riccardotornesello/irapi-go/client"
 
 type ResultsApi struct {
 	Client *client.ApiClient

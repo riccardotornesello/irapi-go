@@ -1,8 +1,8 @@
 package api
 
 import (
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/client"
-	{% for category in categories %}"riccardotornesello.it/sharedtelemetry/iracing/irapi/tools/output/sdk/{{category["package_name"]}}"
+	"github.com/riccardotornesello/irapi-go/client"
+	{% for category in categories %}"github.com/riccardotornesello/irapi-go/api/{{category["package_name"]}}"
     {% endfor %}
 )
 

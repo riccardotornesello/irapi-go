@@ -10,8 +10,8 @@ It is capable of connecting to most of the API endpoints and parsing the respons
 package main
 
 import (
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi"
-	"riccardotornesello.it/sharedtelemetry/iracing/irapi/api/member"
+	"github.com/riccardotornesello/irapi-go"
+	"github.com/riccardotornesello/irapi-go/api/member"
 )
 
 func main() {

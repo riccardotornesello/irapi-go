@@ -1,4 +1,4 @@
-module riccardotornesello.it/sharedtelemetry/iracing/irapi
+module github.com/riccardotornesello/irapi-go
 
 go 1.23.2
 

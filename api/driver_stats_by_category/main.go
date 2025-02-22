@@ -1,6 +1,6 @@
 package driver_stats_by_category
 
-import "riccardotornesello.it/sharedtelemetry/iracing/irapi/client"
+import "github.com/riccardotornesello/irapi-go/client"
 
 type DriverStatsByCategoryApi struct {
 	Client *client.ApiClient
