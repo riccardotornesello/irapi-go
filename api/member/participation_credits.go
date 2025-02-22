@@ -18,6 +18,7 @@ type MemberParticipationCreditsResponse []struct {
 	TotalCredits         int    `json:"total_credits"`
 }
 
+// Always the authenticated member.
 func (api *MemberApi) GetMemberParticipationCredits() (*MemberParticipationCreditsResponse, error) {
 	url := "https://members-ng.iracing.com/data/member/participation_credits"
 

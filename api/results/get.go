@@ -219,6 +219,7 @@ type ResultsGetResponse struct {
 	} `json:"weather"`
 }
 
+// Get the results of a subsession, if authorized to view them. series_logo image paths are relative to https://images-static.iracing.com/img/logos/series/
 func (api *ResultsApi) GetResults(params ResultsGetParams) (*ResultsGetResponse, error) {
 	paramsString, err := query.Values(params)
 	if err != nil {

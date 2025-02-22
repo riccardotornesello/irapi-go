@@ -60,6 +60,7 @@ type SeriesStatsSeriesResponse []struct {
 	} `json:"seasons"`
 }
 
+// To get series and seasons for which standings should be available, filter the list by official: true.
 func (api *SeriesApi) GetSeriesStatsSeries() (*SeriesStatsSeriesResponse, error) {
 	url := "https://members-ng.iracing.com/data/series/stats_series"
 

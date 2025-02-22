@@ -9,6 +9,7 @@ type ConstantsEventTypesResponse []struct {
 	Value int    `json:"value"`
 }
 
+// Constant; returned directly as an array of objects
 func (api *ConstantsApi) GetConstantsEventTypes() (*ConstantsEventTypesResponse, error) {
 	url := "https://members-ng.iracing.com/data/constants/event_types"
 

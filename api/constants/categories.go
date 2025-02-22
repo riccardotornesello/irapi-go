@@ -9,6 +9,7 @@ type ConstantsCategoriesResponse []struct {
 	Value int    `json:"value"`
 }
 
+// Constant; returned directly as an array of objects
 func (api *ConstantsApi) GetConstantsCategories() (*ConstantsCategoriesResponse, error) {
 	url := "https://members-ng.iracing.com/data/constants/categories"
 

@@ -153,6 +153,7 @@ type MemberInfoResponse struct {
 	HasReadPp            bool        `json:"has_read_pp"`
 }
 
+// Always the authenticated member.
 func (api *MemberApi) GetMemberInfo() (*MemberInfoResponse, error) {
 	url := "https://members-ng.iracing.com/data/member/info"
 

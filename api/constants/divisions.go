@@ -9,6 +9,7 @@ type ConstantsDivisionsResponse []struct {
 	Value int    `json:"value"`
 }
 
+// Constant; returned directly as an array of objects
 func (api *ConstantsApi) GetConstantsDivisions() (*ConstantsDivisionsResponse, error) {
 	url := "https://members-ng.iracing.com/data/constants/divisions"
 

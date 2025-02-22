@@ -235,8 +235,8 @@ type SeriesSeasonsResponse []struct {
 		RaceStyle                            int    `json:"race_style"`
 	} `json:"heat_ses_info"`
 	RacePoints     int    `json:"race_points"`
-	RegOpenMinutes int    `json:"reg_open_minutes"`
 	RookieSeason   string `json:"rookie_season"`
+	RegOpenMinutes int    `json:"reg_open_minutes"`
 }
 
 func (api *SeriesApi) GetSeriesSeasons(params SeriesSeasonsParams) (*SeriesSeasonsResponse, error) {

@@ -12,20 +12,19 @@ type LeagueCustLeagueSessionsParams struct {
 }
 
 type LeagueCustLeagueSessionsResponse struct {
-	Mine       bool `json:"mine"`
-	Subscribed bool `json:"subscribed"`
-	Sequence   int  `json:"sequence"`
-	Sessions   []struct {
-		NumDrivers                        int  `json:"num_drivers"`
-		NumSpotters                       int  `json:"num_spotters"`
-		NumSpectators                     int  `json:"num_spectators"`
-		NumBroadcasters                   int  `json:"num_broadcasters"`
-		AvailableReservedBroadcasterSlots int  `json:"available_reserved_broadcaster_slots"`
-		NumSpectatorSlots                 int  `json:"num_spectator_slots"`
-		AvailableSpectatorSlots           int  `json:"available_spectator_slots"`
-		CanBroadcast                      bool `json:"can_broadcast"`
-		CanWatch                          bool `json:"can_watch"`
-		CanSpot                           bool `json:"can_spot"`
+	Sessions []struct {
+		CountByCarId                      map[string]int `json:"count_by_car_id"`
+		CountByCarClassId                 map[string]int `json:"count_by_car_class_id"`
+		NumDrivers                        int            `json:"num_drivers"`
+		NumSpotters                       int            `json:"num_spotters"`
+		NumSpectators                     int            `json:"num_spectators"`
+		NumBroadcasters                   int            `json:"num_broadcasters"`
+		AvailableReservedBroadcasterSlots int            `json:"available_reserved_broadcaster_slots"`
+		NumSpectatorSlots                 int            `json:"num_spectator_slots"`
+		AvailableSpectatorSlots           int            `json:"available_spectator_slots"`
+		CanBroadcast                      bool           `json:"can_broadcast"`
+		CanWatch                          bool           `json:"can_watch"`
+		CanSpot                           bool           `json:"can_spot"`
 		Elig                              struct {
 			SessionFull     bool  `json:"session_full"`
 			CanSpot         bool  `json:"can_spot"`
@@ -100,6 +99,9 @@ type LeagueCustLeagueSessionsResponse struct {
 		TelemetryRestriction       int    `json:"telemetry_restriction"`
 		TelemetryForceToDisk       int    `json:"telemetry_force_to_disk"`
 		MaxAiDrivers               int    `json:"max_ai_drivers"`
+		AiMinSkill                 int    `json:"ai_min_skill"`
+		AiMaxSkill                 int    `json:"ai_max_skill"`
+		AiRosterName               string `json:"ai_roster_name"`
 		AiAvoidPlayers             bool   `json:"ai_avoid_players"`
 		MustUseDiffTireTypesInRace bool   `json:"must_use_diff_tire_types_in_race"`
 		StartZone                  bool   `json:"start_zone"`
@@ -164,10 +166,10 @@ type LeagueCustLeagueSessionsResponse struct {
 				TempHigh          float64 `json:"temp_high"`
 				TempLow           float64 `json:"temp_low"`
 				TempUnits         int     `json:"temp_units"`
+				WindDir           int     `json:"wind_dir"`
 				WindHigh          float64 `json:"wind_high"`
 				WindLow           float64 `json:"wind_low"`
 				WindUnits         int     `json:"wind_units"`
-				WindDir           int     `json:"wind_dir"`
 			} `json:"weather_summary"`
 			WeatherUrl string `json:"weather_url"`
 		} `json:"weather"`
@@ -204,39 +206,20 @@ type LeagueCustLeagueSessionsResponse struct {
 		AllowedTeams   []interface{} `json:"allowed_teams"`
 		AllowedLeagues []int         `json:"allowed_leagues"`
 		Cars           []struct {
-			CarId             int    `json:"car_id"`
-			CarName           string `json:"car_name"`
-			CarClassId        int    `json:"car_class_id"`
-			CarClassName      string `json:"car_class_name"`
-			MaxPctFuelFill    int    `json:"max_pct_fuel_fill"`
-			WeightPenaltyKg   int    `json:"weight_penalty_kg"`
-			PowerAdjustPct    int    `json:"power_adjust_pct"`
-			MaxDryTireSets    int    `json:"max_dry_tire_sets"`
-			PackageId         int    `json:"package_id"`
-			RaceSetupId       int    `json:"race_setup_id"`
-			RaceSetupFilename string `json:"race_setup_filename"`
+			CarId             int     `json:"car_id"`
+			CarName           string  `json:"car_name"`
+			CarClassId        int     `json:"car_class_id"`
+			CarClassName      string  `json:"car_class_name"`
+			MaxPctFuelFill    int     `json:"max_pct_fuel_fill"`
+			WeightPenaltyKg   int     `json:"weight_penalty_kg"`
+			PowerAdjustPct    float64 `json:"power_adjust_pct"`
+			MaxDryTireSets    int     `json:"max_dry_tire_sets"`
+			PackageId         int     `json:"package_id"`
+			QualSetupId       int     `json:"qual_setup_id"`
+			QualSetupFilename string  `json:"qual_setup_filename"`
+			RaceSetupId       int     `json:"race_setup_id"`
+			RaceSetupFilename string  `json:"race_setup_filename"`
 		} `json:"cars"`
-		CountByCarId struct {
-			Field160 int `json:"160"`
-			Field132 int `json:"132"`
-			Field133 int `json:"133"`
-			Field156 int `json:"156"`
-			Field169 int `json:"169"`
-			Field173 int `json:"173"`
-			Field176 int `json:"176"`
-			Field184 int `json:"184"`
-			Field185 int `json:"185"`
-			Field188 int `json:"188"`
-			Field194 int `json:"194"`
-			Field190 int `json:"190"`
-			Field192 int `json:"192"`
-			Field195 int `json:"195"`
-		} `json:"count_by_car_id"`
-		CountByCarClassId struct {
-			Field0    int `json:"0"`
-			Field2708 int `json:"2708"`
-			Field4076 int `json:"4076"`
-		} `json:"count_by_car_class_id"`
 		CarTypes []struct {
 			CarType string `json:"car_type"`
 		} `json:"car_types"`
@@ -268,11 +251,9 @@ type LeagueCustLeagueSessionsResponse struct {
 		Broadcaster      bool          `json:"broadcaster"`
 		MinIr            int           `json:"min_ir"`
 		MaxIr            int           `json:"max_ir"`
-		SessionDesc      string        `json:"session_desc"`
 		LeagueSeasonName string        `json:"league_season_name"`
-		AiMinSkill       int           `json:"ai_min_skill"`
-		AiMaxSkill       int           `json:"ai_max_skill"`
-		AiRosterName     string        `json:"ai_roster_name"`
+		RegisteredTeams  []int         `json:"registered_teams"`
+		SessionDesc      string        `json:"session_desc"`
 		RaceLengthType   int           `json:"race_length_type"`
 		HeatSesInfo      struct {
 			ConsolationDeltaMaxFieldSize         int    `json:"consolation_delta_max_field_size"`
@@ -320,7 +301,10 @@ type LeagueCustLeagueSessionsResponse struct {
 			RaceStyle                            int    `json:"race_style"`
 		} `json:"heat_ses_info"`
 	} `json:"sessions"`
-	Success bool `json:"success"`
+	Mine       bool `json:"mine"`
+	Subscribed bool `json:"subscribed"`
+	Sequence   int  `json:"sequence"`
+	Success    bool `json:"success"`
 }
 
 func (api *LeagueApi) GetLeagueCustLeagueSessions(params LeagueCustLeagueSessionsParams) (*LeagueCustLeagueSessionsResponse, error) {

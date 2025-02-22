@@ -46,74 +46,78 @@ type HostedSessionsResponse struct {
 		CategoryId               int    `json:"category_id"`
 		ConsecCautionsSingleFile bool   `json:"consec_cautions_single_file"`
 		CountByCarClassId        struct {
-			Field2708  int `json:"2708"`
+			Field58948 int `json:"58948"`
+			Field58949 int `json:"58949"`
+			Field60992 int `json:"60992"`
 			Field0     int `json:"0"`
-			Field55293 int `json:"55293"`
-			Field60653 int `json:"60653"`
-			Field60654 int `json:"60654"`
-			Field73998 int `json:"73998"`
-			Field73999 int `json:"73999"`
-			Field74721 int `json:"74721"`
-			Field4072  int `json:"4072"`
-			Field59285 int `json:"59285"`
-			Field59287 int `json:"59287"`
-			Field59288 int `json:"59288"`
-			Field59568 int `json:"59568"`
-			Field15    int `json:"15"`
-			Field2705  int `json:"2705"`
-			Field2742  int `json:"2742"`
+			Field2268  int `json:"2268"`
+			Field2708  int `json:"2708"`
+			Field4073  int `json:"4073"`
 			Field4000  int `json:"4000"`
+			Field4024  int `json:"4024"`
 			Field4025  int `json:"4025"`
-			Field4036  int `json:"4036"`
 			Field4046  int `json:"4046"`
-			Field4060  int `json:"4060"`
-			Field4061  int `json:"4061"`
-			Field4066  int `json:"4066"`
+			Field74    int `json:"74"`
+			Field2978  int `json:"2978"`
+			Field117   int `json:"117"`
+			Field2523  int `json:"2523"`
+			Field4011  int `json:"4011"`
+			Field4029  int `json:"4029"`
+			Field4012  int `json:"4012"`
 		} `json:"count_by_car_class_id"`
 		CountByCarId struct {
+			Field112 int `json:"112"`
+			Field119 int `json:"119"`
+			Field122 int `json:"122"`
+			Field135 int `json:"135"`
+			Field143 int `json:"143"`
+			Field146 int `json:"146"`
+			Field147 int `json:"147"`
+			Field150 int `json:"150"`
+			Field153 int `json:"153"`
+			Field157 int `json:"157"`
+			Field189 int `json:"189"`
+			Field96  int `json:"96"`
+			Field148 int `json:"148"`
+			Field36  int `json:"36"`
+			Field186 int `json:"186"`
+			Field187 int `json:"187"`
+			Field169 int `json:"169"`
+			Field188 int `json:"188"`
+			Field85  int `json:"85"`
+			Field139 int `json:"139"`
+			Field54  int `json:"54"`
+			Field111 int `json:"111"`
+			Field123 int `json:"123"`
+			Field155 int `json:"155"`
 			Field132 int `json:"132"`
 			Field133 int `json:"133"`
 			Field156 int `json:"156"`
-			Field169 int `json:"169"`
 			Field173 int `json:"173"`
 			Field176 int `json:"176"`
 			Field184 int `json:"184"`
 			Field185 int `json:"185"`
-			Field188 int `json:"188"`
 			Field194 int `json:"194"`
-			Field96  int `json:"96"`
-			Field164 int `json:"164"`
-			Field67  int `json:"67"`
-			Field119 int `json:"119"`
-			Field135 int `json:"135"`
-			Field147 int `json:"147"`
-			Field157 int `json:"157"`
-			Field160 int `json:"160"`
-			Field189 int `json:"189"`
 			Field195 int `json:"195"`
-			Field131 int `json:"131"`
-			Field143 int `json:"143"`
-			Field43  int `json:"43"`
-			Field72  int `json:"72"`
-			Field73  int `json:"73"`
-			Field106 int `json:"106"`
-			Field152 int `json:"152"`
+			Field59  int `json:"59"`
+			Field144 int `json:"144"`
+			Field5   int `json:"5"`
+			Field160 int `json:"160"`
 			Field178 int `json:"178"`
-			Field56  int `json:"56"`
-			Field103 int `json:"103"`
-			Field110 int `json:"110"`
-			Field111 int `json:"111"`
-			Field114 int `json:"114"`
-			Field115 int `json:"115"`
-			Field116 int `json:"116"`
-			Field123 int `json:"123"`
-			Field139 int `json:"139"`
+			Field43  int `json:"43"`
+			Field172 int `json:"172"`
+			Field165 int `json:"165"`
+			Field168 int `json:"168"`
+			Field67  int `json:"67"`
+			Field33  int `json:"33"`
 			Field140 int `json:"140"`
 			Field141 int `json:"141"`
-			Field155 int `json:"155"`
-			Field167 int `json:"167"`
-			Field172 int `json:"172"`
-			Field13  int `json:"13"`
+			Field99  int `json:"99"`
+			Field128 int `json:"128"`
+			Field159 int `json:"159"`
+			Field170 int `json:"170"`
+			Field174 int `json:"174"`
+			Field196 int `json:"196"`
 		} `json:"count_by_car_id"`
 		DamageModel           int  `json:"damage_model"`
 		DisallowVirtualMirror bool `json:"disallow_virtual_mirror"`
@@ -199,6 +203,7 @@ type HostedSessionsResponse struct {
 		QualifyLength              int    `json:"qualify_length"`
 		RaceLaps                   int    `json:"race_laps"`
 		RaceLength                 int    `json:"race_length"`
+		RegisteredTeams            []int  `json:"registered_teams"`
 		Restarts                   int    `json:"restarts"`
 		RestrictResults            bool   `json:"restrict_results"`
 		RestrictViewing            bool   `json:"restrict_viewing"`
@@ -222,9 +227,9 @@ type HostedSessionsResponse struct {
 		TimeLimit            int  `json:"time_limit"`
 		Track                struct {
 			CategoryId int    `json:"category_id"`
+			ConfigName string `json:"config_name"`
 			TrackId    int    `json:"track_id"`
 			TrackName  string `json:"track_name"`
-			ConfigName string `json:"config_name"`
 		} `json:"track"`
 		TrackState struct {
 			LeaveMarbles         bool `json:"leave_marbles"`
@@ -268,7 +273,7 @@ type HostedSessionsResponse struct {
 			WeatherSummary          struct {
 				MaxPrecipRate     float64 `json:"max_precip_rate"`
 				MaxPrecipRateDesc string  `json:"max_precip_rate_desc"`
-				PrecipChance      float64 `json:"precip_chance"`
+				PrecipChance      int     `json:"precip_chance"`
 				SkiesHigh         int     `json:"skies_high"`
 				SkiesLow          int     `json:"skies_low"`
 				TempHigh          float64 `json:"temp_high"`
@@ -286,14 +291,60 @@ type HostedSessionsResponse struct {
 			Fog        int    `json:"fog"`
 			Type       int    `json:"type"`
 		} `json:"weather"`
-		AiMaxSkill      int    `json:"ai_max_skill"`
-		AiMinSkill      int    `json:"ai_min_skill"`
-		AiRosterName    string `json:"ai_roster_name"`
-		RegisteredTeams []int  `json:"registered_teams"`
+		AltAssetId   int    `json:"alt_asset_id"`
+		AiMaxSkill   int    `json:"ai_max_skill"`
+		AiMinSkill   int    `json:"ai_min_skill"`
+		AiRosterName string `json:"ai_roster_name"`
+		HeatSesInfo  struct {
+			ConsolationDeltaMaxFieldSize         int    `json:"consolation_delta_max_field_size"`
+			ConsolationDeltaSessionLaps          int    `json:"consolation_delta_session_laps"`
+			ConsolationDeltaSessionLengthMinutes int    `json:"consolation_delta_session_length_minutes"`
+			ConsolationFirstMaxFieldSize         int    `json:"consolation_first_max_field_size"`
+			ConsolationFirstSessionLaps          int    `json:"consolation_first_session_laps"`
+			ConsolationFirstSessionLengthMinutes int    `json:"consolation_first_session_length_minutes"`
+			ConsolationNumPositionToInvert       int    `json:"consolation_num_position_to_invert"`
+			ConsolationNumToConsolation          int    `json:"consolation_num_to_consolation"`
+			ConsolationNumToMain                 int    `json:"consolation_num_to_main"`
+			ConsolationRunAlways                 bool   `json:"consolation_run_always"`
+			ConsolationScoresChampPoints         bool   `json:"consolation_scores_champ_points"`
+			Created                              string `json:"created"`
+			CustId                               int    `json:"cust_id"`
+			HeatCautionType                      int    `json:"heat_caution_type"`
+			HeatInfoId                           int    `json:"heat_info_id"`
+			HeatInfoName                         string `json:"heat_info_name"`
+			HeatLaps                             int    `json:"heat_laps"`
+			HeatLengthMinutes                    int    `json:"heat_length_minutes"`
+			HeatMaxFieldSize                     int    `json:"heat_max_field_size"`
+			HeatNumFromEachToMain                int    `json:"heat_num_from_each_to_main"`
+			HeatNumPositionToInvert              int    `json:"heat_num_position_to_invert"`
+			HeatScoresChampPoints                bool   `json:"heat_scores_champ_points"`
+			HeatSessionMinutesEstimate           int    `json:"heat_session_minutes_estimate"`
+			Hidden                               bool   `json:"hidden"`
+			MainLaps                             int    `json:"main_laps"`
+			MainLengthMinutes                    int    `json:"main_length_minutes"`
+			MainMaxFieldSize                     int    `json:"main_max_field_size"`
+			MainNumPositionToInvert              int    `json:"main_num_position_to_invert"`
+			MaxEntrants                          int    `json:"max_entrants"`
+			OpenPractice                         bool   `json:"open_practice"`
+			PreMainPracticeLengthMinutes         int    `json:"pre_main_practice_length_minutes"`
+			PreQualNumToMain                     int    `json:"pre_qual_num_to_main"`
+			PreQualPracticeLengthMinutes         int    `json:"pre_qual_practice_length_minutes"`
+			QualCautionType                      int    `json:"qual_caution_type"`
+			QualLaps                             int    `json:"qual_laps"`
+			QualLengthMinutes                    int    `json:"qual_length_minutes"`
+			QualNumToMain                        int    `json:"qual_num_to_main"`
+			QualOpenDelaySeconds                 int    `json:"qual_open_delay_seconds"`
+			QualScoresChampPoints                bool   `json:"qual_scores_champ_points"`
+			QualScoring                          int    `json:"qual_scoring"`
+			QualStyle                            int    `json:"qual_style"`
+			RaceStyle                            int    `json:"race_style"`
+			Description                          string `json:"description"`
+		} `json:"heat_ses_info"`
 	} `json:"sessions"`
 	Success bool `json:"success"`
 }
 
+// Sessions that can be joined as a driver. Without spectator and non-league pending sessions for the user.
 func (api *HostedApi) GetHostedSessions() (*HostedSessionsResponse, error) {
 	url := "https://members-ng.iracing.com/data/hosted/sessions"
 

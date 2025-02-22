@@ -11,19 +11,19 @@ type HostedCombinedSessionsParams struct {
 }
 
 type HostedCombinedSessionsResponse struct {
-	Subscribed bool `json:"subscribed"`
-	Sequence   int  `json:"sequence"`
-	Sessions   []struct {
-		NumDrivers                        int  `json:"num_drivers"`
-		NumSpotters                       int  `json:"num_spotters"`
-		NumSpectators                     int  `json:"num_spectators"`
-		NumBroadcasters                   int  `json:"num_broadcasters"`
-		AvailableReservedBroadcasterSlots int  `json:"available_reserved_broadcaster_slots"`
-		NumSpectatorSlots                 int  `json:"num_spectator_slots"`
-		AvailableSpectatorSlots           int  `json:"available_spectator_slots"`
-		CanBroadcast                      bool `json:"can_broadcast"`
-		CanWatch                          bool `json:"can_watch"`
-		CanSpot                           bool `json:"can_spot"`
+	Sessions []struct {
+		CountByCarId                      map[string]int `json:"count_by_car_id"`
+		CountByCarClassId                 map[string]int `json:"count_by_car_class_id"`
+		NumDrivers                        int            `json:"num_drivers"`
+		NumSpotters                       int            `json:"num_spotters"`
+		NumSpectators                     int            `json:"num_spectators"`
+		NumBroadcasters                   int            `json:"num_broadcasters"`
+		AvailableReservedBroadcasterSlots int            `json:"available_reserved_broadcaster_slots"`
+		NumSpectatorSlots                 int            `json:"num_spectator_slots"`
+		AvailableSpectatorSlots           int            `json:"available_spectator_slots"`
+		CanBroadcast                      bool           `json:"can_broadcast"`
+		CanWatch                          bool           `json:"can_watch"`
+		CanSpot                           bool           `json:"can_spot"`
 		Elig                              struct {
 			SessionFull     bool  `json:"session_full"`
 			CanSpot         bool  `json:"can_spot"`
@@ -44,6 +44,7 @@ type HostedCombinedSessionsResponse struct {
 		SubsessionId               int    `json:"subsession_id"`
 		PasswordProtected          bool   `json:"password_protected"`
 		SessionName                string `json:"session_name"`
+		SessionDesc                string `json:"session_desc"`
 		OpenRegExpires             string `json:"open_reg_expires"`
 		LaunchAt                   string `json:"launch_at"`
 		FullCourseCautions         bool   `json:"full_course_cautions"`
@@ -125,8 +126,17 @@ type HostedCombinedSessionsResponse struct {
 			TrackName  string `json:"track_name"`
 		} `json:"track"`
 		Weather struct {
-			AllowFog                bool   `json:"allow_fog"`
-			Fog                     int    `json:"fog"`
+			AllowFog        bool `json:"allow_fog"`
+			ForecastOptions struct {
+				ForecastType  int `json:"forecast_type"`
+				Precipitation int `json:"precipitation"`
+				Skies         int `json:"skies"`
+				StopPrecip    int `json:"stop_precip"`
+				Temperature   int `json:"temperature"`
+				WeatherSeed   int `json:"weather_seed"`
+				WindDir       int `json:"wind_dir"`
+				WindSpeed     int `json:"wind_speed"`
+			} `json:"forecast_options"`
 			PrecipOption            int    `json:"precip_option"`
 			RelHumidity             int    `json:"rel_humidity"`
 			SimulatedStartTime      string `json:"simulated_start_time"`
@@ -137,25 +147,11 @@ type HostedCombinedSessionsResponse struct {
 			TempValue               int    `json:"temp_value"`
 			TimeOfDay               int    `json:"time_of_day"`
 			TrackWater              int    `json:"track_water"`
-			Type                    int    `json:"type"`
 			Version                 int    `json:"version"`
-			WindDir                 int    `json:"wind_dir"`
-			WindUnits               int    `json:"wind_units"`
-			WindValue               int    `json:"wind_value"`
-			ForecastOptions         struct {
-				ForecastType  int `json:"forecast_type"`
-				Precipitation int `json:"precipitation"`
-				Skies         int `json:"skies"`
-				StopPrecip    int `json:"stop_precip"`
-				Temperature   int `json:"temperature"`
-				WeatherSeed   int `json:"weather_seed"`
-				WindDir       int `json:"wind_dir"`
-				WindSpeed     int `json:"wind_speed"`
-			} `json:"forecast_options"`
-			WeatherSummary struct {
+			WeatherSummary          struct {
 				MaxPrecipRate     float64 `json:"max_precip_rate"`
 				MaxPrecipRateDesc string  `json:"max_precip_rate_desc"`
-				PrecipChance      float64 `json:"precip_chance"`
+				PrecipChance      int     `json:"precip_chance"`
 				SkiesHigh         int     `json:"skies_high"`
 				SkiesLow          int     `json:"skies_low"`
 				TempHigh          float64 `json:"temp_high"`
@@ -167,6 +163,11 @@ type HostedCombinedSessionsResponse struct {
 				WindUnits         int     `json:"wind_units"`
 			} `json:"weather_summary"`
 			WeatherUrl string `json:"weather_url"`
+			WindDir    int    `json:"wind_dir"`
+			WindUnits  int    `json:"wind_units"`
+			WindValue  int    `json:"wind_value"`
+			Fog        int    `json:"fog"`
+			Type       int    `json:"type"`
 		} `json:"weather"`
 		TrackState struct {
 			LeaveMarbles         bool `json:"leave_marbles"`
@@ -215,77 +216,8 @@ type HostedCombinedSessionsResponse struct {
 			RaceSetupId       int     `json:"race_setup_id"`
 			RaceSetupFilename string  `json:"race_setup_filename"`
 		} `json:"cars"`
-		CountByCarId struct {
-			Field147 int `json:"147"`
-			Field132 int `json:"132"`
-			Field133 int `json:"133"`
-			Field156 int `json:"156"`
-			Field169 int `json:"169"`
-			Field173 int `json:"173"`
-			Field176 int `json:"176"`
-			Field184 int `json:"184"`
-			Field185 int `json:"185"`
-			Field188 int `json:"188"`
-			Field194 int `json:"194"`
-			Field172 int `json:"172"`
-			Field43  int `json:"43"`
-			Field67  int `json:"67"`
-			Field72  int `json:"72"`
-			Field73  int `json:"73"`
-			Field106 int `json:"106"`
-			Field135 int `json:"135"`
-			Field152 int `json:"152"`
-			Field157 int `json:"157"`
-			Field160 int `json:"160"`
-			Field178 int `json:"178"`
-			Field189 int `json:"189"`
-			Field103 int `json:"103"`
-			Field96  int `json:"96"`
-			Field143 int `json:"143"`
-			Field13  int `json:"13"`
-			Field119 int `json:"119"`
-			Field195 int `json:"195"`
-			Field164 int `json:"164"`
-			Field131 int `json:"131"`
-			Field56  int `json:"56"`
-			Field110 int `json:"110"`
-			Field111 int `json:"111"`
-			Field114 int `json:"114"`
-			Field115 int `json:"115"`
-			Field116 int `json:"116"`
-			Field123 int `json:"123"`
-			Field139 int `json:"139"`
-			Field140 int `json:"140"`
-			Field141 int `json:"141"`
-			Field155 int `json:"155"`
-			Field167 int `json:"167"`
-		} `json:"count_by_car_id"`
-		CountByCarClassId struct {
-			Field0     int `json:"0"`
-			Field2708  int `json:"2708"`
-			Field4072  int `json:"4072"`
-			Field59285 int `json:"59285"`
-			Field59287 int `json:"59287"`
-			Field59288 int `json:"59288"`
-			Field59568 int `json:"59568"`
-			Field15    int `json:"15"`
-			Field55293 int `json:"55293"`
-			Field60653 int `json:"60653"`
-			Field60654 int `json:"60654"`
-			Field73998 int `json:"73998"`
-			Field73999 int `json:"73999"`
-			Field74721 int `json:"74721"`
-			Field2705  int `json:"2705"`
-			Field2742  int `json:"2742"`
-			Field4000  int `json:"4000"`
-			Field4025  int `json:"4025"`
-			Field4036  int `json:"4036"`
-			Field4046  int `json:"4046"`
-			Field4060  int `json:"4060"`
-			Field4061  int `json:"4061"`
-			Field4066  int `json:"4066"`
-		} `json:"count_by_car_class_id"`
-		CarTypes []struct {
+		RegisteredTeams []int `json:"registered_teams"`
+		CarTypes        []struct {
 			CarType string `json:"car_type"`
 		} `json:"car_types"`
 		TrackTypes []struct {
@@ -300,26 +232,73 @@ type HostedCombinedSessionsResponse struct {
 		SessionTypes []struct {
 			SessionType int `json:"session_type"`
 		} `json:"session_types"`
-		CanJoin         bool          `json:"can_join"`
-		SessAdmin       bool          `json:"sess_admin"`
-		Friends         []interface{} `json:"friends"`
-		Watched         []interface{} `json:"watched"`
-		EndTime         string        `json:"end_time"`
-		TeamEntryCount  int           `json:"team_entry_count"`
-		IsHeatRacing    bool          `json:"is_heat_racing"`
-		Populated       bool          `json:"populated"`
-		Broadcaster     bool          `json:"broadcaster"`
-		MinIr           int           `json:"min_ir"`
-		MaxIr           int           `json:"max_ir"`
-		SessionDesc     string        `json:"session_desc"`
-		AiMinSkill      int           `json:"ai_min_skill"`
-		AiMaxSkill      int           `json:"ai_max_skill"`
-		AiRosterName    string        `json:"ai_roster_name"`
-		RegisteredTeams []int         `json:"registered_teams"`
+		CanJoin        bool          `json:"can_join"`
+		SessAdmin      bool          `json:"sess_admin"`
+		Friends        []interface{} `json:"friends"`
+		Watched        []interface{} `json:"watched"`
+		EndTime        string        `json:"end_time"`
+		TeamEntryCount int           `json:"team_entry_count"`
+		IsHeatRacing   bool          `json:"is_heat_racing"`
+		Populated      bool          `json:"populated"`
+		Broadcaster    bool          `json:"broadcaster"`
+		MinIr          int           `json:"min_ir"`
+		MaxIr          int           `json:"max_ir"`
+		AltAssetId     int           `json:"alt_asset_id"`
+		AiMinSkill     int           `json:"ai_min_skill"`
+		AiMaxSkill     int           `json:"ai_max_skill"`
+		AiRosterName   string        `json:"ai_roster_name"`
+		HeatSesInfo    struct {
+			ConsolationDeltaMaxFieldSize         int    `json:"consolation_delta_max_field_size"`
+			ConsolationDeltaSessionLaps          int    `json:"consolation_delta_session_laps"`
+			ConsolationDeltaSessionLengthMinutes int    `json:"consolation_delta_session_length_minutes"`
+			ConsolationFirstMaxFieldSize         int    `json:"consolation_first_max_field_size"`
+			ConsolationFirstSessionLaps          int    `json:"consolation_first_session_laps"`
+			ConsolationFirstSessionLengthMinutes int    `json:"consolation_first_session_length_minutes"`
+			ConsolationNumPositionToInvert       int    `json:"consolation_num_position_to_invert"`
+			ConsolationNumToConsolation          int    `json:"consolation_num_to_consolation"`
+			ConsolationNumToMain                 int    `json:"consolation_num_to_main"`
+			ConsolationRunAlways                 bool   `json:"consolation_run_always"`
+			ConsolationScoresChampPoints         bool   `json:"consolation_scores_champ_points"`
+			Created                              string `json:"created"`
+			CustId                               int    `json:"cust_id"`
+			HeatCautionType                      int    `json:"heat_caution_type"`
+			HeatInfoId                           int    `json:"heat_info_id"`
+			HeatInfoName                         string `json:"heat_info_name"`
+			HeatLaps                             int    `json:"heat_laps"`
+			HeatLengthMinutes                    int    `json:"heat_length_minutes"`
+			HeatMaxFieldSize                     int    `json:"heat_max_field_size"`
+			HeatNumFromEachToMain                int    `json:"heat_num_from_each_to_main"`
+			HeatNumPositionToInvert              int    `json:"heat_num_position_to_invert"`
+			HeatScoresChampPoints                bool   `json:"heat_scores_champ_points"`
+			HeatSessionMinutesEstimate           int    `json:"heat_session_minutes_estimate"`
+			Hidden                               bool   `json:"hidden"`
+			MainLaps                             int    `json:"main_laps"`
+			MainLengthMinutes                    int    `json:"main_length_minutes"`
+			MainMaxFieldSize                     int    `json:"main_max_field_size"`
+			MainNumPositionToInvert              int    `json:"main_num_position_to_invert"`
+			MaxEntrants                          int    `json:"max_entrants"`
+			OpenPractice                         bool   `json:"open_practice"`
+			PreMainPracticeLengthMinutes         int    `json:"pre_main_practice_length_minutes"`
+			PreQualNumToMain                     int    `json:"pre_qual_num_to_main"`
+			PreQualPracticeLengthMinutes         int    `json:"pre_qual_practice_length_minutes"`
+			QualCautionType                      int    `json:"qual_caution_type"`
+			QualLaps                             int    `json:"qual_laps"`
+			QualLengthMinutes                    int    `json:"qual_length_minutes"`
+			QualNumToMain                        int    `json:"qual_num_to_main"`
+			QualOpenDelaySeconds                 int    `json:"qual_open_delay_seconds"`
+			QualScoresChampPoints                bool   `json:"qual_scores_champ_points"`
+			QualScoring                          int    `json:"qual_scoring"`
+			QualStyle                            int    `json:"qual_style"`
+			RaceStyle                            int    `json:"race_style"`
+			Description                          string `json:"description"`
+		} `json:"heat_ses_info"`
 	} `json:"sessions"`
-	Success bool `json:"success"`
+	Subscribed bool `json:"subscribed"`
+	Sequence   int  `json:"sequence"`
+	Success    bool `json:"success"`
 }
 
+// Sessions that can be joined as a driver or spectator, and also includes non-league pending sessions for the user.
 func (api *HostedApi) GetHostedCombinedSessions(params HostedCombinedSessionsParams) (*HostedCombinedSessionsResponse, error) {
 	paramsString, err := query.Values(params)
 	if err != nil {
