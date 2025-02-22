@@ -3,6 +3,8 @@ import json
 
 from genson import SchemaBuilder
 
+from data import SCHEMA_ADJUSTMENTS
+
 
 def gen_schemas():
     for file in os.listdir("output/responses"):
@@ -15,26 +17,8 @@ def gen_schemas():
         builder = SchemaBuilder()
 
         # Manual adjustements
-        # TODO: move to a separate file
-        if category == "car" and endpoint == "assets":
-            builder.add_schema(
-                {"type": "object", "patternProperties": {r"^\d+$": None}}
-            )
-        elif category == "series" and endpoint == "seasons":
-            builder.add_schema(
-                {
-                    "type": "array",
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "allowed_season_members": {
-                                "type": "object",
-                                "patternProperties": {r"^\d+$": None},
-                            }
-                        },
-                    },
-                },
-            )
+        if category in SCHEMA_ADJUSTMENTS and endpoint in SCHEMA_ADJUSTMENTS[category]:
+            builder.add_schema(SCHEMA_ADJUSTMENTS[category][endpoint])
 
         builder.add_object(json.load(open(f"output/responses/{file}")))
 
