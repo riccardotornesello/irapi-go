@@ -8,7 +8,7 @@ import (
 
 type LeagueRosterParams struct {
 	LeagueId        int            `url:"league_id,omitempty"`
-	IncludeLicenses *optional.Bool `url:"include_licenses,omitempty"`
+	IncludeLicenses *optional.Bool `url:"include_licenses,omitempty"` // For faster responses, only request when necessary.
 }
 
 type LeagueRosterResponse struct {

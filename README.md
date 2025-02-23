@@ -46,7 +46,6 @@ Here are the highest priority tasks:
 - improve the API generation tool to make it clearer to use and modify
 - add output in OpenAPI format to the tool
 - add missing endpoints and for those that are present add unknown field types, using different parameters in example calls
-- add comments to parameters in go structs
 - adjust tests for endpoints that require parameters since they don't currently receive them
 - if skip s3 is true, the get function should skip the s3 call
 - some parameters are lists, check if they're passed correctly in the sdk and in the tools

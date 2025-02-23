@@ -10,14 +10,17 @@ import (
 	"log/slog"
 	"net/http"
 	"net/http/cookiejar"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
 )
 
+const tokenCookieName = "authtoken_members"
+
 type ApiClient struct {
-	client     *http.Client
-	retryAfter time.Time
+	Client     *http.Client
+	RetryAfter time.Time
 }
 
 type IRacingAuthResponse struct {
@@ -70,8 +73,29 @@ func NewApiClient(email string, password string) (*ApiClient, error) {
 	}
 
 	return &ApiClient{
-		client: client,
+		Client: client,
 	}, nil
+}
+
+func NewApiClientWithToken(token string) *ApiClient {
+	jar, _ := cookiejar.New(nil)
+
+	// Set a cookie in the jar
+	u, _ := url.Parse("https://members-ng.iracing.com")
+	jar.SetCookies(u, []*http.Cookie{
+		{
+			Name:  tokenCookieName,
+			Value: token,
+		},
+	})
+
+	client := &http.Client{
+		Jar: jar,
+	}
+
+	return &ApiClient{
+		Client: client,
+	}
 }
 
 func (c *ApiClient) Get(path string) (io.ReadCloser, error) {
@@ -79,9 +103,9 @@ func (c *ApiClient) Get(path string) (io.ReadCloser, error) {
 	var err error
 
 	for {
-		if c.retryAfter.After(time.Now()) {
-			slog.Info(fmt.Sprintf("Rate limit exceeded, waiting until %v", c.retryAfter.Format(time.RFC3339)))
-			time.Sleep(time.Until(c.retryAfter))
+		if c.RetryAfter.After(time.Now()) {
+			slog.Info(fmt.Sprintf("Rate limit exceeded, waiting until %v", c.RetryAfter.Format(time.RFC3339)))
+			time.Sleep(time.Until(c.RetryAfter))
 		}
 
 		ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second) // TODO: allow timeout customization
@@ -92,7 +116,7 @@ func (c *ApiClient) Get(path string) (io.ReadCloser, error) {
 			return nil, fmt.Errorf("error creating request for %s: %w", path, err)
 		}
 
-		resp, err = c.client.Do(req)
+		resp, err = c.Client.Do(req)
 		if err != nil {
 			return nil, fmt.Errorf("error getting %s: %w", path, err)
 		}
@@ -116,7 +140,7 @@ func (c *ApiClient) Get(path string) (io.ReadCloser, error) {
 		}
 
 		// Not atomic, but we don't care
-		c.retryAfter = time.Unix(rateLimitResetInt, 0).Add(2 * time.Second)
+		c.RetryAfter = time.Unix(rateLimitResetInt, 0).Add(2 * time.Second)
 	}
 
 	defer resp.Body.Close()
@@ -135,7 +159,7 @@ func (c *ApiClient) Get(path string) (io.ReadCloser, error) {
 		return nil, err
 	}
 
-	payloadResp, err := c.client.Get(response.Link)
+	payloadResp, err := c.Client.Get(response.Link)
 	if err != nil {
 		return nil, err
 	}
@@ -147,7 +171,7 @@ func (c *ApiClient) GetChunks(chunkInfo *IRacingChunkInfo) ([]io.ReadCloser, err
 	out := make([]io.ReadCloser, len(chunkInfo.ChunkFileNames))
 
 	for i, chunkFileName := range chunkInfo.ChunkFileNames {
-		resp, err := c.client.Get(chunkInfo.BaseDownloadUrl + chunkFileName)
+		resp, err := c.Client.Get(chunkInfo.BaseDownloadUrl + chunkFileName)
 		if err != nil {
 			return nil, err
 		}
@@ -156,4 +180,15 @@ func (c *ApiClient) GetChunks(chunkInfo *IRacingChunkInfo) ([]io.ReadCloser, err
 	}
 
 	return out, nil
+}
+
+func (c *ApiClient) GetAuthToken() string {
+	url, _ := url.Parse("https://members-ng.iracing.com")
+	for _, cookie := range c.Client.Jar.Cookies(url) {
+		if cookie.Name == tokenCookieName {
+			return cookie.Value
+		}
+	}
+
+	return ""
 }

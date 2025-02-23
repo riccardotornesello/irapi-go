@@ -7,7 +7,7 @@ import (
 )
 
 type HostedCombinedSessionsParams struct {
-	PackageId *optional.Int `url:"package_id,omitempty"`
+	PackageId *optional.Int `url:"package_id,omitempty"` // If set, return only sessions using this car or track package ID.
 }
 
 type HostedCombinedSessionsResponse struct {

@@ -7,7 +7,7 @@ import (
 )
 
 type MemberGetParams struct {
-	CustIds         []int          `url:"cust_ids,omitempty"`
+	CustIds         []int          `url:"cust_ids,omitempty"` // ?cust_ids=2,3,4
 	IncludeLicenses *optional.Bool `url:"include_licenses,omitempty"`
 }
 

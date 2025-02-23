@@ -2,6 +2,8 @@
 This module contains functions to generate Go structs from JSON schemas.
 """
 
+from constants import PARAM_TYPES
+
 
 def generate_key(key):
     if key.isdigit():
@@ -88,32 +90,24 @@ def convert_schema_to_struct(schema, json_name=None, chunks_struct_name=None):
 
 
 def generate_parameters_struct(parameters):
-    types_map = {
-        True: {
-            "string": "string",
-            "number": "int",
-            "boolean": "bool",
-            "numbers": "[]int",
-        },
-        False: {
-            "string": "*optional.String",
-            "number": "*optional.Int",
-            "boolean": "*optional.Bool",
-            "numbers": "*[]int",
-        },
-    }
-
     requires_optional = False
 
     data = "struct {\n"
 
     for param in parameters:
-        type_string = types_map[param["required"]][param["type"]]
+        type_string = PARAM_TYPES[param["type"]][param["required"]]
 
         if type_string.startswith("*optional"):
             requires_optional = True
 
-        data += f'{generate_key(param["key"])} {type_string} `url:"{param["key"]},omitempty"`\n'
+        data += f'{generate_key(param["key"])} {type_string} `url:"{param["key"]},omitempty"`'
+
+        if "notes" in param:
+            notes_string = " ".join(param["notes"]).replace("\n", " ").strip()
+            if len(notes_string) > 0:
+                data += f" // {notes_string}"
+
+        data += "\n"
 
     data += "}\n"
 

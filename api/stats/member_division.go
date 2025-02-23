@@ -8,7 +8,7 @@ import (
 
 type StatsMemberDivisionParams struct {
 	SeasonId  int `url:"season_id,omitempty"`
-	EventType int `url:"event_type,omitempty"`
+	EventType int `url:"event_type,omitempty"` // The event type code for the division type: 4 - Time Trial; 5 - Race
 }
 
 type StatsMemberDivisionResponse struct {

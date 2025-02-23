@@ -7,18 +7,18 @@ import (
 )
 
 type LeagueDirectoryParams struct {
-	Search               *optional.String `url:"search,omitempty"`
-	Tag                  *optional.String `url:"tag,omitempty"`
-	RestrictToMember     *optional.Bool   `url:"restrict_to_member,omitempty"`
-	RestrictToRecruiting *optional.Bool   `url:"restrict_to_recruiting,omitempty"`
-	RestrictToFriends    *optional.Bool   `url:"restrict_to_friends,omitempty"`
-	RestrictToWatched    *optional.Bool   `url:"restrict_to_watched,omitempty"`
-	MinimumRosterCount   *optional.Int    `url:"minimum_roster_count,omitempty"`
-	MaximumRosterCount   *optional.Int    `url:"maximum_roster_count,omitempty"`
-	Lowerbound           *optional.Int    `url:"lowerbound,omitempty"`
-	Upperbound           *optional.Int    `url:"upperbound,omitempty"`
-	Sort                 *optional.String `url:"sort,omitempty"`
-	Order                *optional.String `url:"order,omitempty"`
+	Search               *optional.String `url:"search,omitempty"`                 // Will search against league name, description, owner, and league ID.
+	Tag                  *optional.String `url:"tag,omitempty"`                    // One or more tags, comma-separated.
+	RestrictToMember     *optional.Bool   `url:"restrict_to_member,omitempty"`     // If true include only leagues for which customer is a member.
+	RestrictToRecruiting *optional.Bool   `url:"restrict_to_recruiting,omitempty"` // If true include only leagues which are recruiting.
+	RestrictToFriends    *optional.Bool   `url:"restrict_to_friends,omitempty"`    // If true include only leagues owned by a friend.
+	RestrictToWatched    *optional.Bool   `url:"restrict_to_watched,omitempty"`    // If true include only leagues owned by a watched member.
+	MinimumRosterCount   *optional.Int    `url:"minimum_roster_count,omitempty"`   // If set include leagues with at least this number of members.
+	MaximumRosterCount   *optional.Int    `url:"maximum_roster_count,omitempty"`   // If set include leagues with no more than this number of members.
+	Lowerbound           *optional.Int    `url:"lowerbound,omitempty"`             // First row of results to return.  Defaults to 1.
+	Upperbound           *optional.Int    `url:"upperbound,omitempty"`             // Last row of results to return. Defaults to lowerbound + 39.
+	Sort                 *optional.String `url:"sort,omitempty"`                   // One of relevance, leaguename, displayname, rostercount. displayname is owners's name. Defaults to relevance.
+	Order                *optional.String `url:"order,omitempty"`                  // One of asc or desc.  Defaults to asc.
 }
 
 type LeagueDirectoryResponse struct {

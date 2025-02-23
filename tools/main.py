@@ -14,6 +14,10 @@ from structs import convert_schema_to_struct, generate_parameters_struct
 from report import generate_report
 
 
+def to_camel_case(snake_str):
+    return "".join(x.title() for x in snake_str.split("_"))
+
+
 def main():
     load_dotenv()
 
@@ -56,27 +60,29 @@ def main():
     test_template = jinja2_environment.get_template("test.j2")
     api_template = jinja2_environment.get_template("api.j2")
 
-    # Generate the structs
+    # Store the generated categories list to create the api.go file
     categories = []
 
     for category, category_endpoints in endpoints.items():
-        camel_category = "".join([x.title() for x in category.split("_")])
-
         os.makedirs(f"output/api/{category}")
 
-        # Generate the client file
-        struct_name = camel_category + "Api"
+        camel_category = to_camel_case(category)
+        client_struct_name = camel_category + "Api"
 
+        # Create the category client file
         with open(f"output/api/{category}/main.go", "w") as f:
             f.write(
-                client_template.render(package_name=category, struct_name=struct_name)
+                client_template.render(
+                    package_name=category,
+                    client_struct_name=client_struct_name,
+                )
             )
 
         categories.append(
             {
                 "camel_category": camel_category,
                 "package_name": category,
-                "struct_name": struct_name,
+                "client_struct_name": client_struct_name,
             }
         )
 
@@ -88,19 +94,20 @@ def main():
                 "https://members-ng.iracing.com", ""
             )
 
-            camel_endpoint = "".join([x.title() for x in endpoint.split("_")])
+            camel_endpoint = to_camel_case(endpoint)
             method_name = "Get" + camel_category + camel_endpoint
             if method_name[-3:] == "Get":
                 method_name = method_name[:-3]
 
+            ##################### JSON
             if endpoint_data["format"] == "json":
-                schema_file = f"output/schemas/{category}__{endpoint}.json"
+                response_schema_file = f"output/schemas/{category}__{endpoint}.json"
                 chunks_schema_file = (
                     f"output/schemas/{category}__{endpoint}__chunks.json"
                 )
 
-                if not os.path.exists(schema_file):
-                    print(f"Schema file not found: {schema_file}")
+                if not os.path.exists(response_schema_file):
+                    print(f"Schema file not found: {response_schema_file}")
                     continue
 
                 chunks_struct_name = None
@@ -112,7 +119,7 @@ def main():
                         )
                         chunks_struct = convert_schema_to_struct(json.load(f))
 
-                with open(schema_file) as f:
+                with open(response_schema_file) as f:
                     struct = convert_schema_to_struct(
                         json.load(f), chunks_struct_name=chunks_struct_name
                     )
@@ -129,7 +136,7 @@ def main():
                     "struct": struct,
                     "chunks_struct_name": chunks_struct_name,
                     "chunks_struct": chunks_struct,
-                    "client_struct_name": camel_category + "Api",
+                    "client_struct_name": client_struct_name,
                     "method_name": method_name,
                     "endpoint": endpoint_url,
                     "params_struct": params_struct,
@@ -144,11 +151,12 @@ def main():
                 with open(test_file, "w") as f:
                     f.write(test_template.render(**template_data))
 
+            ##################### CSV
             elif endpoint_data["format"] == "csv":
                 template_data = {
                     "package_name": category,
                     "struct": struct,
-                    "client_struct_name": camel_category + "Api",
+                    "client_struct_name": client_struct_name,
                     "method_name": method_name,
                     "endpoint": endpoint_url,
                     "notes": endpoint_data["notes"],
@@ -160,6 +168,7 @@ def main():
                 with open(test_file, "w") as f:
                     f.write(test_template.render(**template_data))
 
+            ##################### Unknown
             else:
                 print(f"Unknown format: {endpoint_data['format']}")
 

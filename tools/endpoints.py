@@ -5,6 +5,7 @@ These functions converts the iRacing API definition into a more usable format.
 import json
 import os
 
+from constants import PARAM_TYPES
 from data import OVERRIDES
 
 
@@ -31,9 +32,8 @@ def parse_parameters(endpoint_data):
 
     # Check that the types are known
     # TODO: move to a file with the map to go types
-    known_types = ["string", "number", "boolean", "numbers"]
     for k, v in parameters.items():
-        if v["type"] not in known_types:
+        if v["type"] not in PARAM_TYPES.keys():
             raise Exception(f"Unknown type: {v['type']}")
 
     return [

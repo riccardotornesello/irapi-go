@@ -8,9 +8,9 @@ import (
 
 type ResultsLapDataParams struct {
 	SubsessionId     int           `url:"subsession_id,omitempty"`
-	SimsessionNumber int           `url:"simsession_number,omitempty"`
-	CustId           *optional.Int `url:"cust_id,omitempty"`
-	TeamId           *optional.Int `url:"team_id,omitempty"`
+	SimsessionNumber int           `url:"simsession_number,omitempty"` // The main event is 0; the preceding event is -1, and so on.
+	CustId           *optional.Int `url:"cust_id,omitempty"`           // Required if the subsession was a single-driver event. Optional for team events. If omitted for a team event then the laps driven by all the team's drivers will be included.
+	TeamId           *optional.Int `url:"team_id,omitempty"`           // Required if the subsession was a team event.
 }
 
 type ResultsLapDataResponseChunks []struct {

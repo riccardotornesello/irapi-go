@@ -7,8 +7,8 @@ import (
 )
 
 type LeagueCustLeagueSessionsParams struct {
-	Mine      *optional.Bool `url:"mine,omitempty"`
-	PackageId *optional.Int  `url:"package_id,omitempty"`
+	Mine      *optional.Bool `url:"mine,omitempty"`       // If true, return only sessions created by this user.
+	PackageId *optional.Int  `url:"package_id,omitempty"` // If set, return only sessions using this car or track package ID.
 }
 
 type LeagueCustLeagueSessionsResponse struct {

@@ -8,7 +8,7 @@ import (
 
 type LeagueGetPointsSystemsParams struct {
 	LeagueId int           `url:"league_id,omitempty"`
-	SeasonId *optional.Int `url:"season_id,omitempty"`
+	SeasonId *optional.Int `url:"season_id,omitempty"` // If included and the season is using custom points (points_system_id:2) then the custom points option is included in the returned list. Otherwise the custom points option is not returned.
 }
 
 type LeagueGetPointsSystemsResponse struct {

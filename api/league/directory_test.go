@@ -2,32 +2,19 @@ package league
 
 import (
 	"log"
-	"os"
 	"testing"
 
-	"github.com/joho/godotenv"
-	"github.com/riccardotornesello/irapi-go/client"
+	"github.com/riccardotornesello/irapi-go/testutils"
 )
 
 func TestGetLeagueDirectory(t *testing.T) {
-	err := godotenv.Load()
-	if err != nil {
-		t.Fatal("Error loading .env file")
-	}
-
-	email := os.Getenv("IRACING_EMAIL")
-	password := os.Getenv("IRACING_PASSWORD")
-
-	apiClient, err := client.NewApiClient(email, password)
-	if err != nil {
-		t.Fatal(err)
-	}
+	apiClient := testutils.GetApiClient()
 
 	api := &LeagueApi{
 		Client: apiClient,
 	}
 
-	_, err = api.GetLeagueDirectory()
+	_, err := api.GetLeagueDirectory(LeagueDirectoryParams{})
 	if err != nil {
 		t.Fatal(err)
 	}

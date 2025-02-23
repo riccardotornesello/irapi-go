@@ -1,4 +1,6 @@
 .env
+.token
+coverage.txt
 *.json
 *.sql
 *.csv

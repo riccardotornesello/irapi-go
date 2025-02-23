@@ -9,7 +9,7 @@ import (
 type LeagueSeasonSessionsParams struct {
 	LeagueId    int            `url:"league_id,omitempty"`
 	SeasonId    int            `url:"season_id,omitempty"`
-	ResultsOnly *optional.Bool `url:"results_only,omitempty"`
+	ResultsOnly *optional.Bool `url:"results_only,omitempty"` // If true include only sessions for which results are available.
 }
 
 type LeagueSeasonSessionsResponse struct {

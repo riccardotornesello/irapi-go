@@ -7,7 +7,7 @@ import (
 )
 
 type StatsMemberRecentRacesParams struct {
-	CustId *optional.Int `url:"cust_id,omitempty"`
+	CustId *optional.Int `url:"cust_id,omitempty"` // Defaults to the authenticated member.
 }
 
 type StatsMemberRecentRacesResponse struct {

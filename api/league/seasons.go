@@ -8,7 +8,7 @@ import (
 
 type LeagueSeasonsParams struct {
 	LeagueId int            `url:"league_id,omitempty"`
-	Retired  *optional.Bool `url:"retired,omitempty"`
+	Retired  *optional.Bool `url:"retired,omitempty"` // If true include seasons which are no longer active.
 }
 
 type LeagueSeasonsResponse struct {

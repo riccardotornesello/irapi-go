@@ -7,7 +7,7 @@ import (
 )
 
 type SeasonSpectatorSubsessionidsParams struct {
-	EventTypes *[]int `url:"event_types,omitempty"`
+	EventTypes *[]int `url:"event_types,omitempty"` // Types of events to include in the search. Defaults to all. ?event_types=2,3,4,5
 }
 
 type SeasonSpectatorSubsessionidsResponse struct {

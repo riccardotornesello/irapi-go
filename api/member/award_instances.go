@@ -7,7 +7,7 @@ import (
 )
 
 type MemberAwardInstancesParams struct {
-	CustId  *optional.Int `url:"cust_id,omitempty"`
+	CustId  *optional.Int `url:"cust_id,omitempty"` // Defaults to the authenticated member.
 	AwardId int           `url:"award_id,omitempty"`
 }
 

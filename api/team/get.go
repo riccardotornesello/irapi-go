@@ -8,7 +8,7 @@ import (
 
 type TeamGetParams struct {
 	TeamId          int            `url:"team_id,omitempty"`
-	IncludeLicenses *optional.Bool `url:"include_licenses,omitempty"`
+	IncludeLicenses *optional.Bool `url:"include_licenses,omitempty"` // For faster responses, only request when necessary.
 }
 
 type TeamGetResponse struct {

@@ -7,8 +7,8 @@ import (
 )
 
 type SeasonRaceGuideParams struct {
-	From                *optional.String `url:"from,omitempty"`
-	IncludeEndAfterFrom *optional.Bool   `url:"include_end_after_from,omitempty"`
+	From                *optional.String `url:"from,omitempty"`                   // ISO-8601 offset format. Defaults to the current time. Include sessions with start times up to 3 hours after this time. Times in the past will be rewritten to the current time.
+	IncludeEndAfterFrom *optional.Bool   `url:"include_end_after_from,omitempty"` // Include sessions which start before 'from' but end after.
 }
 
 type SeasonRaceGuideResponse struct {
