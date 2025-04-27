@@ -2,13 +2,14 @@ package league
 
 import (
 	"encoding/json"
+
 	"github.com/google/go-querystring/query"
 	"github.com/markphelps/optional"
 )
 
 type LeagueGetParams struct {
-	LeagueId        int            `url:"league_id,omitempty"`
-	IncludeLicenses *optional.Bool `url:"include_licenses,omitempty"` // For faster responses, only request when necessary.
+	LeagueId        int            `url:"league_id"`
+	IncludeLicenses *optional.Bool `url:"include_licenses"` // For faster responses, only request when necessary.
 }
 
 type LeagueGetResponse struct {

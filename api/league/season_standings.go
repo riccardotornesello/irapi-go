@@ -2,15 +2,16 @@ package league
 
 import (
 	"encoding/json"
+
 	"github.com/google/go-querystring/query"
 	"github.com/markphelps/optional"
 )
 
 type LeagueSeasonStandingsParams struct {
-	LeagueId   int           `url:"league_id,omitempty"`
-	SeasonId   int           `url:"season_id,omitempty"`
-	CarClassId *optional.Int `url:"car_class_id,omitempty"`
-	CarId      *optional.Int `url:"car_id,omitempty"` // If car_class_id is included then the standings are for the car in that car class, otherwise they are for the car across car classes.
+	LeagueId   int           `url:"league_id"`
+	SeasonId   int           `url:"season_id"`
+	CarClassId *optional.Int `url:"car_class_id"`
+	CarId      *optional.Int `url:"car_id"` // If car_class_id is included then the standings are for the car in that car class, otherwise they are for the car across car classes.
 }
 
 type LeagueSeasonStandingsResponse struct {

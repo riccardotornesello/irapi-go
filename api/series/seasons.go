@@ -2,12 +2,13 @@ package series
 
 import (
 	"encoding/json"
+
 	"github.com/google/go-querystring/query"
 	"github.com/markphelps/optional"
 )
 
 type SeriesSeasonsParams struct {
-	IncludeSeries *optional.Bool `url:"include_series,omitempty"`
+	IncludeSeries *optional.Bool `url:"include_series"`
 }
 
 type SeriesSeasonsResponse []struct {

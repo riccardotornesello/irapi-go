@@ -2,13 +2,14 @@ package member
 
 import (
 	"encoding/json"
+
 	"github.com/google/go-querystring/query"
 	"github.com/markphelps/optional"
 )
 
 type MemberAwardInstancesParams struct {
-	CustId  *optional.Int `url:"cust_id,omitempty"` // Defaults to the authenticated member.
-	AwardId int           `url:"award_id,omitempty"`
+	CustId  *optional.Int `url:"cust_id"` // Defaults to the authenticated member.
+	AwardId int           `url:"award_id"`
 }
 
 type MemberAwardInstancesResponse struct {

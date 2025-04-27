@@ -2,14 +2,15 @@ package member
 
 import (
 	"encoding/json"
+
 	"github.com/google/go-querystring/query"
 	"github.com/markphelps/optional"
 )
 
 type MemberChartDataParams struct {
-	CustId     *optional.Int `url:"cust_id,omitempty"`     // Defaults to the authenticated member.
-	CategoryId int           `url:"category_id,omitempty"` // 1 - Oval; 2 - Road; 3 - Dirt oval; 4 - Dirt road
-	ChartType  int           `url:"chart_type,omitempty"`  // 1 - iRating; 2 - TT Rating; 3 - License/SR
+	CustId     *optional.Int `url:"cust_id"`     // Defaults to the authenticated member.
+	CategoryId int           `url:"category_id"` // 1 - Oval; 2 - Road; 3 - Dirt oval; 4 - Dirt road
+	ChartType  int           `url:"chart_type"`  // 1 - iRating; 2 - TT Rating; 3 - License/SR
 }
 
 type MemberChartDataResponse struct {

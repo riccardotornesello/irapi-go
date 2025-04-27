@@ -2,12 +2,13 @@ package hosted
 
 import (
 	"encoding/json"
+
 	"github.com/google/go-querystring/query"
 	"github.com/markphelps/optional"
 )
 
 type HostedCombinedSessionsParams struct {
-	PackageId *optional.Int `url:"package_id,omitempty"` // If set, return only sessions using this car or track package ID.
+	PackageId *optional.Int `url:"package_id"` // If set, return only sessions using this car or track package ID.
 }
 
 type HostedCombinedSessionsResponse struct {

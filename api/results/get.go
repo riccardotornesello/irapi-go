@@ -2,13 +2,14 @@ package results
 
 import (
 	"encoding/json"
+
 	"github.com/google/go-querystring/query"
 	"github.com/markphelps/optional"
 )
 
 type ResultsGetParams struct {
-	SubsessionId    int            `url:"subsession_id,omitempty"`
-	IncludeLicenses *optional.Bool `url:"include_licenses,omitempty"`
+	SubsessionId    int            `url:"subsession_id"`
+	IncludeLicenses *optional.Bool `url:"include_licenses"`
 }
 
 type ResultsGetResponse struct {

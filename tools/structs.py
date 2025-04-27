@@ -100,7 +100,7 @@ def generate_parameters_struct(parameters):
         if type_string.startswith("*optional"):
             requires_optional = True
 
-        data += f'{generate_key(param["key"])} {type_string} `url:"{param["key"]},omitempty"`'
+        data += f'{generate_key(param["key"])} {type_string} `url:"{param["key"]}"`'
 
         if "notes" in param:
             notes_string = " ".join(param["notes"]).replace("\n", " ").strip()

@@ -2,13 +2,14 @@ package league
 
 import (
 	"encoding/json"
+
 	"github.com/google/go-querystring/query"
 	"github.com/markphelps/optional"
 )
 
 type LeagueCustLeagueSessionsParams struct {
-	Mine      *optional.Bool `url:"mine,omitempty"`       // If true, return only sessions created by this user.
-	PackageId *optional.Int  `url:"package_id,omitempty"` // If set, return only sessions using this car or track package ID.
+	Mine      *optional.Bool `url:"mine"`       // If true, return only sessions created by this user.
+	PackageId *optional.Int  `url:"package_id"` // If set, return only sessions using this car or track package ID.
 }
 
 type LeagueCustLeagueSessionsResponse struct {

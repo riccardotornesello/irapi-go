@@ -2,14 +2,15 @@ package stats
 
 import (
 	"encoding/json"
+
 	"github.com/google/go-querystring/query"
 	"github.com/markphelps/optional"
 )
 
 type StatsMemberRecapParams struct {
-	CustId *optional.Int `url:"cust_id,omitempty"` // Defaults to the authenticated member.
-	Year   *optional.Int `url:"year,omitempty"`    // Season year; if not supplied the current calendar year (UTC) is used.
-	Season *optional.Int `url:"season,omitempty"`  // Season (quarter) within the year; if not supplied the recap will be fore the entire year.
+	CustId *optional.Int `url:"cust_id"` // Defaults to the authenticated member.
+	Year   *optional.Int `url:"year"`    // Season year; if not supplied the current calendar year (UTC) is used.
+	Season *optional.Int `url:"season"`  // Season (quarter) within the year; if not supplied the recap will be fore the entire year.
 }
 
 type StatsMemberRecapResponse struct {

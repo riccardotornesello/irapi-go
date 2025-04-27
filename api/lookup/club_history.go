@@ -7,8 +7,8 @@ import (
 )
 
 type LookupClubHistoryParams struct {
-	SeasonYear    int `url:"season_year,omitempty"`
-	SeasonQuarter int `url:"season_quarter,omitempty"`
+	SeasonYear    int `url:"season_year"`
+	SeasonQuarter int `url:"season_quarter"`
 }
 
 type LookupClubHistoryResponse []struct {
