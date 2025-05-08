@@ -31,19 +31,19 @@ type HostedSessionsResponse struct {
 			CarType string `json:"car_type"`
 		} `json:"car_types"`
 		Cars []struct {
-			CarId             int    `json:"car_id"`
-			CarName           string `json:"car_name"`
-			CarClassId        int    `json:"car_class_id"`
-			CarClassName      string `json:"car_class_name"`
-			MaxPctFuelFill    int    `json:"max_pct_fuel_fill"`
-			WeightPenaltyKg   int    `json:"weight_penalty_kg"`
-			PowerAdjustPct    int    `json:"power_adjust_pct"`
-			MaxDryTireSets    int    `json:"max_dry_tire_sets"`
-			PackageId         int    `json:"package_id"`
-			QualSetupId       int    `json:"qual_setup_id"`
-			QualSetupFilename string `json:"qual_setup_filename"`
-			RaceSetupId       int    `json:"race_setup_id"`
-			RaceSetupFilename string `json:"race_setup_filename"`
+			CarId             int     `json:"car_id"`
+			CarName           string  `json:"car_name"`
+			CarClassId        int     `json:"car_class_id"`
+			CarClassName      string  `json:"car_class_name"`
+			MaxPctFuelFill    float64 `json:"max_pct_fuel_fill"`
+			WeightPenaltyKg   int     `json:"weight_penalty_kg"`
+			PowerAdjustPct    float64 `json:"power_adjust_pct"`
+			MaxDryTireSets    int     `json:"max_dry_tire_sets"`
+			PackageId         int     `json:"package_id"`
+			QualSetupId       int     `json:"qual_setup_id"`
+			QualSetupFilename string  `json:"qual_setup_filename"`
+			RaceSetupId       int     `json:"race_setup_id"`
+			RaceSetupFilename string  `json:"race_setup_filename"`
 		} `json:"cars"`
 		CarsLeft                 int    `json:"cars_left"`
 		Category                 string `json:"category"`

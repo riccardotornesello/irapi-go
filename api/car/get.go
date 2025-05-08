@@ -30,9 +30,9 @@ type CarGetResponse []struct {
 	HasRainCapableTireTypes bool     `json:"has_rain_capable_tire_types"`
 	Hp                      int      `json:"hp"`
 	IsPsPurchasable         bool     `json:"is_ps_purchasable"`
-	MaxPowerAdjustPct       int      `json:"max_power_adjust_pct"`
+	MaxPowerAdjustPct       float64  `json:"max_power_adjust_pct"`
 	MaxWeightPenaltyKg      int      `json:"max_weight_penalty_kg"`
-	MinPowerAdjustPct       int      `json:"min_power_adjust_pct"`
+	MinPowerAdjustPct       float64  `json:"min_power_adjust_pct"`
 	PackageId               int      `json:"package_id"`
 	Patterns                int      `json:"patterns"`
 	Price                   float64  `json:"price"`

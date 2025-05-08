@@ -76,7 +76,7 @@ type SeriesSeasonsResponse []struct {
 		CarRestrictions []struct {
 			CarId           int     `json:"car_id"`
 			MaxDryTireSets  int     `json:"max_dry_tire_sets"`
-			MaxPctFuelFill  int     `json:"max_pct_fuel_fill"`
+			MaxPctFuelFill  float64 `json:"max_pct_fuel_fill"`
 			PowerAdjustPct  float64 `json:"power_adjust_pct"`
 			WeightPenaltyKg int     `json:"weight_penalty_kg"`
 			RaceSetupId     int     `json:"race_setup_id"`

@@ -141,7 +141,7 @@ type ResultsGetResponse struct {
 				WheelColor   interface{} `json:"wheel_color"`
 				RimType      int         `json:"rim_type"`
 			} `json:"livery"`
-			MaxPctFuelFill          int     `json:"max_pct_fuel_fill"`
+			MaxPctFuelFill          float64 `json:"max_pct_fuel_fill"`
 			Multiplier              int     `json:"multiplier"`
 			NewCpi                  float64 `json:"new_cpi"`
 			NewLicenseLevel         int     `json:"new_license_level"`
@@ -191,26 +191,26 @@ type ResultsGetResponse struct {
 		WarmupRubber   int  `json:"warmup_rubber"`
 	} `json:"track_state"`
 	Weather struct {
-		AllowFog                      bool   `json:"allow_fog"`
-		Fog                           int    `json:"fog"`
-		PrecipMm2hrBeforeFinalSession int    `json:"precip_mm2hr_before_final_session"`
-		PrecipMmFinalSession          int    `json:"precip_mm_final_session"`
-		PrecipOption                  int    `json:"precip_option"`
-		PrecipTimePct                 int    `json:"precip_time_pct"`
-		RelHumidity                   int    `json:"rel_humidity"`
-		SimulatedStartTime            string `json:"simulated_start_time"`
-		Skies                         int    `json:"skies"`
-		TempUnits                     int    `json:"temp_units"`
-		TempValue                     int    `json:"temp_value"`
-		TimeOfDay                     int    `json:"time_of_day"`
-		TrackWater                    int    `json:"track_water"`
-		Type                          int    `json:"type"`
-		Version                       int    `json:"version"`
-		WeatherVarInitial             int    `json:"weather_var_initial"`
-		WeatherVarOngoing             int    `json:"weather_var_ongoing"`
-		WindDir                       int    `json:"wind_dir"`
-		WindUnits                     int    `json:"wind_units"`
-		WindValue                     int    `json:"wind_value"`
+		AllowFog                      bool    `json:"allow_fog"`
+		Fog                           int     `json:"fog"`
+		PrecipMm2hrBeforeFinalSession int     `json:"precip_mm2hr_before_final_session"`
+		PrecipMmFinalSession          int     `json:"precip_mm_final_session"`
+		PrecipOption                  int     `json:"precip_option"`
+		PrecipTimePct                 float64 `json:"precip_time_pct"`
+		RelHumidity                   int     `json:"rel_humidity"`
+		SimulatedStartTime            string  `json:"simulated_start_time"`
+		Skies                         int     `json:"skies"`
+		TempUnits                     int     `json:"temp_units"`
+		TempValue                     int     `json:"temp_value"`
+		TimeOfDay                     int     `json:"time_of_day"`
+		TrackWater                    int     `json:"track_water"`
+		Type                          int     `json:"type"`
+		Version                       int     `json:"version"`
+		WeatherVarInitial             int     `json:"weather_var_initial"`
+		WeatherVarOngoing             int     `json:"weather_var_ongoing"`
+		WindDir                       int     `json:"wind_dir"`
+		WindUnits                     int     `json:"wind_units"`
+		WindValue                     int     `json:"wind_value"`
 	} `json:"weather"`
 }
 

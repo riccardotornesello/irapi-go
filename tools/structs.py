@@ -69,10 +69,18 @@ def convert_schema_to_struct(schema, json_name=None, chunks_struct_name=None):
             print("Warning: object without properties")
             data += "interface{}"
 
+    elif t == "integer":
+        if json_name is not None and (
+            json_name.endswith("_pct")
+            or json_name.startswith("pct_")
+            or "_pct_" in json_name
+        ):
+            data += "float64"
+        else:
+            data += "int"
+
     elif t == "string":
         data += "string"
-    elif t == "integer":
-        data += "int"
     elif t == "number":
         data += "float64"
     elif t == "boolean":

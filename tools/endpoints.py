@@ -27,12 +27,10 @@ def parse_notes(endpoint_data):
 
 
 def parse_parameters(endpoint_data):
-
     parameters = endpoint_data.get("parameters", {})
 
     # Check that the types are known
-    # TODO: move to a file with the map to go types
-    for k, v in parameters.items():
+    for v in parameters.values():
         if v["type"] not in PARAM_TYPES.keys():
             raise Exception(f"Unknown type: {v['type']}")
 
