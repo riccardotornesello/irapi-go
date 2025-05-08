@@ -2,7 +2,6 @@ package lookup
 
 import (
 	"encoding/json"
-
 	"github.com/google/go-querystring/query"
 )
 

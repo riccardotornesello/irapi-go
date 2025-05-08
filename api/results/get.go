@@ -2,14 +2,12 @@ package results
 
 import (
 	"encoding/json"
-
 	"github.com/google/go-querystring/query"
-	"github.com/markphelps/optional"
 )
 
 type ResultsGetParams struct {
-	SubsessionId    int            `url:"subsession_id"`
-	IncludeLicenses *optional.Bool `url:"include_licenses"`
+	SubsessionId    int   `url:"subsession_id"`
+	IncludeLicenses *bool `url:"include_licenses,omitempty"`
 }
 
 type ResultsGetResponse struct {
@@ -186,15 +184,11 @@ type ResultsGetResponse struct {
 		TrackName  string `json:"track_name"`
 	} `json:"track"`
 	TrackState struct {
-		LeaveMarbles         bool `json:"leave_marbles"`
-		PracticeGripCompound int  `json:"practice_grip_compound"`
-		PracticeRubber       int  `json:"practice_rubber"`
-		QualifyGripCompound  int  `json:"qualify_grip_compound"`
-		QualifyRubber        int  `json:"qualify_rubber"`
-		RaceGripCompound     int  `json:"race_grip_compound"`
-		RaceRubber           int  `json:"race_rubber"`
-		WarmupGripCompound   int  `json:"warmup_grip_compound"`
-		WarmupRubber         int  `json:"warmup_rubber"`
+		LeaveMarbles   bool `json:"leave_marbles"`
+		PracticeRubber int  `json:"practice_rubber"`
+		QualifyRubber  int  `json:"qualify_rubber"`
+		RaceRubber     int  `json:"race_rubber"`
+		WarmupRubber   int  `json:"warmup_rubber"`
 	} `json:"track_state"`
 	Weather struct {
 		AllowFog                      bool   `json:"allow_fog"`

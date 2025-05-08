@@ -2,16 +2,14 @@ package results
 
 import (
 	"encoding/json"
-
 	"github.com/google/go-querystring/query"
-	"github.com/markphelps/optional"
 )
 
 type ResultsLapDataParams struct {
-	SubsessionId     int           `url:"subsession_id"`
-	SimsessionNumber int           `url:"simsession_number"` // The main event is 0; the preceding event is -1, and so on.
-	CustId           *optional.Int `url:"cust_id"`           // Required if the subsession was a single-driver event. Optional for team events. If omitted for a team event then the laps driven by all the team's drivers will be included.
-	TeamId           *optional.Int `url:"team_id"`           // Required if the subsession was a team event.
+	SubsessionId     int  `url:"subsession_id"`
+	SimsessionNumber int  `url:"simsession_number"` // The main event is 0; the preceding event is -1, and so on.
+	CustId           *int `url:"cust_id,omitempty"` // Required if the subsession was a single-driver event. Optional for team events. If omitted for a team event then the laps driven by all the team's drivers will be included.
+	TeamId           *int `url:"team_id,omitempty"` // Required if the subsession was a team event.
 }
 
 type ResultsLapDataResponseChunks []struct {

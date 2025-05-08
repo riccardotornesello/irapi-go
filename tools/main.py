@@ -124,11 +124,7 @@ def main():
                         json.load(f), chunks_struct_name=chunks_struct_name
                     )
 
-                params_struct, requires_optional = (
-                    generate_parameters_struct(endpoint_data["parameters"])
-                    if len(endpoint_data["parameters"]) > 0
-                    else (None, False)
-                )
+                params_struct = generate_parameters_struct(endpoint_data["parameters"])
 
                 template_data = {
                     "package_name": category,
@@ -141,7 +137,6 @@ def main():
                     "endpoint": endpoint_url,
                     "params_struct": params_struct,
                     "params_struct_name": camel_category + camel_endpoint + "Params",
-                    "requires_optional": requires_optional,
                     "notes": endpoint_data["notes"],
                 }
 

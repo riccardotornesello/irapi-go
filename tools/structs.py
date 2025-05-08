@@ -90,17 +90,23 @@ def convert_schema_to_struct(schema, json_name=None, chunks_struct_name=None):
 
 
 def generate_parameters_struct(parameters):
-    requires_optional = False
+    if len(parameters) == 0:
+        return None
 
     data = "struct {\n"
 
     for param in parameters:
-        type_string = PARAM_TYPES[param["type"]][param["required"]]
+        required = param["required"] != False
 
-        if type_string.startswith("*optional"):
-            requires_optional = True
+        type_string = PARAM_TYPES[param["type"]]
+        if not required:
+            type_string = "*" + type_string
 
-        data += f'{generate_key(param["key"])} {type_string} `url:"{param["key"]}"`'
+        url_param = param["key"]
+        if not required:
+            url_param = url_param + ",omitempty"
+
+        data += f'{generate_key(param["key"])} {type_string} `url:"{url_param}"`'
 
         if "notes" in param:
             notes_string = " ".join(param["notes"]).replace("\n", " ").strip()
@@ -111,4 +117,4 @@ def generate_parameters_struct(parameters):
 
     data += "}\n"
 
-    return data, requires_optional
+    return data

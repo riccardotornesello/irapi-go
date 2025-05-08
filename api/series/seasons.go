@@ -2,13 +2,11 @@ package series
 
 import (
 	"encoding/json"
-
 	"github.com/google/go-querystring/query"
-	"github.com/markphelps/optional"
 )
 
 type SeriesSeasonsParams struct {
-	IncludeSeries *optional.Bool `url:"include_series"`
+	IncludeSeries *bool `url:"include_series,omitempty"`
 }
 
 type SeriesSeasonsResponse []struct {
@@ -27,6 +25,9 @@ type SeriesSeasonsResponse []struct {
 	} `json:"car_types"`
 	CautionLapsDoNotCount    bool `json:"caution_laps_do_not_count"`
 	Complete                 bool `json:"complete"`
+	ConnectionBlackFlag      bool `json:"connection_black_flag"`
+	ConsecCautionWithinNlaps int  `json:"consec_caution_within_nlaps"`
+	ConsecCautionsSingleFile bool `json:"consec_cautions_single_file"`
 	CrossLicense             bool `json:"cross_license"`
 	DistributedMatchmaking   bool `json:"distributed_matchmaking"`
 	DriverChangeRule         int  `json:"driver_change_rule"`
@@ -235,9 +236,9 @@ type SeriesSeasonsResponse []struct {
 		QualStyle                            int    `json:"qual_style"`
 		RaceStyle                            int    `json:"race_style"`
 	} `json:"heat_ses_info"`
-	RacePoints     int    `json:"race_points"`
-	RookieSeason   string `json:"rookie_season"`
 	RegOpenMinutes int    `json:"reg_open_minutes"`
+	RookieSeason   string `json:"rookie_season"`
+	RacePoints     int    `json:"race_points"`
 }
 
 func (api *SeriesApi) GetSeriesSeasons(params SeriesSeasonsParams) (*SeriesSeasonsResponse, error) {

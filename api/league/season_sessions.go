@@ -2,15 +2,13 @@ package league
 
 import (
 	"encoding/json"
-
 	"github.com/google/go-querystring/query"
-	"github.com/markphelps/optional"
 )
 
 type LeagueSeasonSessionsParams struct {
-	LeagueId    int            `url:"league_id"`
-	SeasonId    int            `url:"season_id"`
-	ResultsOnly *optional.Bool `url:"results_only"` // If true include only sessions for which results are available.
+	LeagueId    int   `url:"league_id"`
+	SeasonId    int   `url:"season_id"`
+	ResultsOnly *bool `url:"results_only,omitempty"` // If true include only sessions for which results are available.
 }
 
 type LeagueSeasonSessionsResponse struct {

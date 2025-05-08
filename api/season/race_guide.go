@@ -2,14 +2,12 @@ package season
 
 import (
 	"encoding/json"
-
 	"github.com/google/go-querystring/query"
-	"github.com/markphelps/optional"
 )
 
 type SeasonRaceGuideParams struct {
-	From                *optional.String `url:"from"`                   // ISO-8601 offset format. Defaults to the current time. Include sessions with start times up to 3 hours after this time. Times in the past will be rewritten to the current time.
-	IncludeEndAfterFrom *optional.Bool   `url:"include_end_after_from"` // Include sessions which start before 'from' but end after.
+	From                *string `url:"from,omitempty"`                   // ISO-8601 offset format. Defaults to the current time. Include sessions with start times up to 3 hours after this time. Times in the past will be rewritten to the current time.
+	IncludeEndAfterFrom *bool   `url:"include_end_after_from,omitempty"` // Include sessions which start before 'from' but end after.
 }
 
 type SeasonRaceGuideResponse struct {

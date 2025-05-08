@@ -2,14 +2,12 @@ package league
 
 import (
 	"encoding/json"
-
 	"github.com/google/go-querystring/query"
-	"github.com/markphelps/optional"
 )
 
 type LeagueCustLeagueSessionsParams struct {
-	Mine      *optional.Bool `url:"mine"`       // If true, return only sessions created by this user.
-	PackageId *optional.Int  `url:"package_id"` // If set, return only sessions using this car or track package ID.
+	Mine      *bool `url:"mine,omitempty"`       // If true, return only sessions created by this user.
+	PackageId *int  `url:"package_id,omitempty"` // If set, return only sessions using this car or track package ID.
 }
 
 type LeagueCustLeagueSessionsResponse struct {
@@ -71,6 +69,7 @@ type LeagueCustLeagueSessionsResponse struct {
 		IncidentWarnParam1         int    `json:"incident_warn_param1"`
 		IncidentWarnParam2         int    `json:"incident_warn_param2"`
 		UnsportConductRuleMode     int    `json:"unsport_conduct_rule_mode"`
+		ConnectionBlackFlag        bool   `json:"connection_black_flag"`
 		LuckyDog                   bool   `json:"lucky_dog"`
 		MinTeamDrivers             int    `json:"min_team_drivers"`
 		MaxTeamDrivers             int    `json:"max_team_drivers"`
@@ -81,6 +80,7 @@ type LeagueCustLeagueSessionsResponse struct {
 		LeagueId                   int    `json:"league_id"`
 		LeagueName                 string `json:"league_name"`
 		LeagueSeasonId             int    `json:"league_season_id"`
+		LeagueSeasonName           string `json:"league_season_name"`
 		SessionType                int    `json:"session_type"`
 		OrderId                    int    `json:"order_id"`
 		MinLicenseLevel            int    `json:"min_license_level"`
@@ -94,6 +94,7 @@ type LeagueCustLeagueSessionsResponse struct {
 		GreenWhiteCheckeredLimit   int    `json:"green_white_checkered_limit"`
 		DoNotCountCautionLaps      bool   `json:"do_not_count_caution_laps"`
 		ConsecCautionsSingleFile   bool   `json:"consec_cautions_single_file"`
+		ConsecCautionWithinNlaps   int    `json:"consec_caution_within_nlaps"`
 		NoLapperWaveArounds        bool   `json:"no_lapper_wave_arounds"`
 		ShortParadeLap             bool   `json:"short_parade_lap"`
 		StartOnQualTire            bool   `json:"start_on_qual_tire"`
@@ -131,8 +132,17 @@ type LeagueCustLeagueSessionsResponse struct {
 			TrackName  string `json:"track_name"`
 		} `json:"track"`
 		Weather struct {
-			AllowFog                bool   `json:"allow_fog"`
-			Fog                     int    `json:"fog"`
+			AllowFog        bool `json:"allow_fog"`
+			ForecastOptions struct {
+				ForecastType  int `json:"forecast_type"`
+				Precipitation int `json:"precipitation"`
+				Skies         int `json:"skies"`
+				StopPrecip    int `json:"stop_precip"`
+				Temperature   int `json:"temperature"`
+				WeatherSeed   int `json:"weather_seed"`
+				WindDir       int `json:"wind_dir"`
+				WindSpeed     int `json:"wind_speed"`
+			} `json:"forecast_options"`
 			PrecipOption            int    `json:"precip_option"`
 			RelHumidity             int    `json:"rel_humidity"`
 			SimulatedStartTime      string `json:"simulated_start_time"`
@@ -143,25 +153,11 @@ type LeagueCustLeagueSessionsResponse struct {
 			TempValue               int    `json:"temp_value"`
 			TimeOfDay               int    `json:"time_of_day"`
 			TrackWater              int    `json:"track_water"`
-			Type                    int    `json:"type"`
 			Version                 int    `json:"version"`
-			WindDir                 int    `json:"wind_dir"`
-			WindUnits               int    `json:"wind_units"`
-			WindValue               int    `json:"wind_value"`
-			ForecastOptions         struct {
-				ForecastType  int `json:"forecast_type"`
-				Precipitation int `json:"precipitation"`
-				Skies         int `json:"skies"`
-				StopPrecip    int `json:"stop_precip"`
-				Temperature   int `json:"temperature"`
-				WeatherSeed   int `json:"weather_seed"`
-				WindDir       int `json:"wind_dir"`
-				WindSpeed     int `json:"wind_speed"`
-			} `json:"forecast_options"`
-			WeatherSummary struct {
-				MaxPrecipRate     int     `json:"max_precip_rate"`
+			WeatherSummary          struct {
+				MaxPrecipRate     float64 `json:"max_precip_rate"`
 				MaxPrecipRateDesc string  `json:"max_precip_rate_desc"`
-				PrecipChance      int     `json:"precip_chance"`
+				PrecipChance      float64 `json:"precip_chance"`
 				SkiesHigh         int     `json:"skies_high"`
 				SkiesLow          int     `json:"skies_low"`
 				TempHigh          float64 `json:"temp_high"`
@@ -173,17 +169,18 @@ type LeagueCustLeagueSessionsResponse struct {
 				WindUnits         int     `json:"wind_units"`
 			} `json:"weather_summary"`
 			WeatherUrl string `json:"weather_url"`
+			WindDir    int    `json:"wind_dir"`
+			WindUnits  int    `json:"wind_units"`
+			WindValue  int    `json:"wind_value"`
+			Fog        int    `json:"fog"`
+			Type       int    `json:"type"`
 		} `json:"weather"`
 		TrackState struct {
-			LeaveMarbles         bool `json:"leave_marbles"`
-			PracticeGripCompound int  `json:"practice_grip_compound"`
-			PracticeRubber       int  `json:"practice_rubber"`
-			QualifyGripCompound  int  `json:"qualify_grip_compound"`
-			QualifyRubber        int  `json:"qualify_rubber"`
-			RaceGripCompound     int  `json:"race_grip_compound"`
-			RaceRubber           int  `json:"race_rubber"`
-			WarmupGripCompound   int  `json:"warmup_grip_compound"`
-			WarmupRubber         int  `json:"warmup_rubber"`
+			LeaveMarbles   bool `json:"leave_marbles"`
+			PracticeRubber int  `json:"practice_rubber"`
+			QualifyRubber  int  `json:"qualify_rubber"`
+			RaceRubber     int  `json:"race_rubber"`
+			WarmupRubber   int  `json:"warmup_rubber"`
 		} `json:"track_state"`
 		Farm struct {
 			FarmId      int    `json:"farm_id"`
@@ -207,56 +204,21 @@ type LeagueCustLeagueSessionsResponse struct {
 		AllowedTeams   []interface{} `json:"allowed_teams"`
 		AllowedLeagues []int         `json:"allowed_leagues"`
 		Cars           []struct {
-			CarId             int     `json:"car_id"`
-			CarName           string  `json:"car_name"`
-			CarClassId        int     `json:"car_class_id"`
-			CarClassName      string  `json:"car_class_name"`
-			MaxPctFuelFill    int     `json:"max_pct_fuel_fill"`
-			WeightPenaltyKg   int     `json:"weight_penalty_kg"`
-			PowerAdjustPct    float64 `json:"power_adjust_pct"`
-			MaxDryTireSets    int     `json:"max_dry_tire_sets"`
-			PackageId         int     `json:"package_id"`
-			QualSetupId       int     `json:"qual_setup_id"`
-			QualSetupFilename string  `json:"qual_setup_filename"`
-			RaceSetupId       int     `json:"race_setup_id"`
-			RaceSetupFilename string  `json:"race_setup_filename"`
+			CarId             int    `json:"car_id"`
+			CarName           string `json:"car_name"`
+			CarClassId        int    `json:"car_class_id"`
+			CarClassName      string `json:"car_class_name"`
+			MaxPctFuelFill    int    `json:"max_pct_fuel_fill"`
+			WeightPenaltyKg   int    `json:"weight_penalty_kg"`
+			PowerAdjustPct    int    `json:"power_adjust_pct"`
+			MaxDryTireSets    int    `json:"max_dry_tire_sets"`
+			QualSetupId       int    `json:"qual_setup_id"`
+			QualSetupFilename string `json:"qual_setup_filename"`
+			RaceSetupId       int    `json:"race_setup_id"`
+			RaceSetupFilename string `json:"race_setup_filename"`
+			PackageId         int    `json:"package_id"`
 		} `json:"cars"`
-		CarTypes []struct {
-			CarType string `json:"car_type"`
-		} `json:"car_types"`
-		TrackTypes []struct {
-			TrackType string `json:"track_type"`
-		} `json:"track_types"`
-		LicenseGroupTypes []struct {
-			LicenseGroupType int `json:"license_group_type"`
-		} `json:"license_group_types"`
-		EventTypes []struct {
-			EventType int `json:"event_type"`
-		} `json:"event_types"`
-		SessionTypes []struct {
-			SessionType int `json:"session_type"`
-		} `json:"session_types"`
-		CanJoin bool `json:"can_join"`
-		Image   struct {
-			SmallLogo string  `json:"small_logo"`
-			LargeLogo *string `json:"large_logo"`
-		} `json:"image"`
-		Owner            bool          `json:"owner"`
-		Admin            bool          `json:"admin"`
-		Friends          []interface{} `json:"friends"`
-		Watched          []interface{} `json:"watched"`
-		EndTime          string        `json:"end_time"`
-		TeamEntryCount   int           `json:"team_entry_count"`
-		IsHeatRacing     bool          `json:"is_heat_racing"`
-		Populated        bool          `json:"populated"`
-		Broadcaster      bool          `json:"broadcaster"`
-		MinIr            int           `json:"min_ir"`
-		MaxIr            int           `json:"max_ir"`
-		LeagueSeasonName string        `json:"league_season_name"`
-		RegisteredTeams  []int         `json:"registered_teams"`
-		SessionDesc      string        `json:"session_desc"`
-		RaceLengthType   int           `json:"race_length_type"`
-		HeatSesInfo      struct {
+		HeatSesInfo struct {
 			ConsolationDeltaMaxFieldSize         int    `json:"consolation_delta_max_field_size"`
 			ConsolationDeltaSessionLaps          int    `json:"consolation_delta_session_laps"`
 			ConsolationDeltaSessionLengthMinutes int    `json:"consolation_delta_session_length_minutes"`
@@ -270,7 +232,6 @@ type LeagueCustLeagueSessionsResponse struct {
 			ConsolationScoresChampPoints         bool   `json:"consolation_scores_champ_points"`
 			Created                              string `json:"created"`
 			CustId                               int    `json:"cust_id"`
-			Description                          string `json:"description"`
 			HeatCautionType                      int    `json:"heat_caution_type"`
 			HeatInfoId                           int    `json:"heat_info_id"`
 			HeatInfoName                         string `json:"heat_info_name"`
@@ -300,7 +261,42 @@ type LeagueCustLeagueSessionsResponse struct {
 			QualScoring                          int    `json:"qual_scoring"`
 			QualStyle                            int    `json:"qual_style"`
 			RaceStyle                            int    `json:"race_style"`
+			Description                          string `json:"description"`
 		} `json:"heat_ses_info"`
+		CarTypes []struct {
+			CarType string `json:"car_type"`
+		} `json:"car_types"`
+		TrackTypes []struct {
+			TrackType string `json:"track_type"`
+		} `json:"track_types"`
+		LicenseGroupTypes []struct {
+			LicenseGroupType int `json:"license_group_type"`
+		} `json:"license_group_types"`
+		EventTypes []struct {
+			EventType int `json:"event_type"`
+		} `json:"event_types"`
+		SessionTypes []struct {
+			SessionType int `json:"session_type"`
+		} `json:"session_types"`
+		CanJoin bool `json:"can_join"`
+		Image   struct {
+			SmallLogo string  `json:"small_logo"`
+			LargeLogo *string `json:"large_logo"`
+		} `json:"image"`
+		Owner          bool          `json:"owner"`
+		Admin          bool          `json:"admin"`
+		Friends        []interface{} `json:"friends"`
+		Watched        []interface{} `json:"watched"`
+		EndTime        string        `json:"end_time"`
+		TeamEntryCount int           `json:"team_entry_count"`
+		IsHeatRacing   bool          `json:"is_heat_racing"`
+		Populated      bool          `json:"populated"`
+		Broadcaster    bool          `json:"broadcaster"`
+		MinIr          int           `json:"min_ir"`
+		MaxIr          int           `json:"max_ir"`
+		SessionDesc    string        `json:"session_desc"`
+		RaceLengthType int           `json:"race_length_type"`
+		AltAssetId     int           `json:"alt_asset_id"`
 	} `json:"sessions"`
 	Mine       bool `json:"mine"`
 	Subscribed bool `json:"subscribed"`

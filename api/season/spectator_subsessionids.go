@@ -2,12 +2,11 @@ package season
 
 import (
 	"encoding/json"
-
 	"github.com/google/go-querystring/query"
 )
 
 type SeasonSpectatorSubsessionidsParams struct {
-	EventTypes *[]int `url:"event_types"` // Types of events to include in the search. Defaults to all. ?event_types=2,3,4,5
+	EventTypes *[]int `url:"event_types,omitempty"` // Types of events to include in the search. Defaults to all. ?event_types=2,3,4,5
 }
 
 type SeasonSpectatorSubsessionidsResponse struct {

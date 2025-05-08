@@ -2,14 +2,12 @@ package league
 
 import (
 	"encoding/json"
-
 	"github.com/google/go-querystring/query"
-	"github.com/markphelps/optional"
 )
 
 type LeagueMembershipParams struct {
-	CustId        *optional.Int  `url:"cust_id"` // If different from the authenticated member, the following restrictions apply: - Caller cannot be on requested customer's block list or an empty list will result; - Requested customer cannot have their online activity preference set to hidden or an empty list will result; - Only leagues for which the requested customer is an admin and the league roster is not private are returned.
-	IncludeLeague *optional.Bool `url:"include_league"`
+	CustId        *int  `url:"cust_id,omitempty"` // If different from the authenticated member, the following restrictions apply: - Caller cannot be on requested customer's block list or an empty list will result; - Requested customer cannot have their online activity preference set to hidden or an empty list will result; - Only leagues for which the requested customer is an admin and the league roster is not private are returned.
+	IncludeLeague *bool `url:"include_league,omitempty"`
 }
 
 type LeagueMembershipResponse []struct {

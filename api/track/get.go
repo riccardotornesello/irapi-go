@@ -17,6 +17,7 @@ type TrackGetResponse []struct {
 	CornersPerLap          int     `json:"corners_per_lap"`
 	Created                string  `json:"created"`
 	FirstSale              string  `json:"first_sale"`
+	Folder                 string  `json:"folder"`
 	FreeWithSubscription   bool    `json:"free_with_subscription"`
 	FullyLit               bool    `json:"fully_lit"`
 	GridStalls             int     `json:"grid_stalls"`
@@ -49,6 +50,7 @@ type TrackGetResponse []struct {
 	SearchFilters          string  `json:"search_filters"`
 	SiteUrl                string  `json:"site_url"`
 	Sku                    int     `json:"sku"`
+	SmallImage             string  `json:"small_image"`
 	SoloLaps               int     `json:"solo_laps"`
 	StartOnLeft            bool    `json:"start_on_left"`
 	SupportsGripCompound   bool    `json:"supports_grip_compound"`

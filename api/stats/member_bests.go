@@ -2,14 +2,12 @@ package stats
 
 import (
 	"encoding/json"
-
 	"github.com/google/go-querystring/query"
-	"github.com/markphelps/optional"
 )
 
 type StatsMemberBestsParams struct {
-	CustId *optional.Int `url:"cust_id"` // Defaults to the authenticated member.
-	CarId  *optional.Int `url:"car_id"`  // First call should exclude car_id; use cars_driven list in return for subsequent calls.
+	CustId *int `url:"cust_id,omitempty"` // Defaults to the authenticated member.
+	CarId  *int `url:"car_id,omitempty"`  // First call should exclude car_id; use cars_driven list in return for subsequent calls.
 }
 
 type StatsMemberBestsResponse struct {

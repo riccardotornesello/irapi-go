@@ -2,14 +2,12 @@ package member
 
 import (
 	"encoding/json"
-
 	"github.com/google/go-querystring/query"
-	"github.com/markphelps/optional"
 )
 
 type MemberGetParams struct {
-	CustIds         []int          `url:"cust_ids"` // ?cust_ids=2,3,4
-	IncludeLicenses *optional.Bool `url:"include_licenses"`
+	CustIds         []int `url:"cust_ids"` // ?cust_ids=2,3,4
+	IncludeLicenses *bool `url:"include_licenses,omitempty"`
 }
 
 type MemberGetResponse struct {

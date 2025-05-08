@@ -22,7 +22,7 @@ type MemberInfoResponse struct {
 	DownloadServer string `json:"download_server"`
 	Account        struct {
 		IrDollars    float64     `json:"ir_dollars"`
-		IrCredits    int         `json:"ir_credits"`
+		IrCredits    float64     `json:"ir_credits"`
 		Status       string      `json:"status"`
 		CountryRules interface{} `json:"country_rules"`
 	} `json:"account"`

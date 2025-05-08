@@ -2,14 +2,12 @@ package team
 
 import (
 	"encoding/json"
-
 	"github.com/google/go-querystring/query"
-	"github.com/markphelps/optional"
 )
 
 type TeamGetParams struct {
-	TeamId          int            `url:"team_id"`
-	IncludeLicenses *optional.Bool `url:"include_licenses"` // For faster responses, only request when necessary.
+	TeamId          int   `url:"team_id"`
+	IncludeLicenses *bool `url:"include_licenses,omitempty"` // For faster responses, only request when necessary.
 }
 
 type TeamGetResponse struct {

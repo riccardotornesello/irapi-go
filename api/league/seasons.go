@@ -2,14 +2,12 @@ package league
 
 import (
 	"encoding/json"
-
 	"github.com/google/go-querystring/query"
-	"github.com/markphelps/optional"
 )
 
 type LeagueSeasonsParams struct {
-	LeagueId int            `url:"league_id"`
-	Retired  *optional.Bool `url:"retired"` // If true include seasons which are no longer active.
+	LeagueId int   `url:"league_id"`
+	Retired  *bool `url:"retired,omitempty"` // If true include seasons which are no longer active.
 }
 
 type LeagueSeasonsResponse struct {

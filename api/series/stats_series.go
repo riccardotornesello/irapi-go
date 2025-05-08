@@ -52,9 +52,9 @@ type SeriesStatsSeriesResponse []struct {
 			SeasonId    int `json:"season_id"`
 			RaceWeekNum int `json:"race_week_num"`
 			Track       struct {
+				ConfigName string `json:"config_name"`
 				TrackId    int    `json:"track_id"`
 				TrackName  string `json:"track_name"`
-				ConfigName string `json:"config_name"`
 			} `json:"track"`
 		} `json:"race_weeks"`
 	} `json:"seasons"`

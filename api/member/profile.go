@@ -2,41 +2,32 @@ package member
 
 import (
 	"encoding/json"
-
 	"github.com/google/go-querystring/query"
-	"github.com/markphelps/optional"
 )
 
 type MemberProfileParams struct {
-	CustId *optional.Int `url:"cust_id"` // Defaults to the authenticated member.
+	CustId *int `url:"cust_id,omitempty"` // Defaults to the authenticated member.
 }
 
 type MemberProfileResponse struct {
 	RecentAwards []struct {
-		MemberAwardId       int    `json:"member_award_id"`
-		AwardId             int    `json:"award_id"`
-		Achievement         bool   `json:"achievement"`
-		AwardCount          int    `json:"award_count"`
-		AwardDate           string `json:"award_date"`
-		AwardOrder          int    `json:"award_order"`
-		AwardedDescription  string `json:"awarded_description"`
-		Description         string `json:"description"`
-		GroupName           string `json:"group_name"`
-		HasPdf              bool   `json:"has_pdf"`
-		IconUrlLarge        string `json:"icon_url_large"`
-		IconUrlSmall        string `json:"icon_url_small"`
-		IconUrlUnawarded    string `json:"icon_url_unawarded"`
-		Name                string `json:"name"`
-		SubsessionId        int    `json:"subsession_id"`
-		Viewed              bool   `json:"viewed"`
-		Weight              int    `json:"weight"`
-		Progress            int    `json:"progress"`
-		ProgressLabel       string `json:"progress_label"`
-		Threshold           int    `json:"threshold"`
-		ProgressText        string `json:"progress_text"`
-		ProgressTextLabel   string `json:"progress_text_label"`
-		DisplayDate         string `json:"display_date"`
-		IconBackgroundColor string `json:"icon_background_color"`
+		MemberAwardId      int    `json:"member_award_id"`
+		AwardId            int    `json:"award_id"`
+		Achievement        bool   `json:"achievement"`
+		AwardCount         int    `json:"award_count"`
+		AwardDate          string `json:"award_date"`
+		AwardOrder         int    `json:"award_order"`
+		AwardedDescription string `json:"awarded_description"`
+		Description        string `json:"description"`
+		GroupName          string `json:"group_name"`
+		HasPdf             bool   `json:"has_pdf"`
+		IconUrlLarge       string `json:"icon_url_large"`
+		IconUrlSmall       string `json:"icon_url_small"`
+		IconUrlUnawarded   string `json:"icon_url_unawarded"`
+		Name               string `json:"name"`
+		SubsessionId       int    `json:"subsession_id"`
+		Viewed             bool   `json:"viewed"`
+		Weight             int    `json:"weight"`
 	} `json:"recent_awards"`
 	Activity struct {
 		Recent30daysCount    int `json:"recent_30days_count"`
@@ -44,12 +35,8 @@ type MemberProfileResponse struct {
 		ConsecutiveWeeks     int `json:"consecutive_weeks"`
 		MostConsecutiveWeeks int `json:"most_consecutive_weeks"`
 	} `json:"activity"`
-	ImageUrl string `json:"image_url"`
-	Profile  []struct {
-		Name     string `json:"name"`
-		Value    string `json:"value"`
-		Editable bool   `json:"editable"`
-	} `json:"profile"`
+	Success    bool   `json:"success"`
+	ImageUrl   string `json:"image_url"`
 	MemberInfo struct {
 		CustId      int    `json:"cust_id"`
 		DisplayName string `json:"display_name"`
@@ -83,18 +70,10 @@ type MemberProfileResponse struct {
 			Seq           int     `json:"seq"`
 			MprNumTts     int     `json:"mpr_num_tts"`
 		} `json:"licenses"`
+		Country     string `json:"country"`
+		CountryCode string `json:"country_code"`
 	} `json:"member_info"`
-	FieldDefs []struct {
-		FieldId       int         `json:"field_id"`
-		Name          string      `json:"name"`
-		Value         interface{} `json:"value"`
-		Editable      bool        `json:"editable"`
-		Label         string      `json:"label"`
-		Section       string      `json:"section"`
-		RowOrder      int         `json:"row_order"`
-		Column        int         `json:"column"`
-		NumberOfLines int         `json:"number_of_lines"`
-	} `json:"field_defs"`
+	Disabled       bool `json:"disabled"`
 	LicenseHistory []struct {
 		CategoryId   int     `json:"category_id"`
 		Category     string  `json:"category"`
@@ -109,13 +88,6 @@ type MemberProfileResponse struct {
 		GroupId      int     `json:"group_id"`
 		Seq          int     `json:"seq"`
 	} `json:"license_history"`
-	IsGenericImage bool `json:"is_generic_image"`
-	FollowCounts   struct {
-		Followers int `json:"followers"`
-		Follows   int `json:"follows"`
-	} `json:"follow_counts"`
-	Success      bool `json:"success"`
-	Disabled     bool `json:"disabled"`
 	RecentEvents []struct {
 		EventType        string  `json:"event_type"`
 		SubsessionId     int     `json:"subsession_id"`
@@ -136,7 +108,12 @@ type MemberProfileResponse struct {
 			TrackName  string `json:"track_name"`
 		} `json:"track"`
 	} `json:"recent_events"`
-	CustId int `json:"cust_id"`
+	CustId         int  `json:"cust_id"`
+	IsGenericImage bool `json:"is_generic_image"`
+	FollowCounts   struct {
+		Followers int `json:"followers"`
+		Follows   int `json:"follows"`
+	} `json:"follow_counts"`
 }
 
 func (api *MemberApi) GetMemberProfile(params MemberProfileParams) (*MemberProfileResponse, error) {

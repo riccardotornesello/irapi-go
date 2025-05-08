@@ -2,7 +2,6 @@ package {{ package_name }}
 
 import (
 	"encoding/json"
-	{% if requires_optional %}"github.com/markphelps/optional"{% endif %}
 	{% if params_struct %}"github.com/google/go-querystring/query"{% endif %}	
 )
 
