@@ -2,7 +2,9 @@ package results
 
 import (
 	"encoding/json"
+
 	"github.com/google/go-querystring/query"
+	"github.com/riccardotornesello/irapi-go/client"
 )
 
 type ResultsLapDataParams struct {
@@ -12,7 +14,7 @@ type ResultsLapDataParams struct {
 	TeamId           *int `url:"team_id,omitempty"` // Required if the subsession was a team event.
 }
 
-type ResultsLapDataResponseChunks []struct {
+type ResultsLapDataResponseChunk struct {
 	GroupId          int         `json:"group_id"`
 	Name             string      `json:"name"`
 	CustId           int         `json:"cust_id"`
@@ -65,27 +67,21 @@ type ResultsLapDataResponse struct {
 			TrackName  string `json:"track_name"`
 		} `json:"track"`
 	} `json:"session_info"`
-	BestLapNum      int         `json:"best_lap_num"`
-	BestLapTime     int         `json:"best_lap_time"`
-	BestNlapsNum    int         `json:"best_nlaps_num"`
-	BestNlapsTime   int         `json:"best_nlaps_time"`
-	BestQualLapNum  int         `json:"best_qual_lap_num"`
-	BestQualLapTime int         `json:"best_qual_lap_time"`
-	BestQualLapAt   interface{} `json:"best_qual_lap_at"`
-	ChunkInfo       struct {
-		ChunkSize       int      `json:"chunk_size"`
-		NumChunks       int      `json:"num_chunks"`
-		Rows            int      `json:"rows"`
-		BaseDownloadUrl string   `json:"base_download_url"`
-		ChunkFileNames  []string `json:"chunk_file_names"`
-	} `json:"chunk_info"`
-	LastUpdated  string `json:"last_updated"`
-	GroupId      int    `json:"group_id"`
-	CustId       int    `json:"cust_id"`
-	Name         string `json:"name"`
-	CarId        int    `json:"car_id"`
-	LicenseLevel int    `json:"license_level"`
-	Livery       struct {
+	BestLapNum      int                     `json:"best_lap_num"`
+	BestLapTime     int                     `json:"best_lap_time"`
+	BestNlapsNum    int                     `json:"best_nlaps_num"`
+	BestNlapsTime   int                     `json:"best_nlaps_time"`
+	BestQualLapNum  int                     `json:"best_qual_lap_num"`
+	BestQualLapTime int                     `json:"best_qual_lap_time"`
+	BestQualLapAt   interface{}             `json:"best_qual_lap_at"`
+	ChunkInfo       client.IRacingChunkInfo `json:"chunk_info"`
+	LastUpdated     string                  `json:"last_updated"`
+	GroupId         int                     `json:"group_id"`
+	CustId          int                     `json:"cust_id"`
+	Name            string                  `json:"name"`
+	CarId           int                     `json:"car_id"`
+	LicenseLevel    int                     `json:"license_level"`
+	Livery          struct {
 		CarId        int    `json:"car_id"`
 		Pattern      int    `json:"pattern"`
 		Color1       string `json:"color1"`
@@ -102,7 +98,7 @@ type ResultsLapDataResponse struct {
 		WheelColor   string `json:"wheel_color"`
 		RimType      int    `json:"rim_type"`
 	} `json:"livery"`
-	Chunks ResultsLapDataResponseChunks
+	Chunks []ResultsLapDataResponseChunk
 }
 
 func (api *ResultsApi) GetResultsLapData(params ResultsLapDataParams) (*ResultsLapDataResponse, error) {
@@ -123,6 +119,23 @@ func (api *ResultsApi) GetResultsLapData(params ResultsLapDataParams) (*ResultsL
 	if err != nil {
 		return nil, err
 	}
+
+	chunksBody, err := api.Client.GetChunks(&response.ChunkInfo)
+	if err != nil {
+		return nil, err
+	}
+
+	chunks := make([]ResultsLapDataResponseChunk, 0)
+	for _, chunkBody := range chunksBody {
+		chunkData := make([]ResultsLapDataResponseChunk, 0)
+		err = json.NewDecoder(chunkBody).Decode(&chunkData)
+		if err != nil {
+			return nil, err
+		}
+		chunks = append(chunks, chunkData...)
+	}
+
+	response.Chunks = chunks
 
 	return response, nil
 }
