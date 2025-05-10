@@ -12,7 +12,9 @@ def generate_key(key):
     return "".join(x.capitalize() for x in key.lower().replace("-", "_").split("_"))
 
 
-def convert_schema_to_struct(schema, json_name=None, chunks_struct_name=None):
+def convert_schema_to_struct(
+    schema, json_name=None, chunks_struct_name=None, flatten_array=False
+):
     data = ""
 
     if "anyOf" in schema:
@@ -21,6 +23,9 @@ def convert_schema_to_struct(schema, json_name=None, chunks_struct_name=None):
         if schema["anyOf"][0]["type"] != "null":
             raise Exception(f"Unknown list schema {schema}")
         return f"*{convert_schema_to_struct(schema['anyOf'][1], json_name)}"
+
+    if json_name == "chunk_info":
+        return f'client.IRacingChunkInfo `json:"{json_name}"`\n'
 
     if "type" not in schema:
         raise Exception(f"Missing type in key {json_name}: {schema}")
@@ -39,12 +44,19 @@ def convert_schema_to_struct(schema, json_name=None, chunks_struct_name=None):
 
         t = t[0]
 
+    if flatten_array and not t == "array":
+        raise Exception(
+            f"Flatten array is only supported for array types in key {json_name}"
+        )
+
     if t == "array":
+        if not flatten_array:
+            data += "[]"
+
         if not "items" in schema:
             print(f"Warning: array without items in key {json_name}")
-            data += "[]interface{}"
+            data += "interface{}"
         else:
-            data += "[]"
             data += convert_schema_to_struct(schema["items"])
 
     elif t == "object":
@@ -55,7 +67,7 @@ def convert_schema_to_struct(schema, json_name=None, chunks_struct_name=None):
                 data += f"{generate_key(k)} {convert_schema_to_struct(v,k)}"
 
             if chunks_struct_name:
-                data += f"Chunks {chunks_struct_name}"
+                data += f"Chunks []{chunks_struct_name}"
 
             data += "}"
         elif "patternProperties" in schema:

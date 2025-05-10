@@ -3,6 +3,7 @@ package {{ package_name }}
 import (
 	"encoding/json"
 	{% if params_struct %}"github.com/google/go-querystring/query"{% endif %}	
+	{% if chunks_struct %}"github.com/riccardotornesello/irapi-go/client"{% endif %}	
 )
 
 {% if params_struct %}
@@ -38,6 +39,25 @@ func (api *{{ client_struct_name }}) {{ method_name }}({% if params_struct %}par
 	if err != nil {
 		return nil, err
 	}
+
+	{% if chunks_struct %}
+	chunksBody, err := api.Client.GetChunks(&response.ChunkInfo)
+	if err != nil {
+		return nil, err
+	}
+
+	chunks := make([]{{ chunks_struct_name }}, 0)
+	for _, chunkBody := range chunksBody {
+		chunkData := make([]{{ chunks_struct_name }}, 0)
+		err = json.NewDecoder(chunkBody).Decode(&chunkData)
+		if err != nil {
+			return nil, err
+		}
+		chunks = append(chunks, chunkData...)
+	}
+
+	response.Chunks = chunks
+	{% endif %}
 
 	return response, nil
 }

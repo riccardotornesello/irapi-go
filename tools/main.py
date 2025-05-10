@@ -115,9 +115,11 @@ def main():
                 if os.path.exists(chunks_schema_file):
                     with open(chunks_schema_file) as f:
                         chunks_struct_name = (
-                            camel_category + camel_endpoint + "ResponseChunks"
+                            camel_category + camel_endpoint + "ResponseChunkData"
                         )
-                        chunks_struct = convert_schema_to_struct(json.load(f))
+                        chunks_struct = convert_schema_to_struct(
+                            json.load(f), flatten_array=True
+                        )
 
                 with open(response_schema_file) as f:
                     struct = convert_schema_to_struct(

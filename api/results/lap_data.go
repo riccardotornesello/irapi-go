@@ -2,7 +2,6 @@ package results
 
 import (
 	"encoding/json"
-
 	"github.com/google/go-querystring/query"
 	"github.com/riccardotornesello/irapi-go/client"
 )
@@ -14,7 +13,7 @@ type ResultsLapDataParams struct {
 	TeamId           *int `url:"team_id,omitempty"` // Required if the subsession was a team event.
 }
 
-type ResultsLapDataResponseChunk struct {
+type ResultsLapDataResponseChunkData struct {
 	GroupId          int         `json:"group_id"`
 	Name             string      `json:"name"`
 	CustId           int         `json:"cust_id"`
@@ -98,7 +97,7 @@ type ResultsLapDataResponse struct {
 		WheelColor   string `json:"wheel_color"`
 		RimType      int    `json:"rim_type"`
 	} `json:"livery"`
-	Chunks []ResultsLapDataResponseChunk
+	Chunks []ResultsLapDataResponseChunkData
 }
 
 func (api *ResultsApi) GetResultsLapData(params ResultsLapDataParams) (*ResultsLapDataResponse, error) {
@@ -125,9 +124,9 @@ func (api *ResultsApi) GetResultsLapData(params ResultsLapDataParams) (*ResultsL
 		return nil, err
 	}
 
-	chunks := make([]ResultsLapDataResponseChunk, 0)
+	chunks := make([]ResultsLapDataResponseChunkData, 0)
 	for _, chunkBody := range chunksBody {
-		chunkData := make([]ResultsLapDataResponseChunk, 0)
+		chunkData := make([]ResultsLapDataResponseChunkData, 0)
 		err = json.NewDecoder(chunkBody).Decode(&chunkData)
 		if err != nil {
 			return nil, err
