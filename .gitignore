@@ -2,6 +2,7 @@
 .token
 coverage.txt
 *.json
+!.devcontainer/*.json
 *.sql
 *.csv
 
