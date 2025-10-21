@@ -1,0 +1,5 @@
+python-dotenv
+requests
+tqdm
+genson
+jinja2
