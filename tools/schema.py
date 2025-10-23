@@ -15,6 +15,10 @@ from genson import SchemaBuilder
 from data import OVERRIDES
 
 
+# Regex pattern to match numeric string keys (e.g., "1", "2", "100")
+NUMERIC_KEY_PATTERN = r"^\d+$"
+
+
 def all_keys_are_numeric_strings(properties):
     """
     Check if all keys in a properties dict are string representations of numbers.
@@ -70,14 +74,13 @@ def convert_numeric_objects_to_maps(schema):
                 # accommodates all possible property types
                 builder = SchemaBuilder()
                 for prop_schema in property_schemas:
-                    # Build a sample object from each schema to merge them
+                    # Add each property schema to merge them
                     builder.add_schema(prop_schema)
                 
                 value_schema = builder.to_schema()
                 
                 # Convert to patternProperties format with numeric string pattern
-                # Using ^\d+$ to match only numeric strings (more restrictive than .*)
-                schema["patternProperties"] = {r"^\d+$": value_schema}
+                schema["patternProperties"] = {NUMERIC_KEY_PATTERN: value_schema}
                 del schema["properties"]
                 
                 # Recursively process the value schema
