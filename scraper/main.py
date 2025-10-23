@@ -7,10 +7,10 @@ from tqdm import tqdm
 from api_client import APIClient
 from endpoints import generate_endpoints
 from parser import JsonToGo
+from format import to_camel_case
+from categories import generate_categories_api
 
-
-def to_camel_case(snake_str):
-    return "".join(x.title() for x in snake_str.split("_"))
+jinja2_environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates/"))
 
 
 def main():
@@ -18,9 +18,6 @@ def main():
     load_dotenv()
 
     # Prepare the templates
-    jinja2_environment = jinja2.Environment(
-        loader=jinja2.FileSystemLoader("templates/")
-    )
     endpoint_template = jinja2_environment.get_template("endpoint.go")
 
     # Authenticate and init api client
@@ -42,6 +39,10 @@ def main():
             continue
 
         endpoint.save_response()
+
+    # Generate category APIs
+    print("Generating category APIs...")
+    generate_categories_api(endpoints)
 
     # Generate endpoint calls
     # TODO: specify map fields
@@ -79,9 +80,8 @@ def main():
         endpoint_url = endpoint.link  # TODO: remove base URL if present
         method_name = to_camel_case(endpoint.name)
 
-        os.makedirs(f"output/api/{endpoint.category}", exist_ok=True)
         with open(
-            f"output/api/{endpoint.category}/{endpoint.name}.go", "w"
+            f"../api/{endpoint.category}/{endpoint.name}.go", "w"
         ) as output_file:
             output_file.write(
                 endpoint_template.render(
