@@ -41,7 +41,7 @@ def all_keys_are_numeric_strings(properties):
     if not properties or len(properties) == 0:
         return False
     
-    return all(re.match(NUMERIC_KEY_PATTERN, key) for key in properties.keys())
+    return all(re.fullmatch(NUMERIC_KEY_PATTERN, key) for key in properties.keys())
 
 
 def convert_numeric_objects_to_maps(schema):
