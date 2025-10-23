@@ -42,7 +42,7 @@ def convert_numeric_objects_to_maps(schema):
     
     This function walks through the schema tree and identifies objects where all property
     keys are numeric strings. These are converted to use patternProperties with a pattern
-    matching any string, which will generate a Go map[string]T instead of a struct.
+    matching numeric strings, which will generate a Go map[string]T instead of a struct.
     
     Args:
         schema (dict): The JSON schema to process (modified in place)
@@ -62,16 +62,22 @@ def convert_numeric_objects_to_maps(schema):
         
         # Check if all keys are numeric strings
         if all_keys_are_numeric_strings(properties):
-            # Get all the property schemas to find a common type
+            # Get all the property schemas to merge them
             property_schemas = list(properties.values())
             
             if len(property_schemas) > 0:
-                # Use the first property's schema as the pattern value type
-                # In most cases, all numeric-keyed properties have the same schema
-                value_schema = property_schemas[0]
+                # Merge all property schemas to ensure the pattern value type
+                # accommodates all possible property types
+                builder = SchemaBuilder()
+                for prop_schema in property_schemas:
+                    # Build a sample object from each schema to merge them
+                    builder.add_schema(prop_schema)
                 
-                # Convert to patternProperties format
-                schema["patternProperties"] = {r".*": value_schema}
+                value_schema = builder.to_schema()
+                
+                # Convert to patternProperties format with numeric string pattern
+                # Using ^\d+$ to match only numeric strings (more restrictive than .*)
+                schema["patternProperties"] = {r"^\d+$": value_schema}
                 del schema["properties"]
                 
                 # Recursively process the value schema
