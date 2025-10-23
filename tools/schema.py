@@ -9,6 +9,7 @@ generate Go maps instead of structs).
 
 import os
 import json
+import re
 
 from genson import SchemaBuilder
 
@@ -22,6 +23,9 @@ NUMERIC_KEY_PATTERN = r"^\d+$"
 def all_keys_are_numeric_strings(properties):
     """
     Check if all keys in a properties dict are string representations of numbers.
+    
+    Uses the NUMERIC_KEY_PATTERN regex to ensure consistency with patternProperties
+    generation. This matches strings containing only digits (0-9).
     
     Args:
         properties (dict): The properties dictionary from a JSON schema object
@@ -37,7 +41,7 @@ def all_keys_are_numeric_strings(properties):
     if not properties or len(properties) == 0:
         return False
     
-    return all(key.isdigit() for key in properties.keys())
+    return all(re.match(NUMERIC_KEY_PATTERN, key) for key in properties.keys())
 
 
 def convert_numeric_objects_to_maps(schema):
