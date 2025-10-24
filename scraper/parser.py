@@ -462,7 +462,7 @@ class JsonToGo:
         """
         if not isinstance(new_value, (int, float)):
             print(f"Error: currentValue {new_value} is not a number", file=sys.stderr)
-            return None  # Ricade su 'any'
+            return None  # Falls back to 'any'
 
         new_go_type = self._go_type(new_value)
         existing_go_type = self._go_type(existing_value)
@@ -639,7 +639,7 @@ class JsonToGo:
             
             # Parse the struct inline (without prepending parent name)
             self._parse_struct(
-                depth + 1, self.inner_tabs, first_value, False, self.previous_parents
+                depth + 1, self.inner_tabs, first_value, {}, self.previous_parents
             )
         elif value_go_type == "slice":
             # For slice types, we need to determine the element type
