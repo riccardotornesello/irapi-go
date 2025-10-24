@@ -2,12 +2,12 @@
 
 """
 JSON-to-Go
-di Matt Holt
+by Matt Holt
 https://github.com/mholt/json-to-go
 
-Una semplice utility per tradurre JSON in una definizione di tipo Go.
+A simple utility to translate JSON into a Go type definition.
 
-Traduzione Python a cura di Gemini.
+Python translation by Gemini.
 """
 
 import json
@@ -21,7 +21,7 @@ from typing import List, Dict, Any, Optional, Set
 
 class JsonToGo:
     """
-    Converte una stringa JSON in una definizione di tipo Go.
+    Converts a JSON string into a Go type definition.
     """
 
     # https://github.com/golang/lint/blob/5614ed5bae6fb75893070bdc0996a68765fdd275/lint.go#L771-L810
@@ -66,7 +66,7 @@ class JsonToGo:
         "XSS",
     ]
 
-    # Compila le regex una sola volta per efficienza
+    # Compile regexes once for efficiency
     RE_TIME = re.compile(r"^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(\+\d\d:\d\d|Z)$")
     RE_UUID = re.compile(
         r"^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
@@ -77,6 +77,7 @@ class JsonToGo:
     RE_SCREAMING_SNAKE = re.compile(r"^[_A-Z0-9]+$")
     RE_PROPER_CASE_1 = re.compile(r"(^|[^a-zA-Z])([a-z]+)")
     RE_PROPER_CASE_2 = re.compile(r"([A-Z])([a-z]+)")
+    RE_NUMERIC_STRING = re.compile(r"^\d+$")
 
     def __init__(
         self,
@@ -102,11 +103,11 @@ class JsonToGo:
 
     def convert(self, json_string: str) -> Dict[str, str]:
         """
-        Converte la stringa JSON fornita in una definizione di tipo Go.
-        Restituisce un dizionario con la chiave 'go' o 'error'.
+        Converts the provided JSON string into a Go type definition.
+        Returns a dictionary with 'go' or 'error' key.
         """
         try:
-            # Hack che forza i float a rimanere float (es. 1.0 -> 1.1)
+            # Hack to force floats to remain floats (e.g. 1.0 -> 1.1)
             json_string = self.RE_JSON_FLOAT_HACK.sub(r"\1.1", json_string)
             data = json.loads(json_string)
             scope = data
@@ -119,7 +120,7 @@ class JsonToGo:
         if self.flatten:
             self.go += self.accumulator
 
-        # Aggiungi newline finale per POSIX 3.206
+        # Add final newline for POSIX 3.206
         if not self.go.endswith("\n"):
             self.go += "\n"
 
@@ -127,17 +128,21 @@ class JsonToGo:
 
     def _parse_scope(self, scope: Any, depth: int = 0):
         """
-        Analizza ricorsivamente l'ambito JSON (oggetto, array, primitivo).
+        Recursively parses the JSON scope (object, array, primitive).
         """
         if isinstance(scope, dict):
-            if self.flatten:
-                if depth >= 2:
-                    self._appender(self.parent)
-                else:
-                    self._append(self.parent)
-            self._parse_struct(
-                depth + 1, self.inner_tabs, scope, False, self.previous_parents
-            )
+            # Check if this dict should be represented as a map
+            if self._should_be_map(scope):
+                self._parse_as_map(scope, depth)
+            else:
+                if self.flatten:
+                    if depth >= 2:
+                        self._appender(self.parent)
+                    else:
+                        self._append(self.parent)
+                self._parse_struct(
+                    depth + 1, self.inner_tabs, scope, False, self.previous_parents
+                )
 
         elif isinstance(scope, list):
             slice_type: Optional[str] = None
@@ -180,7 +185,7 @@ class JsonToGo:
 
                             if not self._are_same_type(existing_value, current_value):
                                 if existing_value is not None:
-                                    all_fields[keyname]["value"] = None  # Forza 'any'
+                                    all_fields[keyname]["value"] = None  # Force 'any'
                                     print(
                                         f'Warning: key "{keyname}" uses multiple types. Defaulting to type "any".',
                                         file=sys.stderr,
@@ -201,7 +206,7 @@ class JsonToGo:
                                     list(existing_value.keys()),
                                 )
                                 if not comparison_result:
-                                    # Gestisce chiavi duplicate con struct diversi
+                                    # Handle duplicate keys with different structs
                                     keyname = f"{keyname}_{self._uuidv4()}"
                                     all_fields[keyname] = {
                                         "value": current_value,
@@ -209,7 +214,7 @@ class JsonToGo:
                                     }
                         all_fields[keyname]["count"] += 1
 
-                # Crea uno struct comune con tutti i campi
+                # Create a common struct with all fields
                 struct: Dict[str, Any] = {}
                 omitempty: Dict[str, bool] = {}
                 for keyname, elem in all_fields.items():
@@ -224,7 +229,7 @@ class JsonToGo:
                 if scope:
                     self._parse_scope(scope[0], depth)
                 else:
-                    # Array vuoto, non possiamo determinare il tipo
+                    # Empty array, cannot determine type
                     if self.flatten and depth >= 2:
                         self._appender("any")
                     else:
@@ -237,7 +242,7 @@ class JsonToGo:
                 else:
                     self._append(item_type)
 
-        else:  # Primitivo
+        else:  # Primitive
             if self.flatten and depth >= 2:
                 self._appender(self._go_type(scope))
             else:
@@ -252,7 +257,7 @@ class JsonToGo:
         old_parents: str,
     ):
         """
-        Analizza un oggetto JSON e lo converte in una struct Go.
+        Parses a JSON object and converts it into a Go struct.
         """
         if self.flatten:
             self.stack.append("\n" if depth >= 2 else "")
@@ -368,7 +373,7 @@ class JsonToGo:
         self, name: str, seen: Set[str], prefix: Optional[str] = None
     ) -> str:
         """
-        Genera un nome di campo univoco per evitare duplicati.
+        Generates a unique field name to avoid duplicates.
         """
         if name not in seen:
             return name
@@ -387,7 +392,7 @@ class JsonToGo:
 
     def _format(self, s: str) -> str:
         """
-        Sanifica e formatta una stringa per renderla un identificatore Go appropriato.
+        Sanitizes and formats a string to make it an appropriate Go identifier.
         """
         s = self._format_number(s)
         sanitized = self.RE_SANITIZER.sub("", self._to_proper_case(s))
@@ -397,7 +402,7 @@ class JsonToGo:
 
     def _format_number(self, s: str) -> str:
         """
-        Aggiunge un prefisso a un numero per renderlo un identificatore Go.
+        Adds a prefix to a number to make it a Go identifier.
         """
         if not s:
             return ""
@@ -421,7 +426,7 @@ class JsonToGo:
 
     def _go_type(self, val: Any) -> str:
         """
-        Determina il tipo Go più appropriato per un valore Python.
+        Determines the most appropriate Go type for a Python value.
         """
         if val is None:
             return "any"
@@ -453,7 +458,7 @@ class JsonToGo:
         self, existing_value: Any, new_value: Any
     ) -> Any:
         """
-        Aggiorna il tipo numerico al più grande equivalente (es. int -> float64).
+        Updates the numeric type to the largest equivalent (e.g. int -> float64).
         """
         if not isinstance(new_value, (int, float)):
             print(f"Error: currentValue {new_value} is not a number", file=sys.stderr)
@@ -470,15 +475,15 @@ class JsonToGo:
         if existing_go_type == "float64":
             return existing_value
 
-        # Forza l'aggiornamento a float64 se c'è un mix
+        # Force update to float64 if there's a mix
         if "float" in new_go_type and "int" in existing_go_type:
-            return 1.1  # Un valore che _go_type vedrà come float64
+            return 1.1  # A value that _go_type will see as float64
         if "int" in new_go_type and "float" in existing_go_type:
-            return 1.1  # Un valore che _go_type vedrà come float64
+            return 1.1  # A value that _go_type will see as float64
 
         if "int" in new_go_type and "int" in existing_go_type:
             try:
-                # Prova a sommare per vedere se è sicuro
+                # Try to sum to see if it's safe
                 total = abs(existing_value) + abs(new_value)
                 if not math.isfinite(total):
                     return 9223372036854775807  # Max int64
@@ -490,11 +495,11 @@ class JsonToGo:
             f"Error: something went wrong with _find_best_value_for_number_type() using values: '{new_value}' and '{existing_value}'",
             file=sys.stderr,
         )
-        return None  # Ricade su 'any'
+        return None  # Falls back to 'any'
 
     def _most_specific_possible_go_type(self, typ1: str, typ2: str) -> str:
         """
-        Dati due tipi, restituisce il più specifico (preferendo float su int).
+        Given two types, returns the most specific (preferring float over int).
         """
         if typ1.startswith("float") and typ2.startswith("int"):
             return typ1
@@ -504,7 +509,7 @@ class JsonToGo:
 
     def _to_proper_case(self, s: str) -> str:
         """
-        Converte una stringa in ProperCase secondo le convenzioni Go.
+        Converts a string to ProperCase according to Go conventions.
         """
         if self.RE_SCREAMING_SNAKE.match(s):
             s = s.lower()
@@ -529,30 +534,30 @@ class JsonToGo:
         return s
 
     def _uuidv4(self) -> str:
-        """Genera un UUID v4."""
+        """Generates a UUID v4."""
         return str(uuid.uuid4())
 
     def _get_original_name(self, unique: str) -> str:
         """
-        Rimuove l'UUID aggiunto ai nomi delle chiavi per renderle univoche.
+        Removes the UUID added to key names to make them unique.
         """
         if len(unique) >= 36:
             tail = unique[-36:]
             if self.RE_UUID.match(tail):
-                return unique[:-37]  # Rimuove _ e UUID
+                return unique[:-37]  # Removes _ and UUID
         return unique
 
     def _are_objects(self, a: Any, b: Any) -> bool:
-        """Controlla se entrambi sono dizionari Python."""
+        """Checks if both are Python dictionaries."""
         return isinstance(a, dict) and isinstance(b, dict)
 
     def _are_same_type(self, a: Any, b: Any) -> bool:
-        """Controlla se due valori hanno lo stesso tipo Python."""
+        """Checks if two values have the same Python type."""
         return type(a) == type(b)
 
     def _compare_object_keys(self, a_keys: List[str], b_keys: List[str]) -> bool:
         """
-        Controlla se due liste di chiavi contengono gli stessi elementi.
+        Checks if two lists of keys contain the same elements.
         """
         return set(a_keys) == set(b_keys)
 
@@ -560,10 +565,93 @@ class JsonToGo:
         self, a_keys_set: Set[str], b_keys_set: Set[str]
     ) -> bool:
         """
-        Controlla se due set di chiavi sono identici. (Versione ottimizzata)
+        Checks if two sets of keys are identical. (Optimized version)
         """
         return a_keys_set == b_keys_set
 
     def _format_scope_keys(self, keys: List[str]) -> Set[str]:
-        """Esegue _format su una lista di chiavi e restituisce un set."""
+        """Runs _format on a list of keys and returns a set."""
         return {self._format(k) for k in keys}
+    
+    def _all_keys_are_numeric_strings(self, keys: List[str]) -> bool:
+        """
+        Checks if all keys in the list are numeric strings (e.g., "1", "2", "100").
+        """
+        if not keys:
+            return False
+        return all(self.RE_NUMERIC_STRING.match(k) for k in keys)
+    
+    def _should_be_map(self, scope: Dict[str, Any]) -> bool:
+        """
+        Determines if a JSON object should be represented as a map[string]ValueType
+        instead of a struct. This happens when:
+        1. All keys are numeric strings
+        2. All values have the same type
+        """
+        if not scope:
+            return False
+        
+        keys = list(scope.keys())
+        
+        # Check if all keys are numeric strings
+        if not self._all_keys_are_numeric_strings(keys):
+            return False
+        
+        # Check if all values have the same type
+        values = list(scope.values())
+        if not values:
+            return False
+        
+        first_go_type = self._go_type(values[0])
+        
+        # For struct and slice types, we need more detailed comparison
+        if first_go_type == "struct":
+            # All values should be dicts with the same keys
+            if not all(isinstance(v, dict) for v in values):
+                return False
+            first_keys = set(values[0].keys()) if isinstance(values[0], dict) else set()
+            return all(isinstance(v, dict) and set(v.keys()) == first_keys for v in values)
+        
+        # For other types, just check if all have the same Go type
+        return all(self._go_type(v) == first_go_type for v in values)
+    
+    def _parse_as_map(self, scope: Dict[str, Any], depth: int = 0):
+        """
+        Parses a JSON object as a Go map instead of a struct.
+        """
+        if not scope:
+            if self.flatten and depth >= 2:
+                self._appender("map[string]any")
+            else:
+                self._append("map[string]any")
+            return
+        
+        # Get the value type from the first value
+        first_value = next(iter(scope.values()))
+        value_go_type = self._go_type(first_value)
+        
+        # For struct types, we need to define the struct and use it in the map
+        if value_go_type == "struct":
+            # Parse the struct type recursively
+            if self.flatten and depth >= 2:
+                self._appender(f"map[string]{self.parent}")
+            else:
+                self._append(f"map[string]{self.parent}")
+            
+            # Parse the struct definition
+            self._parse_scope(first_value, depth)
+        elif value_go_type == "slice":
+            # For slice types, we need to determine the element type
+            if self.flatten and depth >= 2:
+                self._appender("map[string]")
+            else:
+                self._append("map[string]")
+            
+            # Parse the slice type
+            self._parse_scope(first_value, depth)
+        else:
+            # For primitive types, just use the type directly
+            if self.flatten and depth >= 2:
+                self._appender(f"map[string]{value_go_type}")
+            else:
+                self._append(f"map[string]{value_go_type}")
