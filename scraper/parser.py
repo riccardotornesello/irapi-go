@@ -630,16 +630,17 @@ class JsonToGo:
         first_value = next(iter(scope.values()))
         value_go_type = self._go_type(first_value)
         
-        # For struct types, we need to define the struct and use it in the map
+        # For struct types, we need to define the struct inline
         if value_go_type == "struct":
-            # Parse the struct type recursively
             if self.flatten and depth >= 2:
-                self._appender(f"map[string]{self.parent}")
+                self._appender("map[string]")
             else:
-                self._append(f"map[string]{self.parent}")
+                self._append("map[string]")
             
-            # Parse the struct definition
-            self._parse_scope(first_value, depth)
+            # Parse the struct inline (without prepending parent name)
+            self._parse_struct(
+                depth + 1, self.inner_tabs, first_value, False, self.previous_parents
+            )
         elif value_go_type == "slice":
             # For slice types, we need to determine the element type
             if self.flatten and depth >= 2:
