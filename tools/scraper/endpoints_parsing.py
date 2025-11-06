@@ -8,6 +8,7 @@ from format import to_camel_case
 from constants import PARAM_TYPES
 from api_client import APIClient
 from typing import Literal
+from data import OVERRIDES
 
 
 class EndpointParameter:
@@ -16,7 +17,15 @@ class EndpointParameter:
     required: bool
     notes: list[str]
 
-    def __init__(self, param_name: str, param_data: dict):
+    sample_value = None
+
+    def __init__(
+        self,
+        category_name: str,
+        endpoint_name: str,
+        param_name: str,
+        param_data: dict,
+    ):
         self.name = param_name
         self.type = param_data["type"]
         self.required = param_data.get("required", False)
@@ -25,6 +34,14 @@ class EndpointParameter:
         # Check that the type is known
         if self.type not in PARAM_TYPES.keys():
             raise Exception(f"Unknown type: {self.type}")
+
+        # If available, set the sample value
+        self.sample_value = (
+            OVERRIDES.get(category_name, {})
+            .get(endpoint_name, {})
+            .get("params", {})
+            .get(param_name, None)
+        )
 
 
 class Endpoint:
@@ -57,7 +74,7 @@ class Endpoint:
         self.link = endpoint_data["link"]
         self.notes = _parse_iracing_notes(endpoint_data.get("notes"))
         self.parameters = [
-            EndpointParameter(param_name, param_data)
+            EndpointParameter(category_name, endpoint_name, param_name, param_data)
             for param_name, param_data in endpoint_data.get("parameters", {}).items()
         ]
 
@@ -72,6 +89,14 @@ class Endpoint:
             )
             return False
 
+        # Skip if some parameters are not set
+        for parameter in self.parameters:
+            if parameter.required and not parameter.sample_value:
+                logging.error(
+                    f"Skipping sample response fetch for {self.category}__{self.name} due to parameters."
+                )
+                return False
+
         file_path = f"output/responses/{self.category}__{self.name}.{self.format}"
         if cached and os.path.exists(file_path):
             with open(file_path, "r") as f:
@@ -79,7 +104,13 @@ class Endpoint:
             return True
 
         try:
-            self.sample_response = self.api_client.call_endpoint(self.link)
+            self.sample_response = self.api_client.call_endpoint(
+                self.link,
+                params={
+                    parameter.name: parameter.sample_value
+                    for parameter in self.parameters
+                },
+            )
         except Exception as e:
             logging.error(f"Error fetching {self.category}__{self.name}: {e}")
             return False
@@ -103,7 +134,9 @@ class Endpoint:
             return
 
         # Generate the struct name from the file name
-        self.response_struct_name = to_camel_case(f"{self.category}__{self.name}__Response")
+        self.response_struct_name = to_camel_case(
+            f"{self.category}__{self.name}__Response"
+        )
 
         # Quicktype command
         command = [
@@ -125,7 +158,7 @@ class Endpoint:
                 check=True,  # Raise an error if the command fails
                 capture_output=True,
                 text=True,
-                input=self.sample_response
+                input=self.sample_response,
             )
             self.response_struct = result.stdout
 
