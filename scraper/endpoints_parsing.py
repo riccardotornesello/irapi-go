@@ -1,10 +1,10 @@
 import os
 import logging
+import subprocess
 
-import requests
-from dotenv import load_dotenv
 from tqdm.contrib.concurrent import thread_map
 
+from format import to_camel_case
 from constants import PARAM_TYPES
 from api_client import APIClient
 from typing import Literal
@@ -40,6 +40,10 @@ class Endpoint:
     format: Literal["json", "csv"] = "json"
     s3_cache: bool = True
 
+    sample_response: str | None = None
+    response_struct_name: str | None = None
+    response_struct: str | None = None
+
     def __init__(
         self,
         api_client: APIClient,
@@ -60,17 +64,22 @@ class Endpoint:
         # TODO: allow override self.format = "json"
         # TODO: allow override self.s3_cache = True
 
-    def save_response(self, cached: bool = True) -> bool:
+    def fetch_sample_response(self, cached: bool = True) -> bool:
         # TODO: handle driver_stats_by_category
         if self.category == "driver_stats_by_category":
+            logging.warning(
+                f"Skipping sample response fetch for {self.category}__{self.name} due to complexity."
+            )
             return False
 
         file_path = f"output/responses/{self.category}__{self.name}.{self.format}"
         if cached and os.path.exists(file_path):
+            with open(file_path, "r") as f:
+                self.sample_response = f.read()
             return True
 
         try:
-            response = self.api_client.call_endpoint(self.link)
+            self.sample_response = self.api_client.call_endpoint(self.link)
         except Exception as e:
             logging.error(f"Error fetching {self.category}__{self.name}: {e}")
             return False
@@ -78,9 +87,56 @@ class Endpoint:
         # Save the response to a file
         os.makedirs("output/responses", exist_ok=True)
         with open(file_path, "w") as f:
-            f.write(response)
+            f.write(self.sample_response)
 
         return True
+
+    def generate_go_types(self):
+        """
+        Run the quicktype command to generate Go types.
+        """
+
+        if not self.sample_response:
+            logging.warning(
+                f"Skipped: {self.category}__{self.name} (no sample response)"
+            )
+            return
+
+        # Generate the struct name from the file name
+        self.response_struct_name = to_camel_case(f"{self.category}__{self.name}__Response")
+
+        # Quicktype command
+        command = [
+            "npx",
+            "quicktype",
+            "--src-lang",
+            "json",
+            "--lang",
+            "go",
+            "--just-types",
+            "-t",
+            self.response_struct_name,
+        ]
+
+        try:
+            # Run the command and capture the output. Pass the sample response as stdin.
+            result = subprocess.run(
+                command,
+                check=True,  # Raise an error if the command fails
+                capture_output=True,
+                text=True,
+                input=self.sample_response
+            )
+            self.response_struct = result.stdout
+
+        except subprocess.CalledProcessError as e:
+            logging.error(f"FAILED: Quicktype for {self.category}__{self.name} failed.")
+            logging.error(f"Error: {e.stderr.strip()}")
+
+        except FileNotFoundError:
+            logging.error(
+                "ERROR: Make sure 'npx' and 'quicktype' are installed and available in the PATH."
+            )
 
 
 def _parse_iracing_notes(notes) -> list[str]:
@@ -98,35 +154,13 @@ def _parse_iracing_notes(notes) -> list[str]:
     return notes
 
 
-def get_available_endpoints_documentation(session: requests.Session) -> dict:
-    res = session.get("https://members-ng.iracing.com/data/doc")
-    if res.status_code != 200:
-        raise Exception(f"Failed to fetch API definition: {res.text}")
-
-    return res.json()
-
-
-def generate_endpoints_list(api_client: APIClient) -> list[Endpoint]:
-    endpoints = []
-
-    iracing_documentation = get_available_endpoints_documentation(api_client.api_client)
-
-    for category_name, category_data in iracing_documentation.items():
-        for endpoint_name, endpoint_data in category_data.items():
-            endpoints.append(
-                Endpoint(api_client, category_name, endpoint_name, endpoint_data)
-            )
-
-    return endpoints
-
-
-def save_sample_responses(
+def fetch_sample_responses(
     endpoints: list[Endpoint], skip_cached: bool = True, workers: int = 5
 ):
     logging.info("Fetching sample responses...")
 
     thread_map(
-        lambda endpoint: endpoint.save_response(cached=skip_cached),
+        lambda endpoint: endpoint.fetch_sample_response(cached=skip_cached),
         endpoints,
         max_workers=workers,
     )
@@ -134,22 +168,13 @@ def save_sample_responses(
     logging.info("Sample responses fetched.")
 
 
-def run(api_client: APIClient, workers: int = 5):
-    endpoints = generate_endpoints_list(api_client)
-    save_sample_responses(endpoints, skip_cached=True, workers=workers)
-    return endpoints
+def generate_go_types(endpoints: list[Endpoint], workers: int = 20):
+    logging.info("Generating Go types...")
 
-
-if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+    thread_map(
+        lambda endpoint: endpoint.generate_go_types(),
+        endpoints,
+        max_workers=workers,
     )
 
-    load_dotenv()
-
-    api_client = APIClient(
-        email=os.getenv("IRACING_EMAIL"),
-        password=os.getenv("IRACING_PASSWORD"),
-    )
-
-    run(api_client)
+    logging.info("Go types generated.")

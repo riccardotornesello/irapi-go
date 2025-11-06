@@ -4,9 +4,9 @@ import logging
 from dotenv import load_dotenv
 
 from api_client import APIClient
-import structs_parser
-import endpoints_parsing
-import categories_writing
+from endpoints_documentation import generate_endpoints_list
+from endpoints_parsing import fetch_sample_responses, generate_go_types
+from templating import write_category_apis, write_endpoint_apis
 
 
 logging.basicConfig(
@@ -24,21 +24,19 @@ def main():
         password=os.getenv("IRACING_PASSWORD"),
     )
 
-    # Get the list of available endpoints, parse them and save sample responses
-    endpoints = endpoints_parsing.run(api_client)
+    # Get the list of available endpoints and parse them
+    endpoints = generate_endpoints_list(api_client)
     logging.info(f"Found {len(endpoints)} endpoints")
 
+    # Fetch sample responses for each endpoint
+    fetch_sample_responses(endpoints, skip_cached=True, workers=5)
+
     # Generate Go types from JSON responses
-    structs_parser.run()
+    generate_go_types(endpoints, workers=20)
 
-    # Generate category APIs
-    categories_writing.run(endpoints)
-
-    # # Generate endpoint calls
-    # # TODO: specify map fields
-    # # TODO: handle csv responses
-    # # TODO: loader
-    # print("Generating endpoint calls...")
+    # Generate the APIs
+    write_category_apis(endpoints)
+    write_endpoint_apis(endpoints)
 
 
 if __name__ == "__main__":

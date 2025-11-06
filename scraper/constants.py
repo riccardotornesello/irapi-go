@@ -1,6 +1,3 @@
-from enum import Enum
-
-
 PARAM_TYPES = {
     "string": "string",
     "number": "int",
