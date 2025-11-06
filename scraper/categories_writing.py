@@ -1,13 +1,14 @@
 import os
-
-import jinja2
+import logging
 
 from format import to_camel_case
+from templating import jinja2_environment
+from endpoints_parsing import Endpoint
 
-jinja2_environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates/"))
 
+def run(endpoints: list[Endpoint]):
+    logging.info("Generating category APIs...")
 
-def generate_categories_api(endpoints):
     # Get unique categories
     categories = set([endpoint.category for endpoint in endpoints])
 
@@ -22,3 +23,5 @@ def generate_categories_api(endpoints):
         os.makedirs(f"../api/{category}", exist_ok=True)
         with open(f"../api/{category}/main.go", "w") as f:
             f.write(api_code)
+
+    logging.info("Category APIs generated successfully.")

@@ -26,13 +26,6 @@ class APIClient:
         if auth_code == 0:
             raise Exception(f"Failed to authenticate: {response.text}")
 
-    def get_available_endpoints(self):
-        res = self.api_client.get("https://members-ng.iracing.com/data/doc")
-        if res.status_code != 200:
-            raise Exception(f"Failed to fetch API definition: {res.text}")
-
-        return res.json()
-
     def call_endpoint(self, url, params=None) -> str:
         response = self.api_client.get(url, params=params)
         if response.status_code != 200:
