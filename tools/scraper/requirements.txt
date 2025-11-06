@@ -1,4 +1,5 @@
 python-dotenv
-jinja2
 requests
+tqdm
 genson
+jinja2

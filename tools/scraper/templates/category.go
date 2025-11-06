@@ -1,7 +1,7 @@
-package {{ package_name }}
+package {{package_name}}
 
 import "github.com/riccardotornesello/irapi-go/client"
 
-type {{ client_struct_name }} struct {
+type {{api_name}} struct {
 	Client *client.ApiClient
 }
