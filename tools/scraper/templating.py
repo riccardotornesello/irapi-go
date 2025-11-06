@@ -24,8 +24,8 @@ def write_category_apis(endpoints: list[Endpoint]):
         api_code = category_template.render(
             package_name=category, api_name=to_camel_case(category) + "Api"
         )
-        os.makedirs(f"../api/{category}", exist_ok=True)
-        with open(f"../api/{category}/main.go", "w") as f:
+        os.makedirs(f"../../api/{category}", exist_ok=True)
+        with open(f"../../api/{category}/main.go", "w") as f:
             f.write(api_code)
 
     logging.info("Category APIs generated successfully.")
@@ -43,7 +43,7 @@ def write_endpoint_api(endpoint: Endpoint):
     endpoint_url = endpoint.link.replace("https://members-ng.iracing.com", "")
     method_name = to_camel_case(endpoint.name)
 
-    with open(f"../api/{endpoint.category}/{endpoint.name}.go", "w") as output_file:
+    with open(f"../../api/{endpoint.category}/{endpoint.name}.go", "w") as output_file:
         output_file.write(
             endpoint_template.render(
                 package_name=package_name,

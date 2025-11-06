@@ -4,44 +4,59 @@ import (
 	"encoding/json"
 )
 
-type SeriesGetResponse []struct {
-	AllowedLicenses []struct {
-		GroupName       string `json:"group_name"`
-		LicenseGroup    int    `json:"license_group"`
-		MaxLicenseLevel int    `json:"max_license_level"`
-		MinLicenseLevel int    `json:"min_license_level"`
-	} `json:"allowed_licenses"`
-	Category    string `json:"category"`
-	CategoryId  int    `json:"category_id"`
-	Eligible    bool   `json:"eligible"`
-	FirstSeason struct {
-		SeasonYear    int `json:"season_year"`
-		SeasonQuarter int `json:"season_quarter"`
-	} `json:"first_season"`
-	ForumUrl        string `json:"forum_url"`
-	MaxStarters     int    `json:"max_starters"`
-	MinStarters     int    `json:"min_starters"`
-	OvalCautionType int    `json:"oval_caution_type"`
-	RoadCautionType int    `json:"road_caution_type"`
-	SeriesId        int    `json:"series_id"`
-	SeriesName      string `json:"series_name"`
-	SeriesShortName string `json:"series_short_name"`
-	SearchFilters   string `json:"search_filters"`
+type SeriesGetResponse []SeriesGetResponseElement
+
+type SeriesGetResponseElement struct {
+	AllowedLicenses []AllowedLicense `json:"allowed_licenses"`
+	Category        Category         `json:"category"`
+	CategoryID      int64            `json:"category_id"`
+	Eligible        bool             `json:"eligible"`
+	FirstSeason     FirstSeason      `json:"first_season"`
+	ForumURL        *string          `json:"forum_url,omitempty"`
+	MaxStarters     int64            `json:"max_starters"`
+	MinStarters     int64            `json:"min_starters"`
+	OvalCautionType int64            `json:"oval_caution_type"`
+	RoadCautionType int64            `json:"road_caution_type"`
+	SeriesID        int64            `json:"series_id"`
+	SeriesName      string           `json:"series_name"`
+	SeriesShortName string           `json:"series_short_name"`
+	SearchFilters   *string          `json:"search_filters,omitempty"`
 }
 
-func (api *SeriesApi) GetSeries() (*SeriesGetResponse, error) {
-	url := "/data/series/get"
+type AllowedLicense struct {
+	GroupName       GroupName `json:"group_name"`
+	LicenseGroup    int64     `json:"license_group"`
+	MaxLicenseLevel int64     `json:"max_license_level"`
+	MinLicenseLevel int64     `json:"min_license_level"`
+}
 
-	respBody, err := api.Client.Get(url)
-	if err != nil {
-		return nil, err
-	}
+type FirstSeason struct {
+	SeasonYear    int64 `json:"season_year"`
+	SeasonQuarter int64 `json:"season_quarter"`
+}
 
-	response := &SeriesGetResponse{}
-	err = json.NewDecoder(respBody).Decode(response)
-	if err != nil {
-		return nil, err
-	}
+type GroupName string
 
-	return response, nil
+const (
+	ClassA GroupName = "Class A"
+	ClassB GroupName = "Class B"
+	ClassC GroupName = "Class C"
+	ClassD GroupName = "Class D"
+	Pro    GroupName = "Pro"
+	ProWC  GroupName = "Pro/WC"
+	Rookie GroupName = "Rookie"
+)
+
+type Category string
+
+const (
+	DirtOval   Category = "dirt_oval"
+	DirtRoad   Category = "dirt_road"
+	FormulaCar Category = "formula_car"
+	Oval       Category = "oval"
+	SportsCar  Category = "sports_car"
+)
+
+func (api *SeriesApi) Get() (*SeriesGetResponse, error) {
+	return api.GetJson[SeriesGetResponse]("/data/series/get")
 }

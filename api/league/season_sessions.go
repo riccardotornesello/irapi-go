@@ -2,107 +2,104 @@ package league
 
 import (
 	"encoding/json"
-	"github.com/google/go-querystring/query"
 )
 
-type LeagueSeasonSessionsParams struct {
-	LeagueId    int   `url:"league_id"`
-	SeasonId    int   `url:"season_id"`
-	ResultsOnly *bool `url:"results_only,omitempty"` // If true include only sessions for which results are available.
-}
-
 type LeagueSeasonSessionsResponse struct {
-	Sessions []struct {
-		Cars []struct {
-			CarId        int    `json:"car_id"`
-			CarName      string `json:"car_name"`
-			CarClassId   int    `json:"car_class_id"`
-			CarClassName string `json:"car_class_name"`
-		} `json:"cars"`
-		DriverChanges     bool        `json:"driver_changes"`
-		EntryCount        int         `json:"entry_count"`
-		HasResults        bool        `json:"has_results"`
-		LaunchAt          string      `json:"launch_at"`
-		LeagueId          int         `json:"league_id"`
-		LeagueSeasonId    int         `json:"league_season_id"`
-		LoneQualify       bool        `json:"lone_qualify"`
-		PaceCarClassId    interface{} `json:"pace_car_class_id"`
-		PaceCarId         interface{} `json:"pace_car_id"`
-		PasswordProtected bool        `json:"password_protected"`
-		PracticeLength    int         `json:"practice_length"`
-		PrivateSessionId  int         `json:"private_session_id"`
-		QualifyLaps       int         `json:"qualify_laps"`
-		QualifyLength     int         `json:"qualify_length"`
-		RaceLaps          int         `json:"race_laps"`
-		RaceLength        int         `json:"race_length"`
-		SessionId         int         `json:"session_id"`
-		Status            int         `json:"status"`
-		SubsessionId      int         `json:"subsession_id"`
-		TeamEntryCount    int         `json:"team_entry_count"`
-		TimeLimit         int         `json:"time_limit"`
-		Track             struct {
-			ConfigName string `json:"config_name"`
-			TrackId    int    `json:"track_id"`
-			TrackName  string `json:"track_name"`
-		} `json:"track"`
-		TrackState struct {
-			LeaveMarbles         bool `json:"leave_marbles"`
-			PracticeGripCompound int  `json:"practice_grip_compound"`
-			PracticeRubber       int  `json:"practice_rubber"`
-			QualifyGripCompound  int  `json:"qualify_grip_compound"`
-			QualifyRubber        int  `json:"qualify_rubber"`
-			RaceGripCompound     int  `json:"race_grip_compound"`
-			RaceRubber           int  `json:"race_rubber"`
-			WarmupGripCompound   int  `json:"warmup_grip_compound"`
-			WarmupRubber         int  `json:"warmup_rubber"`
-		} `json:"track_state"`
-		Weather struct {
-			AllowFog       bool `json:"allow_fog"`
-			Fog            int  `json:"fog"`
-			PrecipOption   int  `json:"precip_option"`
-			RelHumidity    int  `json:"rel_humidity"`
-			Skies          int  `json:"skies"`
-			TempUnits      int  `json:"temp_units"`
-			TempValue      int  `json:"temp_value"`
-			TrackWater     int  `json:"track_water"`
-			Type           int  `json:"type"`
-			Version        int  `json:"version"`
-			WeatherSummary struct {
-				MaxPrecipRateDesc string `json:"max_precip_rate_desc"`
-				PrecipChance      int    `json:"precip_chance"`
-			} `json:"weather_summary"`
-			WeatherVarInitial int `json:"weather_var_initial"`
-			WeatherVarOngoing int `json:"weather_var_ongoing"`
-			WindDir           int `json:"wind_dir"`
-			WindUnits         int `json:"wind_units"`
-			WindValue         int `json:"wind_value"`
-		} `json:"weather"`
-		WinnerId   int    `json:"winner_id"`
-		WinnerName string `json:"winner_name"`
-	} `json:"sessions"`
-	Success  bool `json:"success"`
-	SeasonId int  `json:"season_id"`
-	LeagueId int  `json:"league_id"`
+	Success    bool      `json:"success"`
+	Subscribed bool      `json:"subscribed"`
+	LeagueID   int64     `json:"league_id"`
+	SeasonID   int64     `json:"season_id"`
+	Sessions   []Session `json:"sessions"`
 }
 
-func (api *LeagueApi) GetLeagueSeasonSessions(params LeagueSeasonSessionsParams) (*LeagueSeasonSessionsResponse, error) {
-	paramsString, err := query.Values(params)
-	if err != nil {
-		return nil, err
-	}
+import "time"
 
-	url := "/data/league/season_sessions?" + paramsString.Encode()
+type Session struct {
+	Cars              []Car       `json:"cars"`
+	DriverChanges     bool        `json:"driver_changes"`
+	EntryCount        int64       `json:"entry_count"`
+	HasResults        bool        `json:"has_results"`
+	LaunchAt          time.Time   `json:"launch_at"`
+	LeagueID          int64       `json:"league_id"`
+	LeagueSeasonID    int64       `json:"league_season_id"`
+	LoneQualify       bool        `json:"lone_qualify"`
+	PaceCarClassID    interface{} `json:"pace_car_class_id"`
+	PaceCarID         interface{} `json:"pace_car_id"`
+	PasswordProtected bool        `json:"password_protected"`
+	PracticeLength    int64       `json:"practice_length"`
+	PrivateSessionID  int64       `json:"private_session_id"`
+	QualifyLaps       int64       `json:"qualify_laps"`
+	QualifyLength     int64       `json:"qualify_length"`
+	RaceLaps          int64       `json:"race_laps"`
+	RaceLength        int64       `json:"race_length"`
+	SessionID         int64       `json:"session_id"`
+	Status            int64       `json:"status"`
+	SubsessionID      int64       `json:"subsession_id"`
+	TeamEntryCount    int64       `json:"team_entry_count"`
+	TimeLimit         int64       `json:"time_limit"`
+	Track             Track       `json:"track"`
+	TrackState        TrackState  `json:"track_state"`
+	Weather           Weather     `json:"weather"`
+	WinnerID          int64       `json:"winner_id"`
+	WinnerName        string      `json:"winner_name"`
+}
 
-	respBody, err := api.Client.Get(url)
-	if err != nil {
-		return nil, err
-	}
+type Car struct {
+	CarID        int64        `json:"car_id"`
+	CarName      string       `json:"car_name"`
+	CarClassID   int64        `json:"car_class_id"`
+	CarClassName CarClassName `json:"car_class_name"`
+}
 
-	response := &LeagueSeasonSessionsResponse{}
-	err = json.NewDecoder(respBody).Decode(response)
-	if err != nil {
-		return nil, err
-	}
+type Track struct {
+	ConfigName string `json:"config_name"`
+	TrackID    int64  `json:"track_id"`
+	TrackName  string `json:"track_name"`
+}
 
-	return response, nil
+type TrackState struct {
+	LeaveMarbles         bool  `json:"leave_marbles"`
+	PracticeGripCompound int64 `json:"practice_grip_compound"`
+	PracticeRubber       int64 `json:"practice_rubber"`
+	QualifyGripCompound  int64 `json:"qualify_grip_compound"`
+	QualifyRubber        int64 `json:"qualify_rubber"`
+	RaceGripCompound     int64 `json:"race_grip_compound"`
+	RaceRubber           int64 `json:"race_rubber"`
+	WarmupGripCompound   int64 `json:"warmup_grip_compound"`
+	WarmupRubber         int64 `json:"warmup_rubber"`
+}
+
+type Weather struct {
+	AllowFog          bool           `json:"allow_fog"`
+	Fog               int64          `json:"fog"`
+	PrecipOption      int64          `json:"precip_option"`
+	RelHumidity       int64          `json:"rel_humidity"`
+	Skies             int64          `json:"skies"`
+	TempUnits         int64          `json:"temp_units"`
+	TempValue         int64          `json:"temp_value"`
+	TrackWater        int64          `json:"track_water"`
+	Type              int64          `json:"type"`
+	Version           int64          `json:"version"`
+	WeatherSummary    WeatherSummary `json:"weather_summary"`
+	WeatherVarInitial int64          `json:"weather_var_initial"`
+	WeatherVarOngoing int64          `json:"weather_var_ongoing"`
+	WindDir           int64          `json:"wind_dir"`
+	WindUnits         int64          `json:"wind_units"`
+	WindValue         int64          `json:"wind_value"`
+}
+
+type WeatherSummary struct {
+	MaxPrecipRateDesc string `json:"max_precip_rate_desc"`
+	PrecipChance      int64  `json:"precip_chance"`
+}
+
+type CarClassName string
+
+const (
+	HostedAllCarsClass CarClassName = "Hosted All Cars Class"
+)
+
+
+func (api *LeagueApi) SeasonSessions() (*LeagueSeasonSessionsResponse, error) {
+	return api.GetJson[LeagueSeasonSessionsResponse]("/data/league/season_sessions")
 }

@@ -2,138 +2,128 @@ package member
 
 import (
 	"encoding/json"
-	"github.com/google/go-querystring/query"
 )
 
-type MemberProfileParams struct {
-	CustId *int `url:"cust_id,omitempty"` // Defaults to the authenticated member.
-}
-
 type MemberProfileResponse struct {
-	RecentAwards []struct {
-		MemberAwardId      int    `json:"member_award_id"`
-		AwardId            int    `json:"award_id"`
-		Achievement        bool   `json:"achievement"`
-		AwardCount         int    `json:"award_count"`
-		AwardDate          string `json:"award_date"`
-		AwardOrder         int    `json:"award_order"`
-		AwardedDescription string `json:"awarded_description"`
-		Description        string `json:"description"`
-		GroupName          string `json:"group_name"`
-		HasPdf             bool   `json:"has_pdf"`
-		IconUrlLarge       string `json:"icon_url_large"`
-		IconUrlSmall       string `json:"icon_url_small"`
-		IconUrlUnawarded   string `json:"icon_url_unawarded"`
-		Name               string `json:"name"`
-		SubsessionId       int    `json:"subsession_id"`
-		Viewed             bool   `json:"viewed"`
-		Weight             int    `json:"weight"`
-	} `json:"recent_awards"`
-	Activity struct {
-		Recent30daysCount    int `json:"recent_30days_count"`
-		Prev30daysCount      int `json:"prev_30days_count"`
-		ConsecutiveWeeks     int `json:"consecutive_weeks"`
-		MostConsecutiveWeeks int `json:"most_consecutive_weeks"`
-	} `json:"activity"`
-	Success    bool   `json:"success"`
-	ImageUrl   string `json:"image_url"`
-	MemberInfo struct {
-		CustId      int    `json:"cust_id"`
-		DisplayName string `json:"display_name"`
-		Helmet      struct {
-			Pattern    int    `json:"pattern"`
-			Color1     string `json:"color1"`
-			Color2     string `json:"color2"`
-			Color3     string `json:"color3"`
-			FaceType   int    `json:"face_type"`
-			HelmetType int    `json:"helmet_type"`
-		} `json:"helmet"`
-		LastLogin   string `json:"last_login"`
-		MemberSince string `json:"member_since"`
-		ClubId      int    `json:"club_id"`
-		ClubName    string `json:"club_name"`
-		Ai          bool   `json:"ai"`
-		Licenses    []struct {
-			CategoryId    int     `json:"category_id"`
-			Category      string  `json:"category"`
-			CategoryName  string  `json:"category_name"`
-			LicenseLevel  int     `json:"license_level"`
-			SafetyRating  float64 `json:"safety_rating"`
-			Cpi           float64 `json:"cpi"`
-			Irating       int     `json:"irating"`
-			TtRating      int     `json:"tt_rating"`
-			MprNumRaces   int     `json:"mpr_num_races"`
-			Color         string  `json:"color"`
-			GroupName     string  `json:"group_name"`
-			GroupId       int     `json:"group_id"`
-			ProPromotable bool    `json:"pro_promotable"`
-			Seq           int     `json:"seq"`
-			MprNumTts     int     `json:"mpr_num_tts"`
-		} `json:"licenses"`
-		Country     string `json:"country"`
-		CountryCode string `json:"country_code"`
-	} `json:"member_info"`
-	Disabled       bool `json:"disabled"`
-	LicenseHistory []struct {
-		CategoryId   int     `json:"category_id"`
-		Category     string  `json:"category"`
-		CategoryName string  `json:"category_name"`
-		LicenseLevel int     `json:"license_level"`
-		SafetyRating float64 `json:"safety_rating"`
-		Cpi          float64 `json:"cpi"`
-		Irating      int     `json:"irating"`
-		TtRating     int     `json:"tt_rating"`
-		Color        string  `json:"color"`
-		GroupName    string  `json:"group_name"`
-		GroupId      int     `json:"group_id"`
-		Seq          int     `json:"seq"`
-	} `json:"license_history"`
-	RecentEvents []struct {
-		EventType        string  `json:"event_type"`
-		SubsessionId     int     `json:"subsession_id"`
-		StartTime        string  `json:"start_time"`
-		EventId          int     `json:"event_id"`
-		EventName        string  `json:"event_name"`
-		SimsessionType   int     `json:"simsession_type"`
-		StartingPosition int     `json:"starting_position"`
-		FinishPosition   int     `json:"finish_position"`
-		BestLapTime      int     `json:"best_lap_time"`
-		PercentRank      int     `json:"percent_rank"`
-		CarId            int     `json:"car_id"`
-		CarName          string  `json:"car_name"`
-		LogoUrl          *string `json:"logo_url"`
-		Track            struct {
-			ConfigName string `json:"config_name"`
-			TrackId    int    `json:"track_id"`
-			TrackName  string `json:"track_name"`
-		} `json:"track"`
-	} `json:"recent_events"`
-	CustId         int  `json:"cust_id"`
-	IsGenericImage bool `json:"is_generic_image"`
-	FollowCounts   struct {
-		Followers int `json:"followers"`
-		Follows   int `json:"follows"`
-	} `json:"follow_counts"`
+	RecentAwards   []RecentAward `json:"recent_awards"`
+	Activity       Activity      `json:"activity"`
+	Success        bool          `json:"success"`
+	ImageURL       string        `json:"image_url"`
+	MemberInfo     MemberInfo    `json:"member_info"`
+	Disabled       bool          `json:"disabled"`
+	LicenseHistory []License     `json:"license_history"`
+	RecentEvents   []RecentEvent `json:"recent_events"`
+	CustID         int64         `json:"cust_id"`
+	IsGenericImage bool          `json:"is_generic_image"`
+	FollowCounts   FollowCounts  `json:"follow_counts"`
 }
 
-func (api *MemberApi) GetMemberProfile(params MemberProfileParams) (*MemberProfileResponse, error) {
-	paramsString, err := query.Values(params)
-	if err != nil {
-		return nil, err
-	}
+type Activity struct {
+	Recent30DaysCount    int64 `json:"recent_30days_count"`
+	Prev30DaysCount      int64 `json:"prev_30days_count"`
+	ConsecutiveWeeks     int64 `json:"consecutive_weeks"`
+	MostConsecutiveWeeks int64 `json:"most_consecutive_weeks"`
+}
 
-	url := "/data/member/profile?" + paramsString.Encode()
+type FollowCounts struct {
+	Followers int64 `json:"followers"`
+	Follows   int64 `json:"follows"`
+}
 
-	respBody, err := api.Client.Get(url)
-	if err != nil {
-		return nil, err
-	}
+type License struct {
+	CategoryID    int64   `json:"category_id"`
+	Category      string  `json:"category"`
+	CategoryName  string  `json:"category_name"`
+	LicenseLevel  int64   `json:"license_level"`
+	SafetyRating  float64 `json:"safety_rating"`
+	Cpi           float64 `json:"cpi"`
+	Irating       int64   `json:"irating"`
+	TtRating      int64   `json:"tt_rating"`
+	Color         string  `json:"color"`
+	GroupName     string  `json:"group_name"`
+	GroupID       int64   `json:"group_id"`
+	Seq           int64   `json:"seq"`
+	MprNumRaces   *int64  `json:"mpr_num_races,omitempty"`
+	ProPromotable *bool   `json:"pro_promotable,omitempty"`
+	MprNumTTS     *int64  `json:"mpr_num_tts,omitempty"`
+}
 
-	response := &MemberProfileResponse{}
-	err = json.NewDecoder(respBody).Decode(response)
-	if err != nil {
-		return nil, err
-	}
+import "time"
 
-	return response, nil
+type MemberInfo struct {
+	AI             bool      `json:"ai"`
+	Country        string    `json:"country"`
+	CountryCode    string    `json:"country_code"`
+	CustID         int64     `json:"cust_id"`
+	DisplayName    string    `json:"display_name"`
+	FlairID        int64     `json:"flair_id"`
+	FlairName      string    `json:"flair_name"`
+	FlairShortname string    `json:"flair_shortname"`
+	Helmet         Helmet    `json:"helmet"`
+	LastLogin      time.Time `json:"last_login"`
+	Licenses       []License `json:"licenses"`
+	MemberSince    string    `json:"member_since"`
+}
+
+type Helmet struct {
+	Pattern    int64  `json:"pattern"`
+	Color1     string `json:"color1"`
+	Color2     string `json:"color2"`
+	Color3     string `json:"color3"`
+	FaceType   int64  `json:"face_type"`
+	HelmetType int64  `json:"helmet_type"`
+}
+
+type RecentAward struct {
+	MemberAwardID      int64   `json:"member_award_id"`
+	AwardID            int64   `json:"award_id"`
+	Achievement        bool    `json:"achievement"`
+	AwardCount         int64   `json:"award_count"`
+	AwardDate          string  `json:"award_date"`
+	AwardOrder         int64   `json:"award_order"`
+	AwardedDescription string  `json:"awarded_description"`
+	CustID             int64   `json:"cust_id"`
+	Description        string  `json:"description"`
+	GroupName          string  `json:"group_name"`
+	HasPDF             bool    `json:"has_pdf"`
+	IconURLLarge       string  `json:"icon_url_large"`
+	IconURLSmall       string  `json:"icon_url_small"`
+	IconURLUnawarded   string  `json:"icon_url_unawarded"`
+	Name               string  `json:"name"`
+	SubsessionID       *int64  `json:"subsession_id,omitempty"`
+	Viewed             bool    `json:"viewed"`
+	Weight             int64   `json:"weight"`
+	Progress           *int64  `json:"progress,omitempty"`
+	ProgressLabel      *string `json:"progress_label,omitempty"`
+	ProgressText       *string `json:"progress_text,omitempty"`
+	ProgressTextLabel  *string `json:"progress_text_label,omitempty"`
+	Threshold          *int64  `json:"threshold,omitempty"`
+}
+
+type RecentEvent struct {
+	EventType        string      `json:"event_type"`
+	SubsessionID     int64       `json:"subsession_id"`
+	StartTime        time.Time   `json:"start_time"`
+	EventID          int64       `json:"event_id"`
+	EventName        string      `json:"event_name"`
+	SimsessionType   int64       `json:"simsession_type"`
+	StartingPosition int64       `json:"starting_position"`
+	FinishPosition   int64       `json:"finish_position"`
+	BestLapTime      int64       `json:"best_lap_time"`
+	PercentRank      int64       `json:"percent_rank"`
+	CarID            int64       `json:"car_id"`
+	CarName          string      `json:"car_name"`
+	LogoURL          interface{} `json:"logo_url"`
+	Track            Track       `json:"track"`
+}
+
+type Track struct {
+	ConfigName string `json:"config_name"`
+	TrackID    int64  `json:"track_id"`
+	TrackName  string `json:"track_name"`
+}
+
+
+func (api *MemberApi) Profile() (*MemberProfileResponse, error) {
+	return api.GetJson[MemberProfileResponse]("/data/member/profile")
 }

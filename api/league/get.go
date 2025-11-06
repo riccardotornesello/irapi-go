@@ -2,98 +2,79 @@ package league
 
 import (
 	"encoding/json"
-	"github.com/google/go-querystring/query"
 )
 
-type LeagueGetParams struct {
-	LeagueId        int   `url:"league_id"`
-	IncludeLicenses *bool `url:"include_licenses,omitempty"` // For faster responses, only request when necessary.
-}
+import "time"
 
 type LeagueGetResponse struct {
-	LeagueId        int    `json:"league_id"`
-	OwnerId         int    `json:"owner_id"`
-	LeagueName      string `json:"league_name"`
-	Created         string `json:"created"`
-	Hidden          bool   `json:"hidden"`
-	Message         string `json:"message"`
-	About           string `json:"about"`
-	Url             string `json:"url"`
-	Recruiting      bool   `json:"recruiting"`
-	PrivateWall     bool   `json:"private_wall"`
-	PrivateRoster   bool   `json:"private_roster"`
-	PrivateSchedule bool   `json:"private_schedule"`
-	PrivateResults  bool   `json:"private_results"`
-	IsOwner         bool   `json:"is_owner"`
-	IsAdmin         bool   `json:"is_admin"`
-	RosterCount     int    `json:"roster_count"`
-	Owner           struct {
-		CustId      int    `json:"cust_id"`
-		DisplayName string `json:"display_name"`
-		Helmet      struct {
-			Pattern    int    `json:"pattern"`
-			Color1     string `json:"color1"`
-			Color2     string `json:"color2"`
-			Color3     string `json:"color3"`
-			FaceType   int    `json:"face_type"`
-			HelmetType int    `json:"helmet_type"`
-		} `json:"helmet"`
-		CarNumber interface{} `json:"car_number"`
-		NickName  interface{} `json:"nick_name"`
-	} `json:"owner"`
-	Image struct {
-		SmallLogo string `json:"small_logo"`
-		LargeLogo string `json:"large_logo"`
-	} `json:"image"`
-	Tags struct {
-		Categorized    []interface{} `json:"categorized"`
-		NotCategorized []interface{} `json:"not_categorized"`
-	} `json:"tags"`
+	LeagueID           int64         `json:"league_id"`
+	OwnerID            int64         `json:"owner_id"`
+	LeagueName         string        `json:"league_name"`
+	Created            time.Time     `json:"created"`
+	Hidden             bool          `json:"hidden"`
+	Message            string        `json:"message"`
+	About              string        `json:"about"`
+	URL                string        `json:"url"`
+	Recruiting         bool          `json:"recruiting"`
+	PrivateWall        bool          `json:"private_wall"`
+	PrivateRoster      bool          `json:"private_roster"`
+	PrivateSchedule    bool          `json:"private_schedule"`
+	PrivateResults     bool          `json:"private_results"`
+	IsOwner            bool          `json:"is_owner"`
+	IsAdmin            bool          `json:"is_admin"`
+	RosterCount        int64         `json:"roster_count"`
+	Owner              Owner         `json:"owner"`
+	Image              Image         `json:"image"`
+	Tags               Tags          `json:"tags"`
 	LeagueApplications []interface{} `json:"league_applications"`
 	PendingRequests    []interface{} `json:"pending_requests"`
 	IsMember           bool          `json:"is_member"`
 	IsApplicant        bool          `json:"is_applicant"`
 	IsInvite           bool          `json:"is_invite"`
 	IsIgnored          bool          `json:"is_ignored"`
-	Roster             []struct {
-		CustId      int    `json:"cust_id"`
-		DisplayName string `json:"display_name"`
-		Helmet      struct {
-			Pattern    int    `json:"pattern"`
-			Color1     string `json:"color1"`
-			Color2     string `json:"color2"`
-			Color3     string `json:"color3"`
-			FaceType   int    `json:"face_type"`
-			HelmetType int    `json:"helmet_type"`
-		} `json:"helmet"`
-		Owner             bool        `json:"owner"`
-		Admin             bool        `json:"admin"`
-		LeagueMailOptOut  bool        `json:"league_mail_opt_out"`
-		LeaguePmOptOut    bool        `json:"league_pm_opt_out"`
-		LeagueMemberSince string      `json:"league_member_since"`
-		CarNumber         *string     `json:"car_number"`
-		NickName          interface{} `json:"nick_name"`
-	} `json:"roster"`
+	Roster             []Roster      `json:"roster"`
 }
 
-func (api *LeagueApi) GetLeague(params LeagueGetParams) (*LeagueGetResponse, error) {
-	paramsString, err := query.Values(params)
-	if err != nil {
-		return nil, err
-	}
+type Image struct {
+	SmallLogo string `json:"small_logo"`
+	LargeLogo string `json:"large_logo"`
+}
 
-	url := "/data/league/get?" + paramsString.Encode()
+type Owner struct {
+	CustID      int64       `json:"cust_id"`
+	DisplayName string      `json:"display_name"`
+	Helmet      Helmet      `json:"helmet"`
+	CarNumber   interface{} `json:"car_number"`
+	NickName    interface{} `json:"nick_name"`
+}
 
-	respBody, err := api.Client.Get(url)
-	if err != nil {
-		return nil, err
-	}
+type Helmet struct {
+	Pattern    int64  `json:"pattern"`
+	Color1     string `json:"color1"`
+	Color2     string `json:"color2"`
+	Color3     string `json:"color3"`
+	FaceType   int64  `json:"face_type"`
+	HelmetType int64  `json:"helmet_type"`
+}
 
-	response := &LeagueGetResponse{}
-	err = json.NewDecoder(respBody).Decode(response)
-	if err != nil {
-		return nil, err
-	}
+type Roster struct {
+	CustID            int64     `json:"cust_id"`
+	DisplayName       string    `json:"display_name"`
+	Helmet            Helmet    `json:"helmet"`
+	Owner             bool      `json:"owner"`
+	Admin             bool      `json:"admin"`
+	LeagueMailOptOut  bool      `json:"league_mail_opt_out"`
+	LeaguePmOptOut    bool      `json:"league_pm_opt_out"`
+	LeagueMemberSince time.Time `json:"league_member_since"`
+	CarNumber         string    `json:"car_number"`
+	NickName          *string   `json:"nick_name"`
+}
 
-	return response, nil
+type Tags struct {
+	Categorized    []interface{} `json:"categorized"`
+	NotCategorized []interface{} `json:"not_categorized"`
+}
+
+func (api *LeagueApi) Get() (*LeagueGetResponse, error) {
+	return api.GetJson[LeagueGetResponse]("/data/league/get")
 }

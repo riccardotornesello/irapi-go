@@ -4,34 +4,22 @@ import (
 	"encoding/json"
 )
 
-type MemberParticipationCreditsResponse []struct {
-	CustId               int    `json:"cust_id"`
-	SeasonId             int    `json:"season_id"`
-	SeriesId             int    `json:"series_id"`
+type MemberParticipationCreditsResponse []MemberParticipationCreditsResponseElement
+
+type MemberParticipationCreditsResponseElement struct {
+	CustID               int64  `json:"cust_id"`
+	SeasonID             int64  `json:"season_id"`
+	SeriesID             int64  `json:"series_id"`
 	SeriesName           string `json:"series_name"`
-	LicenseGroup         int    `json:"license_group"`
+	LicenseGroup         int64  `json:"license_group"`
 	LicenseGroupName     string `json:"license_group_name"`
-	ParticipationCredits int    `json:"participation_credits"`
-	MinWeeks             int    `json:"min_weeks"`
-	Weeks                int    `json:"weeks"`
-	EarnedCredits        int    `json:"earned_credits"`
-	TotalCredits         int    `json:"total_credits"`
+	ParticipationCredits int64  `json:"participation_credits"`
+	MinWeeks             int64  `json:"min_weeks"`
+	Weeks                int64  `json:"weeks"`
+	EarnedCredits        int64  `json:"earned_credits"`
+	TotalCredits         int64  `json:"total_credits"`
 }
 
-// Always the authenticated member.
-func (api *MemberApi) GetMemberParticipationCredits() (*MemberParticipationCreditsResponse, error) {
-	url := "/data/member/participation_credits"
-
-	respBody, err := api.Client.Get(url)
-	if err != nil {
-		return nil, err
-	}
-
-	response := &MemberParticipationCreditsResponse{}
-	err = json.NewDecoder(respBody).Decode(response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
+func (api *MemberApi) ParticipationCredits() (*MemberParticipationCreditsResponse, error) {
+	return api.GetJson[MemberParticipationCreditsResponse]("/data/member/participation_credits")
 }

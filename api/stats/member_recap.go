@@ -2,60 +2,41 @@ package stats
 
 import (
 	"encoding/json"
-	"github.com/google/go-querystring/query"
 )
 
-type StatsMemberRecapParams struct {
-	CustId *int `url:"cust_id,omitempty"` // Defaults to the authenticated member.
-	Year   *int `url:"year,omitempty"`    // Season year; if not supplied the current calendar year (UTC) is used.
-	Season *int `url:"season,omitempty"`  // Season (quarter) within the year; if not supplied the recap will be fore the entire year.
-}
-
 type StatsMemberRecapResponse struct {
-	Year  int `json:"year"`
-	Stats struct {
-		Starts            int `json:"starts"`
-		Wins              int `json:"wins"`
-		Top5              int `json:"top5"`
-		AvgStartPosition  int `json:"avg_start_position"`
-		AvgFinishPosition int `json:"avg_finish_position"`
-		Laps              int `json:"laps"`
-		LapsLed           int `json:"laps_led"`
-		FavoriteCar       struct {
-			CarId    int    `json:"car_id"`
-			CarName  string `json:"car_name"`
-			CarImage string `json:"car_image"`
-		} `json:"favorite_car"`
-		FavoriteTrack struct {
-			ConfigName string `json:"config_name"`
-			TrackId    int    `json:"track_id"`
-			TrackLogo  string `json:"track_logo"`
-			TrackName  string `json:"track_name"`
-		} `json:"favorite_track"`
-	} `json:"stats"`
+	Year    int64       `json:"year"`
+	Stats   Stats       `json:"stats"`
 	Success bool        `json:"success"`
 	Season  interface{} `json:"season"`
-	CustId  int         `json:"cust_id"`
+	CustID  int64       `json:"cust_id"`
 }
 
-func (api *StatsApi) GetStatsMemberRecap(params StatsMemberRecapParams) (*StatsMemberRecapResponse, error) {
-	paramsString, err := query.Values(params)
-	if err != nil {
-		return nil, err
-	}
+type Stats struct {
+	Starts            int64         `json:"starts"`
+	WINS              int64         `json:"wins"`
+	Top5              int64         `json:"top5"`
+	AvgStartPosition  int64         `json:"avg_start_position"`
+	AvgFinishPosition int64         `json:"avg_finish_position"`
+	Laps              int64         `json:"laps"`
+	LapsLED           int64         `json:"laps_led"`
+	FavoriteCar       FavoriteCar   `json:"favorite_car"`
+	FavoriteTrack     FavoriteTrack `json:"favorite_track"`
+}
 
-	url := "/data/stats/member_recap?" + paramsString.Encode()
+type FavoriteCar struct {
+	CarID    int64  `json:"car_id"`
+	CarName  string `json:"car_name"`
+	CarImage string `json:"car_image"`
+}
 
-	respBody, err := api.Client.Get(url)
-	if err != nil {
-		return nil, err
-	}
+type FavoriteTrack struct {
+	ConfigName string `json:"config_name"`
+	TrackID    int64  `json:"track_id"`
+	TrackLogo  string `json:"track_logo"`
+	TrackName  string `json:"track_name"`
+}
 
-	response := &StatsMemberRecapResponse{}
-	err = json.NewDecoder(respBody).Decode(response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
+func (api *StatsApi) MemberRecap() (*StatsMemberRecapResponse, error) {
+	return api.GetJson[StatsMemberRecapResponse]("/data/stats/member_recap")
 }

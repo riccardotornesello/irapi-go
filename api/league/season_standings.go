@@ -2,73 +2,55 @@ package league
 
 import (
 	"encoding/json"
-	"github.com/google/go-querystring/query"
 )
 
-type LeagueSeasonStandingsParams struct {
-	LeagueId   int  `url:"league_id"`
-	SeasonId   int  `url:"season_id"`
-	CarClassId *int `url:"car_class_id,omitempty"`
-	CarId      *int `url:"car_id,omitempty"` // If car_class_id is included then the standings are for the car in that car class, otherwise they are for the car across car classes.
-}
-
 type LeagueSeasonStandingsResponse struct {
-	CarClassId int  `json:"car_class_id"`
-	Success    bool `json:"success"`
-	SeasonId   int  `json:"season_id"`
-	CarId      int  `json:"car_id"`
-	Standings  struct {
-		DriverStandings []struct {
-			Rownum   int `json:"rownum"`
-			Position int `json:"position"`
-			Driver   struct {
-				CustId      int    `json:"cust_id"`
-				DisplayName string `json:"display_name"`
-				Helmet      struct {
-					Pattern    int    `json:"pattern"`
-					Color1     string `json:"color1"`
-					Color2     string `json:"color2"`
-					Color3     string `json:"color3"`
-					FaceType   int    `json:"face_type"`
-					HelmetType int    `json:"helmet_type"`
-				} `json:"helmet"`
-			} `json:"driver"`
-			CarNumber           *string     `json:"car_number"`
-			DriverNickname      interface{} `json:"driver_nickname"`
-			Wins                int         `json:"wins"`
-			AverageStart        int         `json:"average_start"`
-			AverageFinish       int         `json:"average_finish"`
-			BasePoints          int         `json:"base_points"`
-			NegativeAdjustments int         `json:"negative_adjustments"`
-			PositiveAdjustments int         `json:"positive_adjustments"`
-			TotalAdjustments    int         `json:"total_adjustments"`
-			TotalPoints         int         `json:"total_points"`
-		} `json:"driver_standings"`
-		TeamStandings         []interface{} `json:"team_standings"`
-		DriverStandingsCsvUrl string        `json:"driver_standings_csv_url"`
-		TeamStandingsCsvUrl   string        `json:"team_standings_csv_url"`
-	} `json:"standings"`
-	LeagueId int `json:"league_id"`
+	CarClassID int64     `json:"car_class_id"`
+	Success    bool      `json:"success"`
+	SeasonID   int64     `json:"season_id"`
+	CarID      int64     `json:"car_id"`
+	Standings  Standings `json:"standings"`
+	LeagueID   int64     `json:"league_id"`
 }
 
-func (api *LeagueApi) GetLeagueSeasonStandings(params LeagueSeasonStandingsParams) (*LeagueSeasonStandingsResponse, error) {
-	paramsString, err := query.Values(params)
-	if err != nil {
-		return nil, err
-	}
+type Standings struct {
+	DriverStandings       []DriverStanding `json:"driver_standings"`
+	TeamStandings         []interface{}    `json:"team_standings"`
+	DriverStandingsCSVURL string           `json:"driver_standings_csv_url"`
+	TeamStandingsCSVURL   string           `json:"team_standings_csv_url"`
+}
 
-	url := "/data/league/season_standings?" + paramsString.Encode()
+type DriverStanding struct {
+	Rownum              int64   `json:"rownum"`
+	Position            int64   `json:"position"`
+	Driver              Driver  `json:"driver"`
+	CarNumber           *string `json:"car_number"`
+	DriverNickname      *string `json:"driver_nickname"`
+	WINS                int64   `json:"wins"`
+	AverageStart        int64   `json:"average_start"`
+	AverageFinish       int64   `json:"average_finish"`
+	BasePoints          int64   `json:"base_points"`
+	NegativeAdjustments int64   `json:"negative_adjustments"`
+	PositiveAdjustments int64   `json:"positive_adjustments"`
+	TotalAdjustments    int64   `json:"total_adjustments"`
+	TotalPoints         int64   `json:"total_points"`
+}
 
-	respBody, err := api.Client.Get(url)
-	if err != nil {
-		return nil, err
-	}
+type Driver struct {
+	CustID      int64  `json:"cust_id"`
+	DisplayName string `json:"display_name"`
+	Helmet      Helmet `json:"helmet"`
+}
 
-	response := &LeagueSeasonStandingsResponse{}
-	err = json.NewDecoder(respBody).Decode(response)
-	if err != nil {
-		return nil, err
-	}
+type Helmet struct {
+	Pattern    int64  `json:"pattern"`
+	Color1     string `json:"color1"`
+	Color2     string `json:"color2"`
+	Color3     string `json:"color3"`
+	FaceType   int64  `json:"face_type"`
+	HelmetType int64  `json:"helmet_type"`
+}
 
-	return response, nil
+func (api *LeagueApi) SeasonStandings() (*LeagueSeasonStandingsResponse, error) {
+	return api.GetJson[LeagueSeasonStandingsResponse]("/data/league/season_standings")
 }

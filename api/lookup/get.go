@@ -6,20 +6,6 @@ import (
 
 type LookupGetResponse []interface{}
 
-// ?weather=weather_wind_speed_units&weather=weather_wind_speed_max&weather=weather_wind_speed_min&licenselevels=licenselevels
-func (api *LookupApi) GetLookup() (*LookupGetResponse, error) {
-	url := "/data/lookup/get"
-
-	respBody, err := api.Client.Get(url)
-	if err != nil {
-		return nil, err
-	}
-
-	response := &LookupGetResponse{}
-	err = json.NewDecoder(respBody).Decode(response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
+func (api *LookupApi) Get() (*LookupGetResponse, error) {
+	return api.GetJson[LookupGetResponse]("/data/lookup/get")
 }

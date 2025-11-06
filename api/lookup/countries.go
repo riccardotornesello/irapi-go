@@ -4,24 +4,13 @@ import (
 	"encoding/json"
 )
 
-type LookupCountriesResponse []struct {
+type LookupCountriesResponse []LookupCountriesResponseElement
+
+type LookupCountriesResponseElement struct {
 	CountryName string `json:"country_name"`
 	CountryCode string `json:"country_code"`
 }
 
-func (api *LookupApi) GetLookupCountries() (*LookupCountriesResponse, error) {
-	url := "/data/lookup/countries"
-
-	respBody, err := api.Client.Get(url)
-	if err != nil {
-		return nil, err
-	}
-
-	response := &LookupCountriesResponse{}
-	err = json.NewDecoder(respBody).Decode(response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
+func (api *LookupApi) Countries() (*LookupCountriesResponse, error) {
+	return api.GetJson[LookupCountriesResponse]("/data/lookup/countries")
 }

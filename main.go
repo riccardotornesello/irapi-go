@@ -12,6 +12,7 @@ import (
 	"github.com/riccardotornesello/irapi-go/api/results"
 	"github.com/riccardotornesello/irapi-go/api/season"
 	"github.com/riccardotornesello/irapi-go/api/series"
+	"github.com/riccardotornesello/irapi-go/api/session"
 	"github.com/riccardotornesello/irapi-go/api/stats"
 	"github.com/riccardotornesello/irapi-go/api/team"
 	"github.com/riccardotornesello/irapi-go/api/time_attack"
@@ -31,6 +32,7 @@ type IRacingApiClient struct {
 	Results               *results.ResultsApi
 	Season                *season.SeasonApi
 	Series                *series.SeriesApi
+	Session               *session.SessionApi
 	Stats                 *stats.StatsApi
 	Team                  *team.TeamApi
 	TimeAttack            *time_attack.TimeAttackApi
@@ -55,6 +57,7 @@ func NewIRacingApiClient(email string, password string) (*IRacingApiClient, erro
 		Results:               &results.ResultsApi{Client: apiClient},
 		Season:                &season.SeasonApi{Client: apiClient},
 		Series:                &series.SeriesApi{Client: apiClient},
+		Session:               &session.SessionApi{Client: apiClient},
 		Stats:                 &stats.StatsApi{Client: apiClient},
 		Team:                  &team.TeamApi{Client: apiClient},
 		TimeAttack:            &time_attack.TimeAttackApi{Client: apiClient},

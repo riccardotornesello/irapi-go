@@ -4,12 +4,11 @@ import (
 	"encoding/json"
 )
 
-type CarAssetsResponse map[string]struct {
-	CarId    int `json:"car_id"`
-	CarRules []struct {
-		RuleCategory string `json:"rule_category"`
-		Text         string `json:"text"`
-	} `json:"car_rules"`
+type CarAssetsResponse map[string]CarAssetsResponseValue
+
+type CarAssetsResponseValue struct {
+	CarID                  int64       `json:"car_id"`
+	CarRules               []CarRule   `json:"car_rules"`
 	DetailCopy             string      `json:"detail_copy"`
 	DetailScreenShotImages string      `json:"detail_screen_shot_images"`
 	DetailTechspecsCopy    string      `json:"detail_techspecs_copy"`
@@ -25,20 +24,22 @@ type CarAssetsResponse map[string]struct {
 	TemplatePath           *string     `json:"template_path"`
 }
 
-// image paths are relative to https://images-static.iracing.com/
-func (api *CarApi) GetCarAssets() (*CarAssetsResponse, error) {
-	url := "/data/car/assets"
+type CarRule struct {
+	RuleCategory RuleCategory `json:"rule_category"`
+	Text         string       `json:"text"`
+}
 
-	respBody, err := api.Client.Get(url)
-	if err != nil {
-		return nil, err
-	}
+type RuleCategory string
 
-	response := &CarAssetsResponse{}
-	err = json.NewDecoder(respBody).Decode(response)
-	if err != nil {
-		return nil, err
-	}
+const (
+	Drs          RuleCategory = "DRS"
+	HybridSystem RuleCategory = "Hybrid System"
+	Ots          RuleCategory = "OTS"
+	P2P          RuleCategory = "P2P"
+	Tires        RuleCategory = "Tires"
+	Wings        RuleCategory = "Wings"
+)
 
-	return response, nil
+func (api *CarApi) Assets() (*CarAssetsResponse, error) {
+	return api.GetJson[CarAssetsResponse]("/data/car/assets")
 }
