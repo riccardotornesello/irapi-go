@@ -31,6 +31,9 @@ def write_category_apis(endpoints: list[Endpoint]):
         endpoint_calls = []
         required_imports = {"github.com/riccardotornesello/irapi-go/client"}
         for endpoint in endpoints:
+            if not endpoint.response_struct:
+                continue
+
             endpoint_calls.append(
                 endpoint_call_template.render(
                     api_name=api_name,
@@ -43,7 +46,9 @@ def write_category_apis(endpoints: list[Endpoint]):
                     ),
                 )
             )
-            required_imports.add(f"github.com/riccardotornesello/irapi-go/api/{category}/{endpoint.name}")
+            required_imports.add(
+                f"github.com/riccardotornesello/irapi-go/api/{category}/{endpoint.name}"
+            )
 
         api_code = category_template.render(
             package_name=category,

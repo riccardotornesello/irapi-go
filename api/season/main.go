@@ -1,7 +1,6 @@
 package season
 
 import (
-	"github.com/riccardotornesello/irapi-go/api/season/list"
 	"github.com/riccardotornesello/irapi-go/api/season/race_guide"
 	"github.com/riccardotornesello/irapi-go/api/season/spectator_subsessionids"
 	"github.com/riccardotornesello/irapi-go/api/season/spectator_subsessionids_detail"
@@ -10,10 +9,6 @@ import (
 
 type SeasonApi struct {
 	Client *client.ApiClient
-}
-
-func (api *SeasonApi) List(parameters *list.SeasonListParams) (*list.None, error) {
-	return client.GetJson[list.None](api.Client, "/data/season/list", parameters)
 }
 
 func (api *SeasonApi) RaceGuide(parameters *race_guide.SeasonRaceGuideParams) (*race_guide.SeasonRaceGuideResponse, error) {
