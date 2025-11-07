@@ -9,9 +9,9 @@ from endpoints_parsing import Endpoint
 
 jinja2_environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates/"))
 
-endpoint_call_template = jinja2_environment.get_template("endpoint_call.go")
-endpoint_structs_template = jinja2_environment.get_template("endpoint_structs.go")
-category_template = jinja2_environment.get_template("category.go")
+endpoint_call_template = jinja2_environment.get_template("endpoint_call.j2")
+endpoint_structs_template = jinja2_environment.get_template("endpoint_structs.j2")
+category_template = jinja2_environment.get_template("category.j2")
 
 
 def write_category_apis(endpoints: list[Endpoint]):
