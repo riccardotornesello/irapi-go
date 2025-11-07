@@ -14,6 +14,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/google/go-querystring/query"
 )
 
 const tokenCookieName = "authtoken_members"
@@ -167,22 +169,6 @@ func (c *ApiClient) Get(path string) (io.ReadCloser, error) {
 	return payloadResp.Body, nil
 }
 
-func (c *ApiClient) GetJson(path string)[T any] (T, error) {
-	respBody, err := api.Client.Get(path)
-	if err != nil {
-		return nil, err
-	}
-
-	response := &T{}
-	err = json.NewDecoder(respBody).Decode(response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-
-
 func (c *ApiClient) GetChunks(chunkInfo *IRacingChunkInfo) ([]io.ReadCloser, error) {
 	out := make([]io.ReadCloser, len(chunkInfo.ChunkFileNames))
 
@@ -207,4 +193,26 @@ func (c *ApiClient) GetAuthToken() string {
 	}
 
 	return ""
+}
+
+func GetJson[T any](c *ApiClient, basePath string, parameters interface{}) (*T, error) {
+	parametersData, err := query.Values(parameters)
+	if err != nil {
+		return nil, err
+	}
+
+	fullPath := basePath + "?" + parametersData.Encode()
+
+	respBody, err := c.Get(fullPath)
+	if err != nil {
+		return nil, err
+	}
+
+	response := new(T)
+	err = json.NewDecoder(respBody).Decode(response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
 }

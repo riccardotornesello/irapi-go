@@ -5,10 +5,25 @@ import subprocess
 from tqdm.contrib.concurrent import thread_map
 
 from format import to_camel_case
-from constants import PARAM_TYPES
 from api_client import APIClient
 from typing import Literal
 from data import OVERRIDES
+
+
+PARAM_TYPES = {
+    "string": {
+        "type": "string",
+    },
+    "number": {
+        "type": "int",
+    },
+    "boolean": {
+        "type": "bool",
+    },
+    "numbers": {
+        "type": "[]int",
+    },
+}
 
 
 class EndpointParameter:
@@ -43,6 +58,12 @@ class EndpointParameter:
             .get(param_name, None)
         )
 
+    def get_param_struct_row(self) -> str:
+        go_type = PARAM_TYPES[self.type]["type"]
+        return (
+            f'{to_camel_case(self.name)} {go_type} `url:"{self.name},omitempty,comma"`'
+        )
+
 
 class Endpoint:
     api_client: APIClient
@@ -58,8 +79,14 @@ class Endpoint:
     s3_cache: bool = True
 
     sample_response: str | None = None
+
     response_struct_name: str | None = None
     response_struct: str | None = None
+
+    parameters_struct_name: str | None = None
+    parameters_struct: str | None = None
+
+    required_imports: set[str]
 
     def __init__(
         self,
@@ -78,8 +105,33 @@ class Endpoint:
             for param_name, param_data in endpoint_data.get("parameters", {}).items()
         ]
 
+        self.required_imports = set()
+
+        self.generate_params_struct()
+
         # TODO: allow override self.format = "json"
         # TODO: allow override self.s3_cache = True
+
+    def generate_params_struct(self) -> str | None:
+        if not self.parameters or len(self.parameters) == 0:
+            return None
+
+        # Generate the struct name
+        self.parameters_struct_name = to_camel_case(
+            f"{self.category}__{self.name}__Params"
+        )
+
+        # Generate the struct body
+        struct_rows = [
+            parameter.get_param_struct_row() for parameter in self.parameters
+        ]
+        struct_body = "\n    ".join(struct_rows)
+        self.parameters_struct = (
+            f"type {self.parameters_struct_name} struct {{\n    {struct_body}\n}}"
+        )
+
+    def add_required_import(self, import_path: str):
+        self.required_imports.add(import_path)
 
     def fetch_sample_response(self, cached: bool = True) -> bool:
         # TODO: handle driver_stats_by_category
@@ -133,7 +185,7 @@ class Endpoint:
             )
             return
 
-        # Generate the struct name from the file name
+        # Generate the struct name
         self.response_struct_name = to_camel_case(
             f"{self.category}__{self.name}__Response"
         )
@@ -160,7 +212,6 @@ class Endpoint:
                 text=True,
                 input=self.sample_response,
             )
-            self.response_struct = result.stdout
 
         except subprocess.CalledProcessError as e:
             logging.error(f"FAILED: Quicktype for {self.category}__{self.name} failed.")
@@ -170,6 +221,21 @@ class Endpoint:
             logging.error(
                 "ERROR: Make sure 'npx' and 'quicktype' are installed and available in the PATH."
             )
+
+        # Parse the output to extract imports and the struct definition
+        for line in result.stdout.splitlines():
+            if line.startswith("import"):
+                new_import = line.replace("import", "").replace('"', "").strip()
+                self.add_required_import(new_import)
+                continue
+
+        self.response_struct = "\n".join(
+            [
+                line
+                for line in result.stdout.splitlines()
+                if not line.startswith("import")
+            ]
+        )
 
 
 def _parse_iracing_notes(notes) -> list[str]:
