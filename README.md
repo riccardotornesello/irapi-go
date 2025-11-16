@@ -42,11 +42,11 @@ This project is in its early stages and will grow a lot in the coming period.
 
 Here are the highest priority tasks:
 
-- better document the use of the library and the generation tool (tools folder), perhaps by having the tool generate the documentation automatically
-- improve the API generation tool to make it clearer to use and modify
-- add output in OpenAPI format to the tool
-- add missing endpoints and for those that are present add unknown field types, using different parameters in example calls
-- adjust tests for endpoints that require parameters since they don't currently receive them
-- if skip s3 is true, the get function should skip the s3 call
-- some parameters are lists, check if they're passed correctly in the sdk and in the tools
-- add the structs for the csv files
+- update documentation with new version
+- document the scraping tool and update it to work with the new oauth flow
+- generate more endpoints with the scraping tool
+- add tests to endpoints and client generation
+- parse csv endpoints and add types
+- parse endpoints without s3 cache
+- parse chunks
+- automatically refresh tokens

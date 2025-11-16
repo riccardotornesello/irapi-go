@@ -1,218 +1,105 @@
 package client
 
 import (
-	"context"
-	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io"
-	"log/slog"
 	"net/http"
-	"net/http/cookiejar"
-	"net/url"
-	"strconv"
 	"strings"
+	"sync"
 	"time"
-
-	"github.com/google/go-querystring/query"
 )
 
-const tokenCookieName = "authtoken_members"
-
 type ApiClient struct {
-	Client     *http.Client
-	RetryAfter time.Time
+	accessToken        string
+	refreshToken       string
+	accessTokenExpiry  time.Time
+	refreshTokenExpiry time.Time
+
+	client     *http.Client
+	retryAfter time.Time
+
+	concurrency int
+	semaphore   chan struct{}
+	mutex       sync.Mutex
 }
 
-type IRacingAuthResponse struct {
-	Authcode string `json:"authcode"`
-}
-
-type IRacingResponse struct {
-	Link string `json:"link"`
-}
-
-type IRacingChunkInfo struct {
-	ChunkSize       int      `json:"chunk_size"`
-	NumChunks       int      `json:"num_chunks"`
-	Rows            int      `json:"rows"`
-	BaseDownloadUrl string   `json:"base_download_url"`
-	ChunkFileNames  []string `json:"chunk_file_names"`
-}
-
-func NewApiClient(email string, password string) (*ApiClient, error) {
-	jar, err := cookiejar.New(nil)
-	if err != nil {
-		return nil, err
-	}
-
-	client := &http.Client{
-		Jar: jar,
-	}
-
-	tokenIn := []byte(password + strings.ToLower(email))
-	hasher := sha256.New()
-	hasher.Write(tokenIn)
-	tokenHash := hasher.Sum(nil)
-	tokenB64 := base64.StdEncoding.EncodeToString(tokenHash)
-
-	resp, err := client.Post("https://members-ng.iracing.com/auth", "application/json", strings.NewReader(`{"email":"`+email+`","password":"`+tokenB64+`"}`))
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("error authenticating: %s", resp.Status)
-	}
-
-	defer resp.Body.Close()
-
-	authResponse := &IRacingAuthResponse{}
-	err = json.NewDecoder(resp.Body).Decode(authResponse)
-	if err != nil {
-		return nil, err
+func createApiClientWithToken(accessToken, refreshToken string, accessTokenExpiry, refreshTokenExpiry time.Time, concurrency int) *ApiClient {
+	var semaphore chan struct{}
+	if concurrency > 0 {
+		semaphore = make(chan struct{}, concurrency)
 	}
 
 	return &ApiClient{
-		Client: client,
-	}, nil
-}
+		accessToken:        accessToken,
+		refreshToken:       refreshToken,
+		accessTokenExpiry:  accessTokenExpiry,
+		refreshTokenExpiry: refreshTokenExpiry,
 
-func NewApiClientWithToken(token string) *ApiClient {
-	jar, _ := cookiejar.New(nil)
-
-	// Set a cookie in the jar
-	u, _ := url.Parse("https://members-ng.iracing.com")
-	jar.SetCookies(u, []*http.Cookie{
-		{
-			Name:  tokenCookieName,
-			Value: token,
+		client: &http.Client{
+			Timeout: 60 * time.Second, // TODO: allow customization
 		},
-	})
 
-	client := &http.Client{
-		Jar: jar,
-	}
-
-	return &ApiClient{
-		Client: client,
+		concurrency: concurrency,
+		semaphore:   semaphore,
+		mutex:       sync.Mutex{},
 	}
 }
 
-func (c *ApiClient) Get(path string) (io.ReadCloser, error) {
-	var resp *http.Response
-	var err error
-
-	for {
-		if c.RetryAfter.After(time.Now()) {
-			slog.Info(fmt.Sprintf("Rate limit exceeded, waiting until %v", c.RetryAfter.Format(time.RFC3339)))
-			time.Sleep(time.Until(c.RetryAfter))
-		}
-
-		ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second) // TODO: allow timeout customization
-		defer cancel()
-
-		req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://members-ng.iracing.com"+path, nil)
-		if err != nil {
-			return nil, fmt.Errorf("error creating request for %s: %w", path, err)
-		}
-
-		resp, err = c.Client.Do(req)
-		if err != nil {
-			return nil, fmt.Errorf("error getting %s: %w", path, err)
-		}
-
-		if resp.StatusCode != 429 {
-			break
-		}
-
-		slog.Info(fmt.Sprintf("Rate limit exceeded for %s, retrying in a bit", path))
-
-		// TODO: allow to skip retrying
-		// TODO: allow max retry count
-		rateLimitReset := resp.Header.Get("X-RateLimit-Reset")
-		if rateLimitReset == "" {
-			break
-		}
-
-		rateLimitResetInt, err := strconv.ParseInt(rateLimitReset, 10, 64)
-		if err != nil {
-			break
-		}
-
-		// Not atomic, but we don't care
-		c.RetryAfter = time.Unix(rateLimitResetInt, 0).Add(2 * time.Second)
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		body, err := io.ReadAll(resp.Body)
-		if err != nil {
-			return nil, fmt.Errorf("error getting %s: %d", path, resp.StatusCode)
-		}
-		return nil, fmt.Errorf("error getting %s: %d - %s", path, resp.StatusCode, string(body))
-	}
-
-	response := &IRacingResponse{}
-	err = json.NewDecoder(resp.Body).Decode(response)
+func NewPasswordLimitedApiClient(clientId, clientSecret, username, password string) (*ApiClient, error) {
+	tokenResponse, err := getPasswordLimitedAccessToken(clientId, clientSecret, username, password)
 	if err != nil {
 		return nil, err
 	}
 
-	payloadResp, err := c.Client.Get(response.Link)
-	if err != nil {
-		return nil, err
-	}
-
-	return payloadResp.Body, nil
+	return createApiClientWithToken(
+		tokenResponse.AccessToken,
+		tokenResponse.RefreshToken,
+		time.Now().Add(time.Duration(tokenResponse.ExpiresIn)*time.Second),
+		time.Now().Add(time.Duration(tokenResponse.RefreshTokenExpiresIn)*time.Second),
+		10, // TODO: allow customization
+	), nil
 }
 
-func (c *ApiClient) GetChunks(chunkInfo *IRacingChunkInfo) ([]io.ReadCloser, error) {
-	out := make([]io.ReadCloser, len(chunkInfo.ChunkFileNames))
-
-	for i, chunkFileName := range chunkInfo.ChunkFileNames {
-		resp, err := c.Client.Get(chunkInfo.BaseDownloadUrl + chunkFileName)
-		if err != nil {
-			return nil, err
-		}
-
-		out[i] = resp.Body
+func NewApiClient(accessToken, refreshToken string) *ApiClient {
+	// Extract expiry times from JTW tokens.
+	expAccess, err := getExpiryFromJwt(accessToken)
+	if err != nil {
+		expAccess = time.Time{}
 	}
 
-	return out, nil
+	expRefresh, err := getExpiryFromJwt(refreshToken)
+	if err != nil {
+		expRefresh = time.Time{}
+	}
+
+	return createApiClientWithToken(
+		accessToken,
+		refreshToken,
+		expAccess,
+		expRefresh,
+		10, // TODO: allow customization
+	)
 }
 
-func (c *ApiClient) GetAuthToken() string {
-	url, _ := url.Parse("https://members-ng.iracing.com")
-	for _, cookie := range c.Client.Jar.Cookies(url) {
-		if cookie.Name == tokenCookieName {
-			return cookie.Value
-		}
+func getExpiryFromJwt(token string) (time.Time, error) {
+	parts := strings.Split(token, ".")
+	if len(parts) != 3 {
+		return time.Time{}, fmt.Errorf("invalid JWT token")
 	}
 
-	return ""
-}
-
-func GetJson[T any](c *ApiClient, basePath string, parameters interface{}) (*T, error) {
-	parametersData, err := query.Values(parameters)
+	payload, err := base64.RawURLEncoding.DecodeString(parts[1])
 	if err != nil {
-		return nil, err
+		return time.Time{}, err
 	}
 
-	fullPath := basePath + "?" + parametersData.Encode()
-
-	respBody, err := c.Get(fullPath)
+	var claims struct {
+		Exp int64 `json:"exp"`
+	}
+	err = json.Unmarshal(payload, &claims)
 	if err != nil {
-		return nil, err
+		return time.Time{}, err
 	}
 
-	response := new(T)
-	err = json.NewDecoder(respBody).Decode(response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
+	return time.Unix(claims.Exp, 0), nil
 }

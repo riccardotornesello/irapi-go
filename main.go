@@ -39,12 +39,7 @@ type IRacingApiClient struct {
 	Track                 *track.TrackApi
 }
 
-func NewIRacingApiClient(email string, password string) (*IRacingApiClient, error) {
-	apiClient, err := client.NewApiClient(email, password)
-	if err != nil {
-		return nil, err
-	}
-
+func genClient(apiClient *client.ApiClient) *IRacingApiClient {
 	return &IRacingApiClient{
 		Car:                   &car.CarApi{Client: apiClient},
 		Carclass:              &carclass.CarclassApi{Client: apiClient},
@@ -62,5 +57,14 @@ func NewIRacingApiClient(email string, password string) (*IRacingApiClient, erro
 		Team:                  &team.TeamApi{Client: apiClient},
 		TimeAttack:            &time_attack.TimeAttackApi{Client: apiClient},
 		Track:                 &track.TrackApi{Client: apiClient},
-	}, nil
+	}
+}
+
+func NewIRacingPasswordLimitedApiClient(clientId, clientSecret, username, password string) (*IRacingApiClient, error) {
+	apiClient, err := client.NewPasswordLimitedApiClient(clientId, clientSecret, username, password)
+	if err != nil {
+		return nil, err
+	}
+
+	return genClient(apiClient), nil
 }
