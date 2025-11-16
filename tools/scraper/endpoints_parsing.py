@@ -32,8 +32,6 @@ class EndpointParameter:
     required: bool
     notes: list[str]
 
-    sample_value = None
-
     def __init__(
         self,
         category_name: str,
@@ -49,14 +47,6 @@ class EndpointParameter:
         # Check that the type is known
         if self.type not in PARAM_TYPES.keys():
             raise Exception(f"Unknown type: {self.type}")
-
-        # If available, set the sample value
-        self.sample_value = (
-            OVERRIDES.get(category_name, {})
-            .get(endpoint_name, {})
-            .get("params", {})
-            .get(param_name, None)
-        )
 
     def get_param_struct_row(self) -> str:
         go_type = PARAM_TYPES[self.type]["type"]
@@ -78,7 +68,7 @@ class Endpoint:
     format: Literal["json", "csv"] = "json"
     s3_cache: bool = True
 
-    sample_response: str | None = None
+    sample_responses_parsed: bool = False
 
     response_struct_name: str | None = None
     response_struct: str | None = None
@@ -133,7 +123,7 @@ class Endpoint:
     def add_required_import(self, import_path: str):
         self.required_imports.add(import_path)
 
-    def fetch_sample_response(self, cached: bool = True) -> bool:
+    def fetch_sample_responses(self, cached: bool = True) -> bool:
         # TODO: handle driver_stats_by_category
         if self.category == "driver_stats_by_category":
             logging.warning(
@@ -141,37 +131,45 @@ class Endpoint:
             )
             return False
 
-        # Skip if some parameters are not set
-        for parameter in self.parameters:
-            if parameter.required and not parameter.sample_value:
+        sample_data_suite = (
+            OVERRIDES.get(self.category, {}).get(self.name, {}).get("params", [])
+        )
+
+        if len(sample_data_suite) == 0:
+            # Skip if some parameters are required but have no sample value
+            has_required_params = any(
+                parameter.required for parameter in self.parameters
+            )
+            if has_required_params:
                 logging.error(
                     f"Skipping sample response fetch for {self.category}__{self.name} due to parameters."
                 )
                 return False
 
-        file_path = f"output/responses/{self.category}__{self.name}.{self.format}"
-        if cached and os.path.exists(file_path):
-            with open(file_path, "r") as f:
-                self.sample_response = f.read()
-            return True
+            sample_data_suite = [{}]
 
-        try:
-            self.sample_response = self.api_client.call_endpoint(
-                self.link,
-                params={
-                    parameter.name: parameter.sample_value
-                    for parameter in self.parameters
-                },
+        for i, sample_data in enumerate(sample_data_suite):
+            file_path = (
+                f"output/responses/{self.category}__{self.name}__{i}.{self.format}"
             )
-        except Exception as e:
-            logging.error(f"Error fetching {self.category}__{self.name}: {e}")
-            return False
+            if cached and os.path.exists(file_path):
+                continue
 
-        # Save the response to a file
-        os.makedirs("output/responses", exist_ok=True)
-        with open(file_path, "w") as f:
-            f.write(self.sample_response)
+            try:
+                sample_response = self.api_client.call_endpoint(
+                    self.link,
+                    params=sample_data,
+                )
+            except Exception as e:
+                logging.error(f"Error fetching {self.category}__{self.name}__{i}: {e}")
+                return False
 
+            # Save the response to a file
+            os.makedirs("output/responses", exist_ok=True)
+            with open(file_path, "w") as f:
+                f.write(sample_response)
+
+        self.sample_responses_parsed = True
         return True
 
     def generate_go_types(self):
@@ -179,7 +177,7 @@ class Endpoint:
         Run the quicktype command to generate Go types.
         """
 
-        if not self.sample_response:
+        if not self.sample_responses_parsed:
             logging.warning(
                 f"Skipped: {self.category}__{self.name} (no sample response)"
             )
@@ -194,6 +192,8 @@ class Endpoint:
         command = [
             "npx",
             "quicktype",
+            "--src",
+            f"output/responses/{self.category}__{self.name}__*",
             "--src-lang",
             "json",
             "--lang",
@@ -206,21 +206,23 @@ class Endpoint:
         try:
             # Run the command and capture the output. Pass the sample response as stdin.
             result = subprocess.run(
-                command,
-                check=True,  # Raise an error if the command fails
+                " ".join(command),
                 capture_output=True,
                 text=True,
-                input=self.sample_response,
+                check=True,
+                shell=True,
             )
 
         except subprocess.CalledProcessError as e:
             logging.error(f"FAILED: Quicktype for {self.category}__{self.name} failed.")
             logging.error(f"Error: {e.stderr.strip()}")
+            return
 
         except FileNotFoundError:
             logging.error(
                 "ERROR: Make sure 'npx' and 'quicktype' are installed and available in the PATH."
             )
+            return
 
         # Parse the output to extract imports and the struct definition
         for line in result.stdout.splitlines():
@@ -259,7 +261,7 @@ def fetch_sample_responses(
     logging.info("Fetching sample responses...")
 
     thread_map(
-        lambda endpoint: endpoint.fetch_sample_response(cached=skip_cached),
+        lambda endpoint: endpoint.fetch_sample_responses(cached=skip_cached),
         endpoints,
         max_workers=workers,
     )

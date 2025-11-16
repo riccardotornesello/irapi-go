@@ -1,6 +1,7 @@
 import requests
 import logging
 import os
+import json
 
 from dotenv import load_dotenv
 
@@ -21,7 +22,13 @@ def generate_endpoints_list(api_client: APIClient) -> list[Endpoint]:
 
     logging.info("Fetching available endpoints documentation...")
 
-    iracing_documentation = _get_available_endpoints_documentation(api_client.api_client)
+    # Get the documentation of available endpoints and save it locally
+    iracing_documentation = _get_available_endpoints_documentation(
+        api_client.api_client
+    )
+    os.makedirs("output", exist_ok=True)
+    with open("output/doc.json", "w") as f:
+        json.dump(iracing_documentation, f, indent=4)
 
     for category_name, category_data in iracing_documentation.items():
         for endpoint_name, endpoint_data in category_data.items():

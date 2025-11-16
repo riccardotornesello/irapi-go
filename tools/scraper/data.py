@@ -20,102 +20,154 @@ OVERRIDES = {
     },
     "league": {
         "get": {
-            "params": {
-                "league_id": 4403,
-            },
+            "params": [
+                {
+                    "league_id": 4403,
+                }
+            ],
         },
         "get_points_systems": {
-            "params": {
-                "league_id": 4403,
-            },
-        },
-        "seasons": {
-            "params": {
-                "league_id": 4403,
-            },
+            "params": [
+                {
+                    "league_id": 4403,
+                }
+            ],
         },
         "roster": {
-            "params": {
-                "league_id": 4403,
-                "include_licenses": False,  # TODO: create the schema in case the parameter is True
-            },
+            "params": [
+                {
+                    "league_id": 4403,
+                    "include_licenses": False,
+                },
+                {
+                    "league_id": 4403,
+                    "include_licenses": True,
+                },
+            ],
             "s3_cache": False,
         },
+        "seasons": {
+            "params": [
+                {
+                    "league_id": 4403,
+                }
+            ],
+        },
         "season_standings": {
-            "params": {
-                "league_id": 4403,
-                "season_id": 111405,
-            },
+            "params": [
+                {
+                    "league_id": 4403,
+                    "season_id": 111405,
+                }
+            ],
         },
         "season_sessions": {
-            "params": {
-                "league_id": 4403,
-                "season_id": 111405,
-            },
+            "params": [
+                {
+                    "league_id": 4403,
+                    "season_id": 111405,
+                }
+            ],
         },
     },
     "lookup": {
+        "drivers": {
+            "params": [
+                {
+                    "search_term": "911231",
+                }
+            ],
+        },
         "club_history": {
-            "params": {
-                "season_year": 2024,
-                "season_quarter": 1,
-            },
+            "params": [
+                {
+                    "season_year": 2024,
+                    "season_quarter": 1,
+                }
+            ],
         },
     },
     "member": {
         "awards": {
             "s3_cache": False,
+            "params": [
+                {
+                    "cust_id": 911231,
+                }
+            ],
         },
         "award_instances": {
             "s3_cache": False,
-            "params": {
-                "cust_id": 911231,
-                "award_id": 47780700,
-            },
+            "params": [
+                {
+                    "cust_id": 911231,
+                    "award_id": 47780700,
+                }
+            ],
         },
         "chart_data": {
-            "params": {
-                "cust_id": 911231,
-                "category_id": 5,
-                "chart_type": 1,
-            },
+            "params": [
+                {
+                    "cust_id": 911231,
+                    "category_id": 5,
+                    "chart_type": 1,
+                }
+            ],
         },
         "get": {
-            "params": {
-                "cust_ids": [911231, 408068],
-                "include_licenses": False,  # TODO: create the schema in case the parameter is True
-            },
+            "params": [
+                {
+                    "cust_ids": [911231, 408068],
+                    "include_licenses": False,
+                },
+                {
+                    "cust_ids": [911231, 408068],
+                    "include_licenses": True,
+                },
+            ],
         },
     },
     "results": {
         "get": {
-            "params": {
-                "subsession_id": 67468746,
-                "include_licenses": False,  # TODO: create the schema in case the parameter is True
-            },
+            "params": [
+                {
+                    "subsession_id": 67468746,
+                    "include_licenses": False,
+                },
+                {
+                    "subsession_id": 67468746,
+                    "include_licenses": True,
+                },
+            ],
         },
         "lap_data": {
-            "params": {
-                "subsession_id": 72820991,
-                "simsession_number": 0,
-                "cust_id": 911231,
-                # "team_id": 0, # TODO
-            },
+            "params": [
+                {
+                    "subsession_id": 72820991,
+                    "simsession_number": 0,
+                    "cust_id": 911231,
+                    # "team_id": 0, # TODO
+                }
+            ],
         },
     },
     "stats": {
-        "params": {
-            "member_division": {
-                "season_id": 5244,
-                "event_type": 5,
-            },
-        },
+        "params": [
+            {
+                "member_division": {
+                    "season_id": 5244,
+                    "event_type": 5,
+                },
+            }
+        ],
     },
     "team": {
         "get": {
-            "params": {
-                "team_id": 381567,
-            },
+            "params": [
+                {
+                    "team_id": 381567,
+                }
+            ],
         },
     },
 }
