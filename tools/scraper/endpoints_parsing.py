@@ -1,6 +1,7 @@
 import os
 import logging
-import subprocess
+import requests
+import json
 
 from tqdm.contrib.concurrent import thread_map
 
@@ -8,6 +9,7 @@ from format import to_camel_case
 from api_client import APIClient
 from typing import Literal
 from data import OVERRIDES
+from utils.quicktype import run_quicktype
 
 
 PARAM_TYPES = {
@@ -69,6 +71,7 @@ class Endpoint:
     s3_cache: bool = True
 
     sample_responses_parsed: bool = False
+    chunks_sampled: bool = False
 
     response_struct_name: str | None = None
     response_struct: str | None = None
@@ -172,72 +175,94 @@ class Endpoint:
         self.sample_responses_parsed = True
         return True
 
-    def generate_go_types(self):
-        """
-        Run the quicktype command to generate Go types.
-        """
+    def fetch_sample_chunks(self, cached: bool = True) -> bool:
+        MAX_CHUNKS_PER_SAMPLE = 5
 
+        if not self.sample_responses_parsed:
+            logging.warning(
+                f"Skipped: {self.category}__{self.name} (no sample response)"
+            )
+            return False
+
+        sample_files = [
+            f
+            for f in os.listdir("output/responses")
+            if f.startswith(f"{self.category}__{self.name}__")
+            and f.endswith(f".{self.format}")
+        ]
+
+        for sample_index, sample_file in enumerate(sample_files):
+            with open(os.path.join("output/responses", sample_file), "r") as f:
+                sample_data = json.loads(f.read())
+
+            # Check if data is a list
+            if isinstance(sample_data, list) or not sample_data.get("chunk_info"):
+                continue
+
+            for chunk_index, chunk_file_name in enumerate(
+                sample_data["chunk_info"]["chunk_file_names"]
+            ):
+                if chunk_index >= MAX_CHUNKS_PER_SAMPLE:
+                    break
+
+                file_path = f"output/responses/chunks__{self.category}__{self.name}__{sample_index}__{chunk_index}.json"
+                if cached and os.path.exists(file_path):
+                    self.chunks_sampled = True
+                    continue
+
+                url = (
+                    f"{sample_data['chunk_info']['base_download_url']}{chunk_file_name}"
+                )
+                try:
+                    sample_response = requests.get(url).text
+                except Exception as e:
+                    logging.error(
+                        f"Error fetching {self.category}__{self.name}__{sample_index} chunk {chunk_index}: {e}"
+                    )
+                    self.chunks_sampled = False
+                    return False
+
+                # Save the response to a file
+                os.makedirs("output/responses", exist_ok=True)
+                with open(file_path, "w") as f:
+                    f.write(sample_response)
+
+                self.chunks_sampled = True
+
+        return True
+
+    def generate_go_types(self):
         if not self.sample_responses_parsed:
             logging.warning(
                 f"Skipped: {self.category}__{self.name} (no sample response)"
             )
             return
 
-        # Generate the struct name
+        # Generate the response struct
         self.response_struct_name = to_camel_case(
             f"{self.category}__{self.name}__Response"
         )
 
-        # Quicktype command
-        command = [
-            "npx",
-            "quicktype",
-            "--src",
-            f"output/responses/{self.category}__{self.name}__*",
-            "--src-lang",
-            "json",
-            "--lang",
-            "go",
-            "--just-types",
-            "-t",
+        self.response_struct, self.required_imports = run_quicktype(
             self.response_struct_name,
-        ]
-
-        try:
-            # Run the command and capture the output. Pass the sample response as stdin.
-            result = subprocess.run(
-                " ".join(command),
-                capture_output=True,
-                text=True,
-                check=True,
-                shell=True,
-            )
-
-        except subprocess.CalledProcessError as e:
-            logging.error(f"FAILED: Quicktype for {self.category}__{self.name} failed.")
-            logging.error(f"Error: {e.stderr.strip()}")
-            return
-
-        except FileNotFoundError:
-            logging.error(
-                "ERROR: Make sure 'npx' and 'quicktype' are installed and available in the PATH."
-            )
-            return
-
-        # Parse the output to extract imports and the struct definition
-        for line in result.stdout.splitlines():
-            if line.startswith("import"):
-                new_import = line.replace("import", "").replace('"', "").strip()
-                self.add_required_import(new_import)
-                continue
-
-        self.response_struct = "\n".join(
-            [
-                line
-                for line in result.stdout.splitlines()
-                if not line.startswith("import")
-            ]
+            f"output/responses/{self.category}__{self.name}__*",
         )
+
+        # Generate the chunk response struct
+        if self.chunks_sampled:
+            chunk_struct_name = to_camel_case(
+                f"{self.category}__{self.name}__Response__Chunks"
+            )
+
+            chunk_struct, chunk_imports = run_quicktype(
+                chunk_struct_name,
+                f"output/responses/chunks__{self.category}__{self.name}__*",
+            )
+
+            self.response_struct += f"\n\n{chunk_struct}"
+            self.required_imports.update(chunk_imports)
+
+            # TODO: handle chunk struct in the endpoint class and fetch data
 
 
 def _parse_iracing_notes(notes) -> list[str]:
@@ -267,6 +292,20 @@ def fetch_sample_responses(
     )
 
     logging.info("Sample responses fetched.")
+
+
+def fetch_sample_chunks(
+    endpoints: list[Endpoint], skip_cached: bool = True, workers: int = 5
+):
+    logging.info("Fetching sample chunks...")
+
+    thread_map(
+        lambda endpoint: endpoint.fetch_sample_chunks(cached=skip_cached),
+        endpoints,
+        max_workers=workers,
+    )
+
+    logging.info("Sample chunks fetched.")
 
 
 def generate_go_types(endpoints: list[Endpoint], workers: int = 20):
