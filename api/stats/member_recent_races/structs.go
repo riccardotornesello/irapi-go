@@ -49,14 +49,14 @@ type Race struct {
 type Livery struct {
 	CarID   int64  `json:"car_id"`
 	Pattern int64  `json:"pattern"`
-	Color1  Color1 `json:"color1"`
-	Color2  Color2 `json:"color2"`
-	Color3  Color3 `json:"color3"`
+	Color1  string `json:"color1"`
+	Color2  string `json:"color2"`
+	Color3  string `json:"color3"`
 }
 
 type Track struct {
-	TrackID   int64     `json:"track_id"`
-	TrackName TrackName `json:"track_name"`
+	TrackID   int64  `json:"track_id"`
+	TrackName string `json:"track_name"`
 }
 
 type WinnerHelmet struct {
@@ -67,35 +67,3 @@ type WinnerHelmet struct {
 	FaceType   int64  `json:"face_type"`
 	HelmetType int64  `json:"helmet_type"`
 }
-
-type Color1 string
-
-const (
-	Ffffff    Color1 = "ffffff"
-	The000000 Color1 = "000000"
-	The14213D Color1 = "14213d"
-)
-
-type Color2 string
-
-const (
-	Color2212Fed Color2 = "212fed"
-	Fca311       Color2 = "fca311"
-	Ffec41       Color2 = "ffec41"
-)
-
-type Color3 string
-
-const (
-	Color3212Fed Color3 = "212fed"
-	E5E5E5       Color3 = "e5e5e5"
-	Fc1212       Color3 = "fc1212"
-)
-
-type TrackName string
-
-const (
-	AutódromoJoséCarlosPace     TrackName = "Autódromo José Carlos Pace"
-	OultonParkCircuit           TrackName = "Oulton Park Circuit"
-	SebringInternationalRaceway TrackName = "Sebring International Raceway"
-)

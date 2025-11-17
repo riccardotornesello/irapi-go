@@ -6,6 +6,7 @@ import (
 	"github.com/riccardotornesello/irapi-go/api/league/get"
 	"github.com/riccardotornesello/irapi-go/api/league/get_points_systems"
 	"github.com/riccardotornesello/irapi-go/api/league/membership"
+	"github.com/riccardotornesello/irapi-go/api/league/roster"
 	"github.com/riccardotornesello/irapi-go/api/league/season_sessions"
 	"github.com/riccardotornesello/irapi-go/api/league/season_standings"
 	"github.com/riccardotornesello/irapi-go/api/league/seasons"
@@ -34,6 +35,10 @@ func (api *LeagueApi) GetPointsSystems(parameters *get_points_systems.LeagueGetP
 
 func (api *LeagueApi) Membership(parameters *membership.LeagueMembershipParams) (*membership.LeagueMembershipResponse, error) {
 	return client.GetJson[membership.LeagueMembershipResponse](api.Client, "/data/league/membership", parameters)
+}
+
+func (api *LeagueApi) Roster(parameters *roster.LeagueRosterParams) (*roster.LeagueRosterResponse, error) {
+	return client.GetJson[roster.LeagueRosterResponse](api.Client, "/data/league/roster", parameters)
 }
 
 func (api *LeagueApi) Seasons(parameters *seasons.LeagueSeasonsParams) (*seasons.LeagueSeasonsResponse, error) {

@@ -23,17 +23,6 @@ type CarAssetsResponseValue struct {
 }
 
 type CarRule struct {
-	RuleCategory RuleCategory `json:"rule_category"`
-	Text         string       `json:"text"`
+	RuleCategory string `json:"rule_category"`
+	Text         string `json:"text"`
 }
-
-type RuleCategory string
-
-const (
-	Drs          RuleCategory = "DRS"
-	HybridSystem RuleCategory = "Hybrid System"
-	Ots          RuleCategory = "OTS"
-	P2P          RuleCategory = "P2P"
-	Tires        RuleCategory = "Tires"
-	Wings        RuleCategory = "Wings"
-)

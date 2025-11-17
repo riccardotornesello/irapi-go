@@ -67,7 +67,7 @@ type SeriesSeasonsResponseElement struct {
 	ScheduleDescription        string             `json:"schedule_description"`
 	Schedules                  []Schedule         `json:"schedules"`
 	SeasonQuarter              int64              `json:"season_quarter"`
-	SeasonShortName            SeasonShortName    `json:"season_short_name"`
+	SeasonShortName            string             `json:"season_short_name"`
 	SeasonYear                 int64              `json:"season_year"`
 	SendToOpenPractice         bool               `json:"send_to_open_practice"`
 	SeriesID                   int64              `json:"series_id"`
@@ -77,9 +77,9 @@ type SeriesSeasonsResponseElement struct {
 	StartZone                  bool               `json:"start_zone"`
 	TrackTypes                 []TrackType        `json:"track_types"`
 	UnsportConductRuleMode     int64              `json:"unsport_conduct_rule_mode"`
-	HeatSesInfo                *HeatSesInfo       `json:"heat_ses_info,omitempty"`
-	RookieSeason               *RookieSeason      `json:"rookie_season,omitempty"`
 	ScoreAsCarclassid          *int64             `json:"score_as_carclassid,omitempty"`
+	HeatSesInfo                *HeatSesInfo       `json:"heat_ses_info,omitempty"`
+	RookieSeason               *string            `json:"rookie_season,omitempty"`
 	RegOpenMinutes             *int64             `json:"reg_open_minutes,omitempty"`
 }
 
@@ -141,7 +141,7 @@ type Schedule struct {
 	SeasonID                int64                `json:"season_id"`
 	RaceWeekNum             int64                `json:"race_week_num"`
 	CarRestrictions         []CarRestriction     `json:"car_restrictions"`
-	Category                Category             `json:"category"`
+	Category                string               `json:"category"`
 	CategoryID              int64                `json:"category_id"`
 	EnablePitlaneCollisions bool                 `json:"enable_pitlane_collisions"`
 	FullCourseCautions      bool                 `json:"full_course_cautions"`
@@ -154,7 +154,7 @@ type Schedule struct {
 	RaceTimeLimit           *int64               `json:"race_time_limit"`
 	RaceWeekCarClassIDS     []int64              `json:"race_week_car_class_ids"`
 	RaceWeekCars            []RaceWeekCar        `json:"race_week_cars"`
-	RestartType             RestartType          `json:"restart_type"`
+	RestartType             string               `json:"restart_type"`
 	ScheduleName            string               `json:"schedule_name"`
 	SeasonName              string               `json:"season_name"`
 	SeriesID                int64                `json:"series_id"`
@@ -162,7 +162,7 @@ type Schedule struct {
 	ShortParadeLap          bool                 `json:"short_parade_lap"`
 	SpecialEventType        interface{}          `json:"special_event_type"`
 	StartDate               string               `json:"start_date"`
-	StartType               StartType            `json:"start_type"`
+	StartType               string               `json:"start_type"`
 	StartZone               bool                 `json:"start_zone"`
 	Track                   Track                `json:"track"`
 	TrackState              TrackState           `json:"track_state"`
@@ -199,11 +199,11 @@ type RaceWeekCar struct {
 }
 
 type Track struct {
-	Category   Category `json:"category"`
-	CategoryID int64    `json:"category_id"`
-	ConfigName *string  `json:"config_name,omitempty"`
-	TrackID    int64    `json:"track_id"`
-	TrackName  string   `json:"track_name"`
+	Category   string  `json:"category"`
+	CategoryID int64   `json:"category_id"`
+	ConfigName *string `json:"config_name,omitempty"`
+	TrackID    int64   `json:"track_id"`
+	TrackName  string  `json:"track_name"`
 }
 
 type TrackState struct {
@@ -250,73 +250,20 @@ type ForecastOptions struct {
 }
 
 type WeatherSummary struct {
-	MaxPrecipRate     float64           `json:"max_precip_rate"`
-	MaxPrecipRateDesc MaxPrecipRateDesc `json:"max_precip_rate_desc"`
-	PrecipChance      int64             `json:"precip_chance"`
-	SkiesHigh         int64             `json:"skies_high"`
-	SkiesLow          int64             `json:"skies_low"`
-	TempHigh          float64           `json:"temp_high"`
-	TempLow           float64           `json:"temp_low"`
-	TempUnits         int64             `json:"temp_units"`
-	WindDir           int64             `json:"wind_dir"`
-	WindHigh          float64           `json:"wind_high"`
-	WindLow           float64           `json:"wind_low"`
-	WindUnits         int64             `json:"wind_units"`
+	MaxPrecipRate     float64 `json:"max_precip_rate"`
+	MaxPrecipRateDesc string  `json:"max_precip_rate_desc"`
+	PrecipChance      int64   `json:"precip_chance"`
+	SkiesHigh         int64   `json:"skies_high"`
+	SkiesLow          int64   `json:"skies_low"`
+	TempHigh          float64 `json:"temp_high"`
+	TempLow           float64 `json:"temp_low"`
+	TempUnits         int64   `json:"temp_units"`
+	WindDir           int64   `json:"wind_dir"`
+	WindHigh          float64 `json:"wind_high"`
+	WindLow           float64 `json:"wind_low"`
+	WindUnits         int64   `json:"wind_units"`
 }
 
 type TrackType struct {
-	TrackType Category `json:"track_type"`
+	TrackType string `json:"track_type"`
 }
-
-type RookieSeason string
-
-const (
-	A RookieSeason = "A"
-)
-
-type Category string
-
-const (
-	DirtOval   Category = "dirt_oval"
-	DirtRoad   Category = "dirt_road"
-	FormulaCar Category = "formula_car"
-	Oval       Category = "oval"
-	Road       Category = "road"
-	SportsCar  Category = "sports_car"
-)
-
-type RestartType string
-
-const (
-	DoubleFileBack     RestartType = "Double-file Back"
-	DoubleFileInside   RestartType = "Double-file Inside"
-	SingleFileBack     RestartType = "Single-file Back"
-	SingleFileMaintain RestartType = "Single-file Maintain"
-)
-
-type StartType string
-
-const (
-	Rolling  StartType = "Rolling"
-	Standing StartType = "Standing"
-)
-
-type MaxPrecipRateDesc string
-
-const (
-	Heavy    MaxPrecipRateDesc = "Heavy"
-	Light    MaxPrecipRateDesc = "Light"
-	Moderate MaxPrecipRateDesc = "Moderate"
-	None     MaxPrecipRateDesc = "None"
-)
-
-type SeasonShortName string
-
-const (
-	SeasonShortName2025Season       SeasonShortName = "2025 Season "
-	SeasonShortName2025Season4      SeasonShortName = "2025 Season 4 "
-	SeasonShortName2025Season4Fixed SeasonShortName = "2025 Season 4 - Fixed"
-	The2025Season                   SeasonShortName = "2025 Season"
-	The2025Season4                  SeasonShortName = "2025 Season 4"
-	The2025Season4Fixed             SeasonShortName = "2025 Season 4 Fixed"
-)

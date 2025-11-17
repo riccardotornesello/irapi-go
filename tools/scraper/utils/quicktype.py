@@ -22,6 +22,7 @@ def run_quicktype(
         "--just-types",
         "-t",
         struct_name,
+        "--no-enums",
     ]
 
     try:

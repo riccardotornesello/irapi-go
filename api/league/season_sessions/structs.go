@@ -49,10 +49,10 @@ type Session struct {
 }
 
 type Car struct {
-	CarID        int64        `json:"car_id"`
-	CarName      string       `json:"car_name"`
-	CarClassID   int64        `json:"car_class_id"`
-	CarClassName CarClassName `json:"car_class_name"`
+	CarID        int64  `json:"car_id"`
+	CarName      string `json:"car_name"`
+	CarClassID   int64  `json:"car_class_id"`
+	CarClassName string `json:"car_class_name"`
 }
 
 type Track struct {
@@ -96,9 +96,3 @@ type WeatherSummary struct {
 	MaxPrecipRateDesc string `json:"max_precip_rate_desc"`
 	PrecipChance      int64  `json:"precip_chance"`
 }
-
-type CarClassName string
-
-const (
-	HostedAllCarsClass CarClassName = "Hosted All Cars Class"
-)

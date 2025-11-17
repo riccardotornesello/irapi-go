@@ -22,7 +22,7 @@ type CarGetResponseElement struct {
 	CarNameAbbreviated      string         `json:"car_name_abbreviated"`
 	CarTypes                []CarType      `json:"car_types"`
 	CarWeight               int64          `json:"car_weight"`
-	Categories              []Category     `json:"categories"`
+	Categories              []string       `json:"categories"`
 	Created                 time.Time      `json:"created"`
 	FirstSale               time.Time      `json:"first_sale"`
 	Folder                  string         `json:"folder"`
@@ -40,7 +40,7 @@ type CarGetResponseElement struct {
 	PackageID               int64          `json:"package_id"`
 	Patterns                int64          `json:"patterns"`
 	Price                   float64        `json:"price"`
-	PriceDisplay            *PriceDisplay  `json:"price_display,omitempty"`
+	PriceDisplay            *string        `json:"price_display,omitempty"`
 	RainEnabled             bool           `json:"rain_enabled"`
 	Retired                 bool           `json:"retired"`
 	SearchFilters           string         `json:"search_filters"`
@@ -86,86 +86,35 @@ type PaintRules struct {
 }
 
 type The0 struct {
-	PaintCarAvailable       bool        `json:"PaintCarAvailable"`
-	Color1                  Color1Enum  `json:"Color1"`
-	Color2                  Color2Enum  `json:"Color2"`
-	Color3                  Color3Enum  `json:"Color3"`
-	Sponsor1Available       bool        `json:"Sponsor1Available"`
-	Sponsor2Available       bool        `json:"Sponsor2Available"`
-	Sponsor1                string      `json:"Sponsor1"`
-	Sponsor2                string      `json:"Sponsor2"`
-	PaintWheelAvailable     *bool       `json:"PaintWheelAvailable,omitempty"`
-	WheelColor              *WheelColor `json:"WheelColor,omitempty"`
-	RimTypeAvailable        *bool       `json:"RimTypeAvailable,omitempty"`
-	RimType                 *RimType    `json:"RimType,omitempty"`
-	AllowNumberFontChanges  *bool       `json:"AllowNumberFontChanges,omitempty"`
-	NumberFont              *string     `json:"NumberFont,omitempty"`
-	AllowNumberColorChanges *bool       `json:"AllowNumberColorChanges,omitempty"`
-	NumberColor1            *Color1Enum `json:"NumberColor1,omitempty"`
-	NumberColor2            *Color2Enum `json:"NumberColor2,omitempty"`
-	NumberColor3            *Color3Enum `json:"NumberColor3,omitempty"`
-	RulesExplanation        string      `json:"RulesExplanation"`
+	PaintCarAvailable       bool    `json:"PaintCarAvailable"`
+	Color1                  string  `json:"Color1"`
+	Color2                  string  `json:"Color2"`
+	Color3                  string  `json:"Color3"`
+	Sponsor1Available       bool    `json:"Sponsor1Available"`
+	Sponsor2Available       bool    `json:"Sponsor2Available"`
+	Sponsor1                string  `json:"Sponsor1"`
+	Sponsor2                string  `json:"Sponsor2"`
+	PaintWheelAvailable     *bool   `json:"PaintWheelAvailable,omitempty"`
+	WheelColor              *string `json:"WheelColor,omitempty"`
+	RimTypeAvailable        *bool   `json:"RimTypeAvailable,omitempty"`
+	RimType                 *string `json:"RimType,omitempty"`
+	AllowNumberFontChanges  *bool   `json:"AllowNumberFontChanges,omitempty"`
+	NumberFont              *string `json:"NumberFont,omitempty"`
+	AllowNumberColorChanges *bool   `json:"AllowNumberColorChanges,omitempty"`
+	NumberColor1            *string `json:"NumberColor1,omitempty"`
+	NumberColor2            *string `json:"NumberColor2,omitempty"`
+	NumberColor3            *string `json:"NumberColor3,omitempty"`
+	RulesExplanation        string  `json:"RulesExplanation"`
 }
 
 type The24 struct {
-	PaintCarAvailable bool       `json:"PaintCarAvailable"`
-	Color1            Color1Enum `json:"Color1"`
-	Color2            Color2Enum `json:"Color2"`
-	Color3            Color3Enum `json:"Color3"`
-	Sponsor1Available bool       `json:"Sponsor1Available"`
-	Sponsor2Available bool       `json:"Sponsor2Available"`
-	Sponsor1          string     `json:"Sponsor1"`
-	Sponsor2          string     `json:"Sponsor2"`
-	RulesExplanation  string     `json:"RulesExplanation"`
+	PaintCarAvailable bool   `json:"PaintCarAvailable"`
+	Color1            string `json:"Color1"`
+	Color2            string `json:"Color2"`
+	Color3            string `json:"Color3"`
+	Sponsor1Available bool   `json:"Sponsor1Available"`
+	Sponsor2Available bool   `json:"Sponsor2Available"`
+	Sponsor1          string `json:"Sponsor1"`
+	Sponsor2          string `json:"Sponsor2"`
+	RulesExplanation  string `json:"RulesExplanation"`
 }
-
-type Category string
-
-const (
-	DirtOval   Category = "dirt_oval"
-	DirtRoad   Category = "dirt_road"
-	FormulaCar Category = "formula_car"
-	Oval       Category = "oval"
-	SportsCar  Category = "sports_car"
-)
-
-type Color1Enum string
-
-const (
-	Color1 Color1Enum = ""
-	Ff0000 Color1Enum = "FF0000"
-)
-
-type Color2Enum string
-
-const (
-	Color2    Color2Enum = ""
-	The00Ff00 Color2Enum = "00FF00"
-)
-
-type Color3Enum string
-
-const (
-	Color3    Color3Enum = ""
-	The0000Ff Color3Enum = "0000FF"
-)
-
-type RimType string
-
-const (
-	Null RimType = "null"
-)
-
-type WheelColor string
-
-const (
-	Ebebeb WheelColor = "EBEBEB"
-)
-
-type PriceDisplay string
-
-const (
-	The000  PriceDisplay = "$0.00"
-	The1195 PriceDisplay = "$11.95"
-	The295  PriceDisplay = "$2.95"
-)

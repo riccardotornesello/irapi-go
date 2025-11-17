@@ -6,7 +6,7 @@ type SeriesGetResponse []SeriesGetResponseElement
 
 type SeriesGetResponseElement struct {
 	AllowedLicenses []AllowedLicense `json:"allowed_licenses"`
-	Category        Category         `json:"category"`
+	Category        string           `json:"category"`
 	CategoryID      int64            `json:"category_id"`
 	Eligible        bool             `json:"eligible"`
 	FirstSeason     FirstSeason      `json:"first_season"`
@@ -22,35 +22,13 @@ type SeriesGetResponseElement struct {
 }
 
 type AllowedLicense struct {
-	GroupName       GroupName `json:"group_name"`
-	LicenseGroup    int64     `json:"license_group"`
-	MaxLicenseLevel int64     `json:"max_license_level"`
-	MinLicenseLevel int64     `json:"min_license_level"`
+	GroupName       string `json:"group_name"`
+	LicenseGroup    int64  `json:"license_group"`
+	MaxLicenseLevel int64  `json:"max_license_level"`
+	MinLicenseLevel int64  `json:"min_license_level"`
 }
 
 type FirstSeason struct {
 	SeasonYear    int64 `json:"season_year"`
 	SeasonQuarter int64 `json:"season_quarter"`
 }
-
-type GroupName string
-
-const (
-	ClassA GroupName = "Class A"
-	ClassB GroupName = "Class B"
-	ClassC GroupName = "Class C"
-	ClassD GroupName = "Class D"
-	Pro    GroupName = "Pro"
-	ProWC  GroupName = "Pro/WC"
-	Rookie GroupName = "Rookie"
-)
-
-type Category string
-
-const (
-	DirtOval   Category = "dirt_oval"
-	DirtRoad   Category = "dirt_road"
-	FormulaCar Category = "formula_car"
-	Oval       Category = "oval"
-	SportsCar  Category = "sports_car"
-)

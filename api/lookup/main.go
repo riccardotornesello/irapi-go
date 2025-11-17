@@ -2,6 +2,7 @@ package lookup
 
 import (
 	"github.com/riccardotornesello/irapi-go/api/lookup/countries"
+	"github.com/riccardotornesello/irapi-go/api/lookup/drivers"
 	"github.com/riccardotornesello/irapi-go/api/lookup/flairs"
 	"github.com/riccardotornesello/irapi-go/api/lookup/get"
 	"github.com/riccardotornesello/irapi-go/api/lookup/licenses"
@@ -14,6 +15,10 @@ type LookupApi struct {
 
 func (api *LookupApi) Countries() (*countries.LookupCountriesResponse, error) {
 	return client.GetJson[countries.LookupCountriesResponse](api.Client, "/data/lookup/countries", nil)
+}
+
+func (api *LookupApi) Drivers(parameters *drivers.LookupDriversParams) (*drivers.LookupDriversResponse, error) {
+	return client.GetJson[drivers.LookupDriversResponse](api.Client, "/data/lookup/drivers", parameters)
 }
 
 func (api *LookupApi) Flairs() (*flairs.LookupFlairsResponse, error) {

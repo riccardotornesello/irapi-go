@@ -103,20 +103,20 @@ type RecentAward struct {
 }
 
 type RecentEvent struct {
-	EventType        string    `json:"event_type"`
-	SubsessionID     int64     `json:"subsession_id"`
-	StartTime        time.Time `json:"start_time"`
-	EventID          int64     `json:"event_id"`
-	EventName        string    `json:"event_name"`
-	SimsessionType   int64     `json:"simsession_type"`
-	StartingPosition int64     `json:"starting_position"`
-	FinishPosition   int64     `json:"finish_position"`
-	BestLapTime      int64     `json:"best_lap_time"`
-	PercentRank      int64     `json:"percent_rank"`
-	CarID            int64     `json:"car_id"`
-	CarName          string    `json:"car_name"`
-	LogoURL          *string   `json:"logo_url"`
-	Track            Track     `json:"track"`
+	EventType        string      `json:"event_type"`
+	SubsessionID     int64       `json:"subsession_id"`
+	StartTime        time.Time   `json:"start_time"`
+	EventID          int64       `json:"event_id"`
+	EventName        string      `json:"event_name"`
+	SimsessionType   int64       `json:"simsession_type"`
+	StartingPosition int64       `json:"starting_position"`
+	FinishPosition   int64       `json:"finish_position"`
+	BestLapTime      int64       `json:"best_lap_time"`
+	PercentRank      int64       `json:"percent_rank"`
+	CarID            int64       `json:"car_id"`
+	CarName          string      `json:"car_name"`
+	LogoURL          interface{} `json:"logo_url"`
+	Track            Track       `json:"track"`
 }
 
 type Track struct {

@@ -26,8 +26,7 @@ def generate_endpoints_list(api_client: APIClient) -> list[Endpoint]:
     iracing_documentation = _get_available_endpoints_documentation(
         api_client.api_client
     )
-    os.makedirs("output", exist_ok=True)
-    with open("output/doc.json", "w") as f:
+    with open("../../doc.json", "w") as f:
         json.dump(iracing_documentation, f, indent=4)
 
     for category_name, category_data in iracing_documentation.items():

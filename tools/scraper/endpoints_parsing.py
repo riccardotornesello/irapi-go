@@ -68,7 +68,7 @@ class Endpoint:
     parameters: list[EndpointParameter]
 
     format: Literal["json", "csv"] = "json"
-    s3_cache: bool = True
+    s3_cache: bool
 
     sample_responses_parsed: bool = False
     chunks_sampled: bool = False
@@ -99,11 +99,13 @@ class Endpoint:
         ]
 
         self.required_imports = set()
+        self.s3_cache = (
+            OVERRIDES.get(self.category, {}).get(self.name, {}).get("s3_cache", False)
+        )
 
         self.generate_params_struct()
 
         # TODO: allow override self.format = "json"
-        # TODO: allow override self.s3_cache = True
 
     def generate_params_struct(self) -> str | None:
         if not self.parameters or len(self.parameters) == 0:
@@ -162,6 +164,7 @@ class Endpoint:
                 sample_response = self.api_client.call_endpoint(
                     self.link,
                     params=sample_data,
+                    s3_cache=self.s3_cache,
                 )
             except Exception as e:
                 logging.error(f"Error fetching {self.category}__{self.name}__{i}: {e}")

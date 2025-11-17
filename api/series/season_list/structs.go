@@ -70,7 +70,7 @@ type Season struct {
 	RestrictViewing            bool                 `json:"restrict_viewing"`
 	ScheduleDescription        string               `json:"schedule_description"`
 	SeasonQuarter              int64                `json:"season_quarter"`
-	SeasonShortName            SeasonShortName      `json:"season_short_name"`
+	SeasonShortName            string               `json:"season_short_name"`
 	SeasonYear                 int64                `json:"season_year"`
 	SendToOpenPractice         bool                 `json:"send_to_open_practice"`
 	SeriesID                   int64                `json:"series_id"`
@@ -80,10 +80,10 @@ type Season struct {
 	StartZone                  bool                 `json:"start_zone"`
 	TrackTypes                 []TrackType          `json:"track_types"`
 	UnsportConductRuleMode     int64                `json:"unsport_conduct_rule_mode"`
-	HeatSesInfo                *HeatSesInfo         `json:"heat_ses_info,omitempty"`
-	RookieSeason               *RookieSeason        `json:"rookie_season,omitempty"`
 	RaceWeekCarClassIDS        []RaceWeekCarClassID `json:"race_week_car_class_ids,omitempty"`
 	ScoreAsCarclassid          *int64               `json:"score_as_carclassid,omitempty"`
+	HeatSesInfo                *HeatSesInfo         `json:"heat_ses_info,omitempty"`
+	RookieSeason               *string              `json:"rookie_season,omitempty"`
 	RegOpenMinutes             *int64               `json:"reg_open_minutes,omitempty"`
 }
 
@@ -98,7 +98,7 @@ type CurrentWeekSched struct {
 	RaceLapLimit    *int64           `json:"race_lap_limit"`
 	RaceTimeLimit   *int64           `json:"race_time_limit"`
 	PrecipChance    *int64           `json:"precip_chance,omitempty"`
-	StartType       StartType        `json:"start_type"`
+	StartType       string           `json:"start_type"`
 	CategoryID      int64            `json:"category_id"`
 }
 
@@ -113,11 +113,11 @@ type CarRestriction struct {
 }
 
 type Track struct {
-	Category   Category `json:"category"`
-	CategoryID int64    `json:"category_id"`
-	ConfigName *string  `json:"config_name,omitempty"`
-	TrackID    int64    `json:"track_id"`
-	TrackName  string   `json:"track_name"`
+	Category   string  `json:"category"`
+	CategoryID int64   `json:"category_id"`
+	ConfigName *string `json:"config_name,omitempty"`
+	TrackID    int64   `json:"track_id"`
+	TrackName  string  `json:"track_name"`
 }
 
 type Elig struct {
@@ -181,40 +181,5 @@ type RaceWeekCarClassID struct {
 }
 
 type TrackType struct {
-	TrackType Category `json:"track_type"`
+	TrackType string `json:"track_type"`
 }
-
-type StartType string
-
-const (
-	Rolling  StartType = "Rolling"
-	Standing StartType = "Standing"
-)
-
-type Category string
-
-const (
-	DirtOval   Category = "dirt_oval"
-	DirtRoad   Category = "dirt_road"
-	FormulaCar Category = "formula_car"
-	Oval       Category = "oval"
-	Road       Category = "road"
-	SportsCar  Category = "sports_car"
-)
-
-type RookieSeason string
-
-const (
-	A RookieSeason = "A"
-)
-
-type SeasonShortName string
-
-const (
-	SeasonShortName2025Season       SeasonShortName = "2025 Season "
-	SeasonShortName2025Season4      SeasonShortName = "2025 Season 4 "
-	SeasonShortName2025Season4Fixed SeasonShortName = "2025 Season 4 - Fixed"
-	The2025Season                   SeasonShortName = "2025 Season"
-	The2025Season4                  SeasonShortName = "2025 Season 4"
-	The2025Season4Fixed             SeasonShortName = "2025 Season 4 Fixed"
-)

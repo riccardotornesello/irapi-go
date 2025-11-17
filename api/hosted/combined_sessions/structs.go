@@ -90,6 +90,7 @@ type Session struct {
 	TelemetryRestriction              int64              `json:"telemetry_restriction"`
 	TelemetryForceToDisk              int64              `json:"telemetry_force_to_disk"`
 	MaxAIDrivers                      int64              `json:"max_ai_drivers"`
+	AltAssetID                        *int64             `json:"alt_asset_id,omitempty"`
 	AIAvoidPlayers                    bool               `json:"ai_avoid_players"`
 	AdaptiveAIEnabled                 bool               `json:"adaptive_ai_enabled"`
 	AdaptiveAIDifficulty              *int64             `json:"adaptive_ai_difficulty,omitempty"`
@@ -99,7 +100,7 @@ type Session struct {
 	DisallowVirtualMirror             bool               `json:"disallow_virtual_mirror"`
 	MaxVisorTearoffs                  int64              `json:"max_visor_tearoffs"`
 	CategoryID                        int64              `json:"category_id"`
-	Category                          Category           `json:"category"`
+	Category                          string             `json:"category"`
 	SessionFull                       bool               `json:"session_full"`
 	Host                              Host               `json:"host"`
 	Track                             Track              `json:"track"`
@@ -113,7 +114,7 @@ type Session struct {
 	CountByCarID                      map[string]int64   `json:"count_by_car_id"`
 	CountByCarClassID                 map[string]int64   `json:"count_by_car_class_id"`
 	CarTypes                          []CarType          `json:"car_types"`
-	TrackTypes                        []TrackTypeElement `json:"track_types"`
+	TrackTypes                        []TrackType        `json:"track_types"`
 	LicenseGroupTypes                 []LicenseGroupType `json:"license_group_types"`
 	EventTypes                        []EventType        `json:"event_types"`
 	SessionTypes                      []SessionType      `json:"session_types"`
@@ -128,13 +129,12 @@ type Session struct {
 	Broadcaster                       bool               `json:"broadcaster"`
 	MinIR                             int64              `json:"min_ir"`
 	MaxIR                             int64              `json:"max_ir"`
+	SessionDesc                       *string            `json:"session_desc,omitempty"`
+	AIRosterName                      *string            `json:"ai_roster_name,omitempty"`
 	AIMinSkill                        *int64             `json:"ai_min_skill,omitempty"`
 	AIMaxSkill                        *int64             `json:"ai_max_skill,omitempty"`
-	AIRosterName                      *string            `json:"ai_roster_name,omitempty"`
-	SessionDesc                       *string            `json:"session_desc,omitempty"`
-	HeatSesInfo                       *HeatSesInfo       `json:"heat_ses_info,omitempty"`
 	RegisteredTeams                   []int64            `json:"registered_teams,omitempty"`
-	AltAssetID                        *int64             `json:"alt_asset_id,omitempty"`
+	HeatSesInfo                       *HeatSesInfo       `json:"heat_ses_info,omitempty"`
 }
 
 type Host struct {
@@ -157,19 +157,19 @@ type CarType struct {
 }
 
 type Car struct {
-	CarID             int64        `json:"car_id"`
-	CarName           string       `json:"car_name"`
-	CarClassID        int64        `json:"car_class_id"`
-	CarClassName      CarClassName `json:"car_class_name"`
-	MaxPctFuelFill    int64        `json:"max_pct_fuel_fill"`
-	WeightPenaltyKg   int64        `json:"weight_penalty_kg"`
-	PowerAdjustPct    int64        `json:"power_adjust_pct"`
-	MaxDryTireSets    int64        `json:"max_dry_tire_sets"`
-	PackageID         int64        `json:"package_id"`
-	QualSetupID       *int64       `json:"qual_setup_id,omitempty"`
-	QualSetupFilename *string      `json:"qual_setup_filename,omitempty"`
-	RaceSetupID       *int64       `json:"race_setup_id,omitempty"`
-	RaceSetupFilename *string      `json:"race_setup_filename,omitempty"`
+	CarID             int64   `json:"car_id"`
+	CarName           string  `json:"car_name"`
+	CarClassID        int64   `json:"car_class_id"`
+	CarClassName      string  `json:"car_class_name"`
+	MaxPctFuelFill    int64   `json:"max_pct_fuel_fill"`
+	WeightPenaltyKg   int64   `json:"weight_penalty_kg"`
+	PowerAdjustPct    int64   `json:"power_adjust_pct"`
+	MaxDryTireSets    int64   `json:"max_dry_tire_sets"`
+	PackageID         int64   `json:"package_id"`
+	QualSetupID       *int64  `json:"qual_setup_id,omitempty"`
+	QualSetupFilename *string `json:"qual_setup_filename,omitempty"`
+	RaceSetupID       *int64  `json:"race_setup_id,omitempty"`
+	RaceSetupFilename *string `json:"race_setup_filename,omitempty"`
 }
 
 type Elig struct {
@@ -190,10 +190,10 @@ type EventType struct {
 }
 
 type Farm struct {
-	FarmID      int64       `json:"farm_id"`
-	DisplayName DisplayName `json:"display_name"`
-	ImagePath   ImagePath   `json:"image_path"`
-	Displayed   bool        `json:"displayed"`
+	FarmID      int64  `json:"farm_id"`
+	DisplayName string `json:"display_name"`
+	ImagePath   string `json:"image_path"`
+	Displayed   bool   `json:"displayed"`
 }
 
 type HeatSesInfo struct {
@@ -239,6 +239,7 @@ type HeatSesInfo struct {
 	QualScoring                          int64     `json:"qual_scoring"`
 	QualStyle                            int64     `json:"qual_style"`
 	RaceStyle                            int64     `json:"race_style"`
+	Description                          *string   `json:"description,omitempty"`
 }
 
 type LicenseGroupType struct {
@@ -264,8 +265,8 @@ type TrackState struct {
 	WarmupRubber   int64 `json:"warmup_rubber"`
 }
 
-type TrackTypeElement struct {
-	TrackType TrackTypeEnum `json:"track_type"`
+type TrackType struct {
+	TrackType string `json:"track_type"`
 }
 
 type Weather struct {
@@ -305,7 +306,7 @@ type ForecastOptions struct {
 type WeatherSummary struct {
 	MaxPrecipRate     *float64 `json:"max_precip_rate,omitempty"`
 	MaxPrecipRateDesc string   `json:"max_precip_rate_desc"`
-	PrecipChance      int64    `json:"precip_chance"`
+	PrecipChance      float64  `json:"precip_chance"`
 	SkiesHigh         *int64   `json:"skies_high,omitempty"`
 	SkiesLow          *int64   `json:"skies_low,omitempty"`
 	TempHigh          *float64 `json:"temp_high,omitempty"`
@@ -316,50 +317,3 @@ type WeatherSummary struct {
 	WindLow           *float64 `json:"wind_low,omitempty"`
 	WindUnits         *int64   `json:"wind_units,omitempty"`
 }
-
-type CarClassName string
-
-const (
-	DallaraP217        CarClassName = "Dallara P217"
-	GT3Class           CarClassName = "GT3 Class"
-	Gtp                CarClassName = "GTP"
-	HostedAllCarsClass CarClassName = "Hosted All Cars Class"
-	Imsa23             CarClassName = "IMSA23"
-	NASCAR2022NextGen  CarClassName = "NASCAR 2022 NextGen"
-	SuperFormulaLights CarClassName = "Super Formula Lights"
-	SupercarsGen3      CarClassName = "Supercars Gen 3"
-)
-
-type Category string
-
-const (
-	CategoryDirtOval Category = "dirt_oval"
-	FormulaCar       Category = "formula_car"
-	SportsCar        Category = "sports_car"
-)
-
-type DisplayName string
-
-const (
-	AUSyd    DisplayName = "AU-Syd"
-	DEFra    DisplayName = "DE-Fra"
-	USEastOH DisplayName = "US-East-OH"
-	USWest   DisplayName = "US-West"
-)
-
-type ImagePath string
-
-const (
-	MemberImagesFlagsAuPNG       ImagePath = "/member_images/flags/au.png"
-	MemberImagesFlagsDePNG       ImagePath = "/member_images/flags/de.png"
-	MemberImagesFlagsUsAmazonPNG ImagePath = "/member_images/flags/us-amazon.png"
-	MemberImagesFlagsWAmazonPNG  ImagePath = "/member_images/flags/w-amazon.png"
-)
-
-type TrackTypeEnum string
-
-const (
-	Oval              TrackTypeEnum = "oval"
-	Road              TrackTypeEnum = "road"
-	TrackTypeDirtOval TrackTypeEnum = "dirt_oval"
-)

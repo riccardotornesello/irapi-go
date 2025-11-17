@@ -25,6 +25,7 @@ type Member struct {
 	FlairName      string    `json:"flair_name"`
 	FlairShortname string    `json:"flair_shortname"`
 	AI             bool      `json:"ai"`
+	Licenses       []License `json:"licenses,omitempty"`
 }
 
 type Helmet struct {
@@ -34,4 +35,22 @@ type Helmet struct {
 	Color3     string `json:"color3"`
 	FaceType   int64  `json:"face_type"`
 	HelmetType int64  `json:"helmet_type"`
+}
+
+type License struct {
+	CategoryID    int64   `json:"category_id"`
+	Category      string  `json:"category"`
+	CategoryName  string  `json:"category_name"`
+	LicenseLevel  int64   `json:"license_level"`
+	SafetyRating  float64 `json:"safety_rating"`
+	Cpi           float64 `json:"cpi"`
+	TtRating      int64   `json:"tt_rating"`
+	MprNumRaces   int64   `json:"mpr_num_races"`
+	Color         string  `json:"color"`
+	GroupName     string  `json:"group_name"`
+	GroupID       int64   `json:"group_id"`
+	ProPromotable bool    `json:"pro_promotable"`
+	Seq           int64   `json:"seq"`
+	MprNumTTS     int64   `json:"mpr_num_tts"`
+	Irating       *int64  `json:"irating,omitempty"`
 }

@@ -26,10 +26,13 @@ class APIClient:
         if auth_code == 0:
             raise Exception(f"Failed to authenticate: {response.text}")
 
-    def call_endpoint(self, url, params=None) -> str:
+    def call_endpoint(self, url, params=None, s3_cache=True) -> str:
         response = self.api_client.get(url, params=params)
         if response.status_code != 200:
             raise Exception(f"API call failed: {response.text}")
+
+        if not s3_cache:
+            return response.text
 
         s3_url = response.json()["link"]
         response = self.api_client.get(s3_url)
