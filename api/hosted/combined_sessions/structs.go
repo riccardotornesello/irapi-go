@@ -90,10 +90,11 @@ type Session struct {
 	TelemetryRestriction              int64              `json:"telemetry_restriction"`
 	TelemetryForceToDisk              int64              `json:"telemetry_force_to_disk"`
 	MaxAIDrivers                      int64              `json:"max_ai_drivers"`
-	AltAssetID                        *int64             `json:"alt_asset_id,omitempty"`
+	AIMinSkill                        *int64             `json:"ai_min_skill,omitempty"`
+	AIMaxSkill                        *int64             `json:"ai_max_skill,omitempty"`
+	AIRosterName                      *string            `json:"ai_roster_name,omitempty"`
 	AIAvoidPlayers                    bool               `json:"ai_avoid_players"`
 	AdaptiveAIEnabled                 bool               `json:"adaptive_ai_enabled"`
-	AdaptiveAIDifficulty              *int64             `json:"adaptive_ai_difficulty,omitempty"`
 	MustUseDiffTireTypesInRace        bool               `json:"must_use_diff_tire_types_in_race"`
 	StartZone                         bool               `json:"start_zone"`
 	EnablePitlaneCollisions           bool               `json:"enable_pitlane_collisions"`
@@ -129,12 +130,10 @@ type Session struct {
 	Broadcaster                       bool               `json:"broadcaster"`
 	MinIR                             int64              `json:"min_ir"`
 	MaxIR                             int64              `json:"max_ir"`
+	AdaptiveAIDifficulty              *int64             `json:"adaptive_ai_difficulty,omitempty"`
 	SessionDesc                       *string            `json:"session_desc,omitempty"`
-	AIRosterName                      *string            `json:"ai_roster_name,omitempty"`
-	AIMinSkill                        *int64             `json:"ai_min_skill,omitempty"`
-	AIMaxSkill                        *int64             `json:"ai_max_skill,omitempty"`
-	RegisteredTeams                   []int64            `json:"registered_teams,omitempty"`
 	HeatSesInfo                       *HeatSesInfo       `json:"heat_ses_info,omitempty"`
+	AltAssetID                        *int64             `json:"alt_asset_id,omitempty"`
 }
 
 type Host struct {
@@ -239,7 +238,6 @@ type HeatSesInfo struct {
 	QualScoring                          int64     `json:"qual_scoring"`
 	QualStyle                            int64     `json:"qual_style"`
 	RaceStyle                            int64     `json:"race_style"`
-	Description                          *string   `json:"description,omitempty"`
 }
 
 type LicenseGroupType struct {
@@ -252,9 +250,9 @@ type SessionType struct {
 
 type Track struct {
 	CategoryID int64   `json:"category_id"`
-	ConfigName *string `json:"config_name,omitempty"`
 	TrackID    int64   `json:"track_id"`
 	TrackName  string  `json:"track_name"`
+	ConfigName *string `json:"config_name,omitempty"`
 }
 
 type TrackState struct {

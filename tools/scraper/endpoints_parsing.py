@@ -2,6 +2,7 @@ import os
 import logging
 import requests
 import json
+import re
 
 from tqdm.contrib.concurrent import thread_map
 
@@ -100,12 +101,10 @@ class Endpoint:
 
         self.required_imports = set()
         self.s3_cache = (
-            OVERRIDES.get(self.category, {}).get(self.name, {}).get("s3_cache", False)
+            OVERRIDES.get(self.category, {}).get(self.name, {}).get("s3_cache", True)
         )
 
         self.generate_params_struct()
-
-        # TODO: allow override self.format = "json"
 
     def generate_params_struct(self) -> str | None:
         if not self.parameters or len(self.parameters) == 0:
@@ -222,8 +221,7 @@ class Endpoint:
                     logging.error(
                         f"Error fetching {self.category}__{self.name}__{sample_index} chunk {chunk_index}: {e}"
                     )
-                    self.chunks_sampled = False
-                    return False
+                    continue
 
                 # Save the response to a file
                 os.makedirs("output/responses", exist_ok=True)
@@ -231,6 +229,10 @@ class Endpoint:
                     f.write(sample_response)
 
                 self.chunks_sampled = True
+
+            sample_data["chunks"] = "PLACEHOLDER"
+            with open(os.path.join("output/responses", sample_file), "w") as f:
+                f.write(json.dumps(sample_data, indent=4))
 
         return True
 
@@ -262,10 +264,15 @@ class Endpoint:
                 f"output/responses/chunks__{self.category}__{self.name}__*",
             )
 
+            # Find the string "Chunks ... string" in the main response struct and replace it with the chunk struct name
+            pattern = r'Chunks [^\n]+string'
+            replacement = f"Chunks {chunk_struct_name}"
+            self.response_struct = re.sub(pattern, replacement, self.response_struct)
+
             self.response_struct += f"\n\n{chunk_struct}"
             self.required_imports.update(chunk_imports)
 
-            # TODO: handle chunk struct in the endpoint class and fetch data
+            # TODO: fetch chunks in the client's api call
 
 
 def _parse_iracing_notes(notes) -> list[str]:

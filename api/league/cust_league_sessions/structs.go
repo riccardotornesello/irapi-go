@@ -37,6 +37,7 @@ type Session struct {
 	SubsessionID                      *int64             `json:"subsession_id,omitempty"`
 	PasswordProtected                 bool               `json:"password_protected"`
 	SessionName                       string             `json:"session_name"`
+	SessionDesc                       *string            `json:"session_desc,omitempty"`
 	OpenRegExpires                    *time.Time         `json:"open_reg_expires,omitempty"`
 	LaunchAt                          time.Time          `json:"launch_at"`
 	FullCourseCautions                bool               `json:"full_course_cautions"`
@@ -96,7 +97,7 @@ type Session struct {
 	MaxAIDrivers                      int64              `json:"max_ai_drivers"`
 	AIAvoidPlayers                    bool               `json:"ai_avoid_players"`
 	AdaptiveAIEnabled                 bool               `json:"adaptive_ai_enabled"`
-	AdaptiveAIDifficulty              *int64             `json:"adaptive_ai_difficulty,omitempty"`
+	AdaptiveAIDifficulty              int64              `json:"adaptive_ai_difficulty"`
 	MustUseDiffTireTypesInRace        bool               `json:"must_use_diff_tire_types_in_race"`
 	StartZone                         bool               `json:"start_zone"`
 	EnablePitlaneCollisions           bool               `json:"enable_pitlane_collisions"`
@@ -114,6 +115,7 @@ type Session struct {
 	AllowedTeams                      []interface{}      `json:"allowed_teams"`
 	AllowedLeagues                    []int64            `json:"allowed_leagues"`
 	Cars                              []Car              `json:"cars"`
+	HeatSesInfo                       *HeatSesInfo       `json:"heat_ses_info,omitempty"`
 	CountByCarID                      map[string]int64   `json:"count_by_car_id,omitempty"`
 	CountByCarClassID                 map[string]int64   `json:"count_by_car_class_id,omitempty"`
 	CarTypes                          []CarType          `json:"car_types"`
@@ -122,28 +124,18 @@ type Session struct {
 	EventTypes                        []EventType        `json:"event_types"`
 	SessionTypes                      []SessionType      `json:"session_types"`
 	CanJoin                           bool               `json:"can_join"`
-	Image                             *Image             `json:"image,omitempty"`
+	Image                             Image              `json:"image"`
 	Owner                             bool               `json:"owner"`
 	Admin                             bool               `json:"admin"`
 	Friends                           []interface{}      `json:"friends,omitempty"`
 	Watched                           []interface{}      `json:"watched,omitempty"`
 	EndTime                           time.Time          `json:"end_time"`
+	Populated                         bool               `json:"populated"`
 	TeamEntryCount                    int64              `json:"team_entry_count"`
 	IsHeatRacing                      bool               `json:"is_heat_racing"`
-	Populated                         bool               `json:"populated"`
 	Broadcaster                       bool               `json:"broadcaster"`
 	MinIR                             int64              `json:"min_ir"`
 	MaxIR                             int64              `json:"max_ir"`
-	HeatSesInfo                       *HeatSesInfo       `json:"heat_ses_info,omitempty"`
-	AIRosterName                      *string            `json:"ai_roster_name,omitempty"`
-	SessionDesc                       *string            `json:"session_desc,omitempty"`
-	AIMinSkill                        *int64             `json:"ai_min_skill,omitempty"`
-	AIMaxSkill                        *int64             `json:"ai_max_skill,omitempty"`
-	AltAssetID                        *int64             `json:"alt_asset_id,omitempty"`
-	ServerNumber                      *int64             `json:"server_number,omitempty"`
-	SessionSubsessions                []int64            `json:"session_subsessions,omitempty"`
-	Grid                              []Grid             `json:"grid,omitempty"`
-	HeatSpec                          *HeatSpec          `json:"heat_spec,omitempty"`
 	RaceLengthType                    *int64             `json:"race_length_type,omitempty"`
 }
 
@@ -175,11 +167,11 @@ type Car struct {
 	WeightPenaltyKg   int64   `json:"weight_penalty_kg"`
 	PowerAdjustPct    int64   `json:"power_adjust_pct"`
 	MaxDryTireSets    int64   `json:"max_dry_tire_sets"`
-	QualSetupID       *int64  `json:"qual_setup_id,omitempty"`
-	QualSetupFilename *string `json:"qual_setup_filename,omitempty"`
 	RaceSetupID       *int64  `json:"race_setup_id,omitempty"`
 	RaceSetupFilename *string `json:"race_setup_filename,omitempty"`
 	PackageID         int64   `json:"package_id"`
+	QualSetupID       *int64  `json:"qual_setup_id,omitempty"`
+	QualSetupFilename *string `json:"qual_setup_filename,omitempty"`
 }
 
 type Elig struct {
@@ -206,15 +198,6 @@ type Farm struct {
 	Displayed   bool   `json:"displayed"`
 }
 
-type Grid struct {
-	CustID       int64 `json:"cust_id"`
-	HeatGridsID  int64 `json:"heat_grids_id"`
-	ServerNumber int64 `json:"server_number"`
-	Position     int64 `json:"position"`
-	LapTime      int64 `json:"lap_time"`
-	UseQual      bool  `json:"use_qual"`
-}
-
 type HeatSesInfo struct {
 	ConsolationDeltaMaxFieldSize         int64     `json:"consolation_delta_max_field_size"`
 	ConsolationDeltaSessionLaps          int64     `json:"consolation_delta_session_laps"`
@@ -229,6 +212,7 @@ type HeatSesInfo struct {
 	ConsolationScoresChampPoints         bool      `json:"consolation_scores_champ_points"`
 	Created                              time.Time `json:"created"`
 	CustID                               int64     `json:"cust_id"`
+	Description                          *string   `json:"description,omitempty"`
 	HeatCautionType                      int64     `json:"heat_caution_type"`
 	HeatInfoID                           int64     `json:"heat_info_id"`
 	HeatInfoName                         string    `json:"heat_info_name"`
@@ -258,14 +242,6 @@ type HeatSesInfo struct {
 	QualScoring                          int64     `json:"qual_scoring"`
 	QualStyle                            int64     `json:"qual_style"`
 	RaceStyle                            int64     `json:"race_style"`
-	Description                          *string   `json:"description,omitempty"`
-}
-
-type HeatSpec struct {
-	GridID       int64 `json:"grid_id"`
-	NumServers   int64 `json:"num_servers"`
-	AddedDrivers bool  `json:"added_drivers"`
-	HeatFinal    bool  `json:"heat_final"`
 }
 
 type Image struct {
@@ -289,11 +265,11 @@ type Track struct {
 }
 
 type TrackState struct {
-	LeaveMarbles   bool   `json:"leave_marbles"`
-	PracticeRubber int64  `json:"practice_rubber"`
-	QualifyRubber  int64  `json:"qualify_rubber"`
-	RaceRubber     int64  `json:"race_rubber"`
-	WarmupRubber   *int64 `json:"warmup_rubber,omitempty"`
+	LeaveMarbles   bool  `json:"leave_marbles"`
+	PracticeRubber int64 `json:"practice_rubber"`
+	QualifyRubber  int64 `json:"qualify_rubber"`
+	RaceRubber     int64 `json:"race_rubber"`
+	WarmupRubber   int64 `json:"warmup_rubber"`
 }
 
 type TrackType struct {
@@ -337,7 +313,7 @@ type ForecastOptions struct {
 type WeatherSummary struct {
 	MaxPrecipRate     *float64 `json:"max_precip_rate,omitempty"`
 	MaxPrecipRateDesc string   `json:"max_precip_rate_desc"`
-	PrecipChance      float64  `json:"precip_chance"`
+	PrecipChance      int64    `json:"precip_chance"`
 	SkiesHigh         *int64   `json:"skies_high,omitempty"`
 	SkiesLow          *int64   `json:"skies_low,omitempty"`
 	TempHigh          *float64 `json:"temp_high,omitempty"`
