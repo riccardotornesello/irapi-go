@@ -4,6 +4,7 @@ import shutil
 import requests
 import json
 import re
+import datetime
 
 from tqdm.contrib.concurrent import thread_map
 
@@ -137,12 +138,27 @@ class Endpoint:
             )
             return False
 
+        responses_folder = f"output/responses/{self.category}/{self.name}"
+        os.makedirs(responses_folder, exist_ok=True)
+
+        # If the cache is enabled and we have files, skip fetching
+        if len(os.listdir(responses_folder)) > 0 and cached:
+            self.sample_responses_parsed = True
+
+            # If any of the files starts with "chunks__", we have sampled chunks
+            for f in os.listdir(responses_folder):
+                if f.startswith("chunks__"):
+                    self.chunks_sampled = True
+                    break
+
+            return True
+
         sample_data_suite = (
             OVERRIDES.get(self.category, {}).get(self.name, {}).get("params", [])
         )
 
+        # Skip if some parameters are required but have no sample value
         if len(sample_data_suite) == 0:
-            # Skip if some parameters are required but have no sample value
             has_required_params = any(
                 parameter.required for parameter in self.parameters
             )
@@ -152,14 +168,13 @@ class Endpoint:
                 )
                 return False
 
+            # Use an empty dict as default sample data
             sample_data_suite = [{}]
 
+        timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+
         for i, sample_data in enumerate(sample_data_suite):
-            file_path = (
-                f"output/responses/{self.category}__{self.name}__{i}.{self.format}"
-            )
-            if cached and os.path.exists(file_path):
-                continue
+            file_path = f"output/responses/{self.category}/{self.name}/response__{timestamp}__{i}.{self.format}"
 
             try:
                 sample_response = self.api_client.call_endpoint(
@@ -168,69 +183,49 @@ class Endpoint:
                     s3_cache=self.s3_cache,
                 )
             except Exception as e:
-                logging.error(f"Error fetching {self.category}__{self.name}__{i}: {e}")
+                logging.error(f"Error fetching {self.category}/{self.name}/{i}: {e}")
                 return False
 
             # Save the response to a file
-            os.makedirs("output/responses", exist_ok=True)
             with open(file_path, "w") as f:
                 f.write(sample_response)
+
+            # Save the chunks if any
+            response_data = json.loads(sample_response)
+            if isinstance(response_data, dict) and response_data.get("chunk_info"):
+                if not self.fetch_sample_chunks(response_data["chunk_info"], timestamp, i):
+                    return False
 
         self.sample_responses_parsed = True
         return True
 
-    def fetch_sample_chunks(self, cached: bool = True) -> bool:
+    def fetch_sample_chunks(
+        self, chunk_info: dict, timestamp: str, sample_index: int
+    ) -> bool:
         MAX_CHUNKS_PER_SAMPLE = 5
 
-        if not self.sample_responses_parsed:
-            logging.warning(
-                f"Skipped: {self.category}__{self.name} (no sample response)"
-            )
-            return False
+        base_url = chunk_info["base_download_url"]
 
-        sample_files = [
-            f
-            for f in os.listdir("output/responses")
-            if f.startswith(f"{self.category}__{self.name}__")
-            and f.endswith(f".{self.format}")
-        ]
+        for chunk_index, chunk_file_name in enumerate(chunk_info["chunk_file_names"]):
+            if chunk_index >= MAX_CHUNKS_PER_SAMPLE:
+                break
 
-        for sample_index, sample_file in enumerate(sample_files):
-            with open(os.path.join("output/responses", sample_file), "r") as f:
-                sample_data = json.loads(f.read())
+            file_path = f"output/responses/{self.category}/{self.name}/chunks__{timestamp}__{sample_index}__{chunk_index}.{self.format}"
 
-            # Check if data is a list
-            if isinstance(sample_data, list) or not sample_data.get("chunk_info"):
-                continue
-
-            for chunk_index, chunk_file_name in enumerate(
-                sample_data["chunk_info"]["chunk_file_names"]
-            ):
-                if chunk_index >= MAX_CHUNKS_PER_SAMPLE:
-                    break
-
-                file_path = f"output/responses/chunks__{self.category}__{self.name}__{sample_index}__{chunk_index}.json"
-                if cached and os.path.exists(file_path):
-                    self.chunks_sampled = True
-                    continue
-
-                url = (
-                    f"{sample_data['chunk_info']['base_download_url']}{chunk_file_name}"
+            url = f"{base_url}{chunk_file_name}"
+            try:
+                sample_response = requests.get(url).text
+            except Exception as e:
+                logging.error(
+                    f"Error fetching {self.category}__{self.name}__{sample_index} chunk {chunk_index}: {e}"
                 )
-                try:
-                    sample_response = requests.get(url).text
-                except Exception as e:
-                    logging.error(
-                        f"Error fetching {self.category}__{self.name}__{sample_index} chunk {chunk_index}: {e}"
-                    )
-                    continue
+                return False
 
-                # Save the response to a file
-                os.makedirs("output/responses", exist_ok=True)
-                with open(file_path, "w") as f:
-                    f.write(sample_response)
+            # Save the response to a file
+            with open(file_path, "w") as f:
+                f.write(sample_response)
 
-                self.chunks_sampled = True
+            self.chunks_sampled = True
 
         return True
 
@@ -242,26 +237,30 @@ class Endpoint:
             return
 
         # Generate the files used as input for quicktype
-        for f in os.listdir("output/responses"):
-            if not f.startswith(f"{self.category}__{self.name}__"):
+        responses_folder = f"output/responses/{self.category}/{self.name}"
+        inputs_folder = f"output/inputs/{self.category}/{self.name}"
+        os.makedirs(inputs_folder, exist_ok=True)
+
+        for f in os.listdir(responses_folder):
+            if not f.startswith(f"response__"):
                 continue
 
             if not f.endswith(f".{self.format}"):
                 continue
 
             if self.chunks_sampled:
-                with open(os.path.join("output/responses", f), "r") as file:
+                with open(os.path.join(responses_folder, f), "r") as file:
                     data = json.load(file)
 
                 data["chunk_info"] = "PLACEHOLDER"
                 data["chunks"] = "PLACEHOLDER"
 
-                with open(os.path.join("output/inputs", f), "w") as file:
+                with open(os.path.join(inputs_folder, f), "w") as file:
                     json.dump(data, file, indent=4)
             else:
                 shutil.copyfile(
-                    os.path.join("output/responses", f),
-                    os.path.join("output/inputs", f),
+                    os.path.join(responses_folder, f),
+                    os.path.join(inputs_folder, f),
                 )
 
         # Generate the response struct
@@ -271,7 +270,7 @@ class Endpoint:
 
         self.response_struct, self.required_imports = run_quicktype(
             self.response_struct_name,
-            f"output/inputs/{self.category}__{self.name}__*",
+            f"output/inputs/{self.category}/{self.name}/response__*",
         )
 
         # Generate the chunk response struct
@@ -282,7 +281,7 @@ class Endpoint:
 
             chunk_struct, chunk_imports = run_quicktype(
                 plural_chunk_struct_name,
-                f"output/responses/chunks__{self.category}__{self.name}__*",
+                f"output/responses/{self.category}/{self.name}/chunks__*",
             )
 
             self.chunk_struct_name = plural_chunk_struct_name.rstrip("s")
@@ -340,27 +339,12 @@ def fetch_sample_responses(
     logging.info("Sample responses fetched.")
 
 
-def fetch_sample_chunks(
-    endpoints: list[Endpoint], skip_cached: bool = True, workers: int = 5
-):
-    logging.info("Fetching sample chunks...")
-
-    thread_map(
-        lambda endpoint: endpoint.fetch_sample_chunks(cached=skip_cached),
-        endpoints,
-        max_workers=workers,
-    )
-
-    logging.info("Sample chunks fetched.")
-
-
 def generate_go_types(endpoints: list[Endpoint], workers: int = 20):
     logging.info("Generating Go types...")
 
-    # Remove and recreate the inputs folder
+    # Remove the inputs folder
     if os.path.exists("output/inputs"):
         shutil.rmtree("output/inputs")
-    os.makedirs("output/inputs", exist_ok=True)
 
     thread_map(
         lambda endpoint: endpoint.generate_go_types(),
