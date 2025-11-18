@@ -1,3 +1,18 @@
+{#
+  Template: category.j2
+  
+  Generates the main.go file for an API category.
+  
+  This template creates a Go struct that represents an API category
+  (e.g., LeagueApi, MemberApi) and includes methods for all endpoints
+  within that category.
+  
+  Variables:
+    - package_name: The Go package name (category name)
+    - imports: Set of Go package imports needed
+    - api_name: Name of the API struct (e.g., "LeagueApi")
+    - endpoint_calls: List of rendered endpoint method implementations
+#}
 package {{package_name}}
 
 import (
