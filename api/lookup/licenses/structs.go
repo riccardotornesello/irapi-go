@@ -1,7 +1,5 @@
 package licenses
 
-import ()
-
 type LookupLicensesResponse []LookupLicensesResponseElement
 
 type LookupLicensesResponseElement struct {

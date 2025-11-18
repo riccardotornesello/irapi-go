@@ -11,9 +11,19 @@ type TrackApi struct {
 }
 
 func (api *TrackApi) Assets() (*assets.TrackAssetsResponse, error) {
-	return client.GetJson[assets.TrackAssetsResponse](api.Client, "/data/track/assets", nil)
+	resp, err := client.GetJson[assets.TrackAssetsResponse](api.Client, "/data/track/assets", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }
 
 func (api *TrackApi) Get() (*get.TrackGetResponse, error) {
-	return client.GetJson[get.TrackGetResponse](api.Client, "/data/track/get", nil)
+	resp, err := client.GetJson[get.TrackGetResponse](api.Client, "/data/track/get", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

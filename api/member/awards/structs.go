@@ -1,7 +1,5 @@
 package awards
 
-import ()
-
 type MemberAwardsParams struct {
 	CustId int `url:"cust_id,omitempty,comma"`
 }

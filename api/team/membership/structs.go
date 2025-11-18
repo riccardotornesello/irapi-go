@@ -1,7 +1,5 @@
 package membership
 
-import ()
-
 type TeamMembershipResponse []TeamMembershipResponseElement
 
 type TeamMembershipResponseElement struct {

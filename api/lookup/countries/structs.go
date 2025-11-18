@@ -1,7 +1,5 @@
 package countries
 
-import ()
-
 type LookupCountriesResponse []LookupCountriesResponseElement
 
 type LookupCountriesResponseElement struct {

@@ -1,7 +1,5 @@
 package member_career
 
-import ()
-
 type StatsMemberCareerParams struct {
 	CustId int `url:"cust_id,omitempty,comma"`
 }

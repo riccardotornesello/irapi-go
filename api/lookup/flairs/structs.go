@@ -1,7 +1,5 @@
 package flairs
 
-import ()
-
 type LookupFlairsResponse struct {
 	Flairs  []Flair `json:"flairs"`
 	Success bool    `json:"success"`

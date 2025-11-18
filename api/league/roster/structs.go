@@ -1,7 +1,5 @@
 package roster
 
-import ()
-
 type LeagueRosterParams struct {
 	LeagueId        int  `url:"league_id,omitempty,comma"`
 	IncludeLicenses bool `url:"include_licenses,omitempty,comma"`

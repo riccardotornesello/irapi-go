@@ -15,7 +15,7 @@ type iRacingResponse struct {
 	Link string `json:"link"`
 }
 
-type iRacingChunkInfo struct {
+type IRacingChunkInfo struct {
 	ChunkSize       int      `json:"chunk_size"`
 	NumChunks       int      `json:"num_chunks"`
 	Rows            int      `json:"rows"`
@@ -110,16 +110,32 @@ func (c *ApiClient) GetResourceUrl(path string, parameters interface{}) (string,
 	}
 }
 
-func (c *ApiClient) GetChunks(chunkInfo *iRacingChunkInfo) ([]io.ReadCloser, error) {
-	out := make([]io.ReadCloser, len(chunkInfo.ChunkFileNames))
+func GetChunks[T any](chunkInfo *IRacingChunkInfo) ([]T, error) {
+	out := make([]T, 0)
 
 	for i, chunkFileName := range chunkInfo.ChunkFileNames {
-		resp, err := http.DefaultClient.Get(chunkInfo.BaseDownloadUrl + chunkFileName)
+		resp, err := http.Get(chunkInfo.BaseDownloadUrl + chunkFileName)
 		if err != nil {
 			return nil, err
 		}
 
-		out[i] = resp.Body
+		bodyBytes, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+		resp.Body.Close()
+
+		if resp.StatusCode != 200 {
+			return nil, fmt.Errorf("error getting chunk %d: %d - %s", i, resp.StatusCode, string(bodyBytes))
+		}
+
+		var chunkData []T
+		err = json.Unmarshal(bodyBytes, &chunkData)
+		if err != nil {
+			return nil, err
+		}
+
+		out = append(out, chunkData...)
 	}
 
 	return out, nil

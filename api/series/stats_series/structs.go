@@ -1,7 +1,5 @@
 package stats_series
 
-import ()
-
 type SeriesStatsSeriesResponse []SeriesStatsSeriesResponseElement
 
 type SeriesStatsSeriesResponseElement struct {

@@ -1,7 +1,5 @@
 package seasons
 
-import ()
-
 type LeagueSeasonsParams struct {
 	LeagueId int  `url:"league_id,omitempty,comma"`
 	Retired  bool `url:"retired,omitempty,comma"`

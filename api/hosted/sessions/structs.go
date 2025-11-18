@@ -106,9 +106,9 @@ type Session struct {
 	WarmupLength               int64              `json:"warmup_length"`
 	Weather                    Weather            `json:"weather"`
 	SessionDesc                *string            `json:"session_desc,omitempty"`
-	HeatSesInfo                *HeatSesInfo       `json:"heat_ses_info,omitempty"`
 	AIMaxSkill                 *int64             `json:"ai_max_skill,omitempty"`
 	AIMinSkill                 *int64             `json:"ai_min_skill,omitempty"`
+	HeatSesInfo                *HeatSesInfo       `json:"heat_ses_info,omitempty"`
 	AltAssetID                 *int64             `json:"alt_asset_id,omitempty"`
 }
 
@@ -141,8 +141,6 @@ type Car struct {
 	PowerAdjustPct    int64   `json:"power_adjust_pct"`
 	MaxDryTireSets    int64   `json:"max_dry_tire_sets"`
 	PackageID         int64   `json:"package_id"`
-	QualSetupID       *int64  `json:"qual_setup_id,omitempty"`
-	QualSetupFilename *string `json:"qual_setup_filename,omitempty"`
 	RaceSetupID       *int64  `json:"race_setup_id,omitempty"`
 	RaceSetupFilename *string `json:"race_setup_filename,omitempty"`
 }
@@ -245,7 +243,7 @@ type TrackType struct {
 
 type Weather struct {
 	AllowFog                bool             `json:"allow_fog"`
-	Fog                     *int64           `json:"fog,omitempty"`
+	ForecastOptions         *ForecastOptions `json:"forecast_options,omitempty"`
 	PrecipOption            int64            `json:"precip_option"`
 	RelHumidity             int64            `json:"rel_humidity"`
 	SimulatedStartTime      time.Time        `json:"simulated_start_time"`
@@ -256,14 +254,14 @@ type Weather struct {
 	TempValue               int64            `json:"temp_value"`
 	TimeOfDay               int64            `json:"time_of_day"`
 	TrackWater              int64            `json:"track_water"`
-	Type                    *int64           `json:"type,omitempty"`
 	Version                 int64            `json:"version"`
+	WeatherSummary          *WeatherSummary  `json:"weather_summary,omitempty"`
+	WeatherURL              *string          `json:"weather_url,omitempty"`
 	WindDir                 int64            `json:"wind_dir"`
 	WindUnits               int64            `json:"wind_units"`
 	WindValue               int64            `json:"wind_value"`
-	ForecastOptions         *ForecastOptions `json:"forecast_options,omitempty"`
-	WeatherSummary          *WeatherSummary  `json:"weather_summary,omitempty"`
-	WeatherURL              *string          `json:"weather_url,omitempty"`
+	Fog                     *int64           `json:"fog,omitempty"`
+	Type                    *int64           `json:"type,omitempty"`
 }
 
 type ForecastOptions struct {
@@ -280,7 +278,7 @@ type ForecastOptions struct {
 type WeatherSummary struct {
 	MaxPrecipRate     *float64 `json:"max_precip_rate,omitempty"`
 	MaxPrecipRateDesc string   `json:"max_precip_rate_desc"`
-	PrecipChance      float64  `json:"precip_chance"`
+	PrecipChance      int64    `json:"precip_chance"`
 	SkiesHigh         *int64   `json:"skies_high,omitempty"`
 	SkiesLow          *int64   `json:"skies_low,omitempty"`
 	TempHigh          *float64 `json:"temp_high,omitempty"`

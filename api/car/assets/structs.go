@@ -1,7 +1,5 @@
 package assets
 
-import ()
-
 type CarAssetsResponse map[string]CarAssetsResponseValue
 
 type CarAssetsResponseValue struct {

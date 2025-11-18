@@ -1,7 +1,5 @@
 package participation_credits
 
-import ()
-
 type MemberParticipationCreditsResponse []MemberParticipationCreditsResponseElement
 
 type MemberParticipationCreditsResponseElement struct {

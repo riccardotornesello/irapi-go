@@ -1,7 +1,5 @@
 package drivers
 
-import ()
-
 type LookupDriversParams struct {
 	SearchTerm string `url:"search_term,omitempty,comma"`
 	LeagueId   int    `url:"league_id,omitempty,comma"`

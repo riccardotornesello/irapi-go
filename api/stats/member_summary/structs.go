@@ -1,7 +1,5 @@
 package member_summary
 
-import ()
-
 type StatsMemberSummaryParams struct {
 	CustId int `url:"cust_id,omitempty,comma"`
 }

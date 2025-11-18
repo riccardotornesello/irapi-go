@@ -1,7 +1,5 @@
 package event_types
 
-import ()
-
 type ConstantsEventTypesResponse []ConstantsEventTypesResponseElement
 
 type ConstantsEventTypesResponseElement struct {

@@ -44,6 +44,7 @@ def write_category_apis(endpoints: list[Endpoint]):
                     endpoint_url=endpoint.link.replace(
                         "https://members-ng.iracing.com", ""
                     ),
+                    response_chunk_type=endpoint.chunk_struct_name,
                 )
             )
             required_imports.add(

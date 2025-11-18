@@ -1,3 +1,17 @@
 func (api *{{api_name}}) {{method_name}}({% if parameters_struct_name %}parameters *{{endpoint_name}}.{{parameters_struct_name}}{% endif %}) (*{{endpoint_name}}.{{response_struct_name}}, error) {
-	return client.GetJson[{{endpoint_name}}.{{response_struct_name}}](api.Client, "{{endpoint_url}}", {% if parameters_struct_name %}parameters{% else %}nil{% endif %})
+	resp, err := client.GetJson[{{endpoint_name}}.{{response_struct_name}}](api.Client, "{{endpoint_url}}", {% if parameters_struct_name %}parameters{% else %}nil{% endif %})
+	if err != nil {
+		return nil, err
+	}
+
+	{% if response_chunk_type %}
+		chunks, err := client.GetChunks[{{endpoint_name}}.{{response_chunk_type}}](&resp.ChunkInfo)
+		if err != nil {
+			return nil, err
+		}
+
+		resp.Chunks = chunks
+	{% endif %}
+
+	return resp, nil
 }

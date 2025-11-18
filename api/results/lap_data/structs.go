@@ -1,6 +1,7 @@
 package lap_data
 
 import (
+	"github.com/riccardotornesello/irapi-go/client"
 	"time"
 )
 
@@ -12,32 +13,24 @@ type ResultsLapDataParams struct {
 }
 
 type ResultsLapDataResponse struct {
-	Success         bool                         `json:"success"`
-	SessionInfo     SessionInfo                  `json:"session_info"`
-	BestLapNum      int64                        `json:"best_lap_num"`
-	BestLapTime     int64                        `json:"best_lap_time"`
-	BestNlapsNum    int64                        `json:"best_nlaps_num"`
-	BestNlapsTime   int64                        `json:"best_nlaps_time"`
-	BestQualLapNum  int64                        `json:"best_qual_lap_num"`
-	BestQualLapTime int64                        `json:"best_qual_lap_time"`
-	BestQualLapAt   interface{}                  `json:"best_qual_lap_at"`
-	ChunkInfo       ChunkInfo                    `json:"chunk_info"`
-	LastUpdated     time.Time                    `json:"last_updated"`
-	GroupID         int64                        `json:"group_id"`
-	CustID          int64                        `json:"cust_id"`
-	Name            string                       `json:"name"`
-	CarID           int64                        `json:"car_id"`
-	LicenseLevel    int64                        `json:"license_level"`
-	Livery          Livery                       `json:"livery"`
-	Chunks          ResultsLapDataResponseChunks `json:"chunks"`
-}
-
-type ChunkInfo struct {
-	ChunkSize       int64    `json:"chunk_size"`
-	NumChunks       int64    `json:"num_chunks"`
-	Rows            int64    `json:"rows"`
-	BaseDownloadURL string   `json:"base_download_url"`
-	ChunkFileNames  []string `json:"chunk_file_names"`
+	Success         bool                          `json:"success"`
+	SessionInfo     SessionInfo                   `json:"session_info"`
+	BestLapNum      int64                         `json:"best_lap_num"`
+	BestLapTime     int64                         `json:"best_lap_time"`
+	BestNlapsNum    int64                         `json:"best_nlaps_num"`
+	BestNlapsTime   int64                         `json:"best_nlaps_time"`
+	BestQualLapNum  int64                         `json:"best_qual_lap_num"`
+	BestQualLapTime int64                         `json:"best_qual_lap_time"`
+	BestQualLapAt   interface{}                   `json:"best_qual_lap_at"`
+	ChunkInfo       client.IRacingChunkInfo       `json:"chunk_info"`
+	LastUpdated     time.Time                     `json:"last_updated"`
+	GroupID         int64                         `json:"group_id"`
+	CustID          int64                         `json:"cust_id"`
+	Name            string                        `json:"name"`
+	CarID           int64                         `json:"car_id"`
+	LicenseLevel    int64                         `json:"license_level"`
+	Livery          Livery                        `json:"livery"`
+	Chunks          []ResultsLapDataResponseChunk `json:"chunks"`
 }
 
 type Livery struct {
@@ -84,8 +77,6 @@ type Track struct {
 	TrackID    int64  `json:"track_id"`
 	TrackName  string `json:"track_name"`
 }
-
-type ResultsLapDataResponseChunks []ResultsLapDataResponseChunk
 
 type ResultsLapDataResponseChunk struct {
 	GroupID          int64       `json:"group_id"`

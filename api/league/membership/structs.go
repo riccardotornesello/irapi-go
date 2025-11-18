@@ -1,7 +1,5 @@
 package membership
 
-import ()
-
 type LeagueMembershipParams struct {
 	CustId        int  `url:"cust_id,omitempty,comma"`
 	IncludeLeague bool `url:"include_league,omitempty,comma"`

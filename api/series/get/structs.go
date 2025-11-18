@@ -1,7 +1,5 @@
 package get
 
-import ()
-
 type SeriesGetResponse []SeriesGetResponseElement
 
 type SeriesGetResponseElement struct {

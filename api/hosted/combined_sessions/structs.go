@@ -90,11 +90,9 @@ type Session struct {
 	TelemetryRestriction              int64              `json:"telemetry_restriction"`
 	TelemetryForceToDisk              int64              `json:"telemetry_force_to_disk"`
 	MaxAIDrivers                      int64              `json:"max_ai_drivers"`
-	AIMinSkill                        *int64             `json:"ai_min_skill,omitempty"`
-	AIMaxSkill                        *int64             `json:"ai_max_skill,omitempty"`
-	AIRosterName                      *string            `json:"ai_roster_name,omitempty"`
 	AIAvoidPlayers                    bool               `json:"ai_avoid_players"`
 	AdaptiveAIEnabled                 bool               `json:"adaptive_ai_enabled"`
+	AdaptiveAIDifficulty              *int64             `json:"adaptive_ai_difficulty,omitempty"`
 	MustUseDiffTireTypesInRace        bool               `json:"must_use_diff_tire_types_in_race"`
 	StartZone                         bool               `json:"start_zone"`
 	EnablePitlaneCollisions           bool               `json:"enable_pitlane_collisions"`
@@ -130,7 +128,9 @@ type Session struct {
 	Broadcaster                       bool               `json:"broadcaster"`
 	MinIR                             int64              `json:"min_ir"`
 	MaxIR                             int64              `json:"max_ir"`
-	AdaptiveAIDifficulty              *int64             `json:"adaptive_ai_difficulty,omitempty"`
+	AIMinSkill                        *int64             `json:"ai_min_skill,omitempty"`
+	AIMaxSkill                        *int64             `json:"ai_max_skill,omitempty"`
+	AIRosterName                      *string            `json:"ai_roster_name,omitempty"`
 	SessionDesc                       *string            `json:"session_desc,omitempty"`
 	HeatSesInfo                       *HeatSesInfo       `json:"heat_ses_info,omitempty"`
 	AltAssetID                        *int64             `json:"alt_asset_id,omitempty"`
@@ -165,8 +165,6 @@ type Car struct {
 	PowerAdjustPct    int64   `json:"power_adjust_pct"`
 	MaxDryTireSets    int64   `json:"max_dry_tire_sets"`
 	PackageID         int64   `json:"package_id"`
-	QualSetupID       *int64  `json:"qual_setup_id,omitempty"`
-	QualSetupFilename *string `json:"qual_setup_filename,omitempty"`
 	RaceSetupID       *int64  `json:"race_setup_id,omitempty"`
 	RaceSetupFilename *string `json:"race_setup_filename,omitempty"`
 }
@@ -250,9 +248,9 @@ type SessionType struct {
 
 type Track struct {
 	CategoryID int64   `json:"category_id"`
+	ConfigName *string `json:"config_name,omitempty"`
 	TrackID    int64   `json:"track_id"`
 	TrackName  string  `json:"track_name"`
-	ConfigName *string `json:"config_name,omitempty"`
 }
 
 type TrackState struct {
@@ -304,7 +302,7 @@ type ForecastOptions struct {
 type WeatherSummary struct {
 	MaxPrecipRate     *float64 `json:"max_precip_rate,omitempty"`
 	MaxPrecipRateDesc string   `json:"max_precip_rate_desc"`
-	PrecipChance      float64  `json:"precip_chance"`
+	PrecipChance      int64    `json:"precip_chance"`
 	SkiesHigh         *int64   `json:"skies_high,omitempty"`
 	SkiesLow          *int64   `json:"skies_low,omitempty"`
 	TempHigh          *float64 `json:"temp_high,omitempty"`

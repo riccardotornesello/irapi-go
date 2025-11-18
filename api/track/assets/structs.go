@@ -1,7 +1,5 @@
 package assets
 
-import ()
-
 type TrackAssetsResponse map[string]TrackAssetsResponseValue
 
 type TrackAssetsResponseValue struct {

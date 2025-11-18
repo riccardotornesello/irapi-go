@@ -1,7 +1,5 @@
 package member_recap
 
-import ()
-
 type StatsMemberRecapParams struct {
 	CustId int `url:"cust_id,omitempty,comma"`
 	Year   int `url:"year,omitempty,comma"`

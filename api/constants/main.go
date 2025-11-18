@@ -12,13 +12,28 @@ type ConstantsApi struct {
 }
 
 func (api *ConstantsApi) Categories() (*categories.ConstantsCategoriesResponse, error) {
-	return client.GetJson[categories.ConstantsCategoriesResponse](api.Client, "/data/constants/categories", nil)
+	resp, err := client.GetJson[categories.ConstantsCategoriesResponse](api.Client, "/data/constants/categories", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }
 
 func (api *ConstantsApi) Divisions() (*divisions.ConstantsDivisionsResponse, error) {
-	return client.GetJson[divisions.ConstantsDivisionsResponse](api.Client, "/data/constants/divisions", nil)
+	resp, err := client.GetJson[divisions.ConstantsDivisionsResponse](api.Client, "/data/constants/divisions", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }
 
 func (api *ConstantsApi) EventTypes() (*event_types.ConstantsEventTypesResponse, error) {
-	return client.GetJson[event_types.ConstantsEventTypesResponse](api.Client, "/data/constants/event_types", nil)
+	resp, err := client.GetJson[event_types.ConstantsEventTypesResponse](api.Client, "/data/constants/event_types", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

@@ -1,7 +1,5 @@
 package member_yearly
 
-import ()
-
 type StatsMemberYearlyParams struct {
 	CustId int `url:"cust_id,omitempty,comma"`
 }

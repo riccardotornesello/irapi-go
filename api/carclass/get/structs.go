@@ -1,7 +1,5 @@
 package get
 
-import ()
-
 type CarclassGetResponse []CarclassGetResponseElement
 
 type CarclassGetResponseElement struct {

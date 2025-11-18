@@ -1,7 +1,5 @@
 package divisions
 
-import ()
-
 type ConstantsDivisionsResponse []ConstantsDivisionsResponseElement
 
 type ConstantsDivisionsResponseElement struct {

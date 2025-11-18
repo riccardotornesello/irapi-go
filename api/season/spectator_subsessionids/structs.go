@@ -1,7 +1,5 @@
 package spectator_subsessionids
 
-import ()
-
 type SeasonSpectatorSubsessionidsParams struct {
 	EventTypes []int `url:"event_types,omitempty,comma"`
 }

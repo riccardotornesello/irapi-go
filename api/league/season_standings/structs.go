@@ -1,7 +1,5 @@
 package season_standings
 
-import ()
-
 type LeagueSeasonStandingsParams struct {
 	LeagueId   int `url:"league_id,omitempty,comma"`
 	SeasonId   int `url:"season_id,omitempty,comma"`

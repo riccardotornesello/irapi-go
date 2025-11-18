@@ -1,9 +1,11 @@
 package {{package_name}}
 
+{% if imports %}
 import (
 	{% for imp in imports %}"{{imp}}"
 	{% endfor %}
 )
+{% endif %}
 
 {% if parameters_struct_code %}
 {{parameters_struct_code}}

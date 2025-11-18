@@ -1,7 +1,5 @@
 package categories
 
-import ()
-
 type ConstantsCategoriesResponse []ConstantsCategoriesResponseElement
 
 type ConstantsCategoriesResponseElement struct {

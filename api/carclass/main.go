@@ -10,5 +10,10 @@ type CarclassApi struct {
 }
 
 func (api *CarclassApi) Get() (*get.CarclassGetResponse, error) {
-	return client.GetJson[get.CarclassGetResponse](api.Client, "/data/carclass/get", nil)
+	resp, err := client.GetJson[get.CarclassGetResponse](api.Client, "/data/carclass/get", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

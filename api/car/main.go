@@ -11,9 +11,19 @@ type CarApi struct {
 }
 
 func (api *CarApi) Assets() (*assets.CarAssetsResponse, error) {
-	return client.GetJson[assets.CarAssetsResponse](api.Client, "/data/car/assets", nil)
+	resp, err := client.GetJson[assets.CarAssetsResponse](api.Client, "/data/car/assets", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }
 
 func (api *CarApi) Get() (*get.CarGetResponse, error) {
-	return client.GetJson[get.CarGetResponse](api.Client, "/data/car/get", nil)
+	resp, err := client.GetJson[get.CarGetResponse](api.Client, "/data/car/get", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

@@ -14,21 +14,46 @@ type SeriesApi struct {
 }
 
 func (api *SeriesApi) Assets() (*assets.SeriesAssetsResponse, error) {
-	return client.GetJson[assets.SeriesAssetsResponse](api.Client, "/data/series/assets", nil)
+	resp, err := client.GetJson[assets.SeriesAssetsResponse](api.Client, "/data/series/assets", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }
 
 func (api *SeriesApi) Get() (*get.SeriesGetResponse, error) {
-	return client.GetJson[get.SeriesGetResponse](api.Client, "/data/series/get", nil)
+	resp, err := client.GetJson[get.SeriesGetResponse](api.Client, "/data/series/get", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }
 
 func (api *SeriesApi) Seasons(parameters *seasons.SeriesSeasonsParams) (*seasons.SeriesSeasonsResponse, error) {
-	return client.GetJson[seasons.SeriesSeasonsResponse](api.Client, "/data/series/seasons", parameters)
+	resp, err := client.GetJson[seasons.SeriesSeasonsResponse](api.Client, "/data/series/seasons", parameters)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }
 
 func (api *SeriesApi) SeasonList(parameters *season_list.SeriesSeasonListParams) (*season_list.SeriesSeasonListResponse, error) {
-	return client.GetJson[season_list.SeriesSeasonListResponse](api.Client, "/data/series/season_list", parameters)
+	resp, err := client.GetJson[season_list.SeriesSeasonListResponse](api.Client, "/data/series/season_list", parameters)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }
 
 func (api *SeriesApi) StatsSeries() (*stats_series.SeriesStatsSeriesResponse, error) {
-	return client.GetJson[stats_series.SeriesStatsSeriesResponse](api.Client, "/data/series/stats_series", nil)
+	resp, err := client.GetJson[stats_series.SeriesStatsSeriesResponse](api.Client, "/data/series/stats_series", nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

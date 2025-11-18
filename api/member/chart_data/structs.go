@@ -1,7 +1,5 @@
 package chart_data
 
-import ()
-
 type MemberChartDataParams struct {
 	CustId     int `url:"cust_id,omitempty,comma"`
 	CategoryId int `url:"category_id,omitempty,comma"`

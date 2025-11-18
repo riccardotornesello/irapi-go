@@ -1,7 +1,5 @@
 package get_points_systems
 
-import ()
-
 type LeagueGetPointsSystemsParams struct {
 	LeagueId int `url:"league_id,omitempty,comma"`
 	SeasonId int `url:"season_id,omitempty,comma"`

@@ -1,5 +1,6 @@
 import os
 import logging
+import shutil
 import requests
 import json
 import re
@@ -75,6 +76,7 @@ class Endpoint:
     chunks_sampled: bool = False
 
     response_struct_name: str | None = None
+    chunk_struct_name: str | None = None
     response_struct: str | None = None
 
     parameters_struct_name: str | None = None
@@ -230,10 +232,6 @@ class Endpoint:
 
                 self.chunks_sampled = True
 
-            sample_data["chunks"] = "PLACEHOLDER"
-            with open(os.path.join("output/responses", sample_file), "w") as f:
-                f.write(json.dumps(sample_data, indent=4))
-
         return True
 
     def generate_go_types(self):
@@ -243,6 +241,29 @@ class Endpoint:
             )
             return
 
+        # Generate the files used as input for quicktype
+        for f in os.listdir("output/responses"):
+            if not f.startswith(f"{self.category}__{self.name}__"):
+                continue
+
+            if not f.endswith(f".{self.format}"):
+                continue
+
+            if self.chunks_sampled:
+                with open(os.path.join("output/responses", f), "r") as file:
+                    data = json.load(file)
+
+                data["chunk_info"] = "PLACEHOLDER"
+                data["chunks"] = "PLACEHOLDER"
+
+                with open(os.path.join("output/inputs", f), "w") as file:
+                    json.dump(data, file, indent=4)
+            else:
+                shutil.copyfile(
+                    os.path.join("output/responses", f),
+                    os.path.join("output/inputs", f),
+                )
+
         # Generate the response struct
         self.response_struct_name = to_camel_case(
             f"{self.category}__{self.name}__Response"
@@ -250,29 +271,44 @@ class Endpoint:
 
         self.response_struct, self.required_imports = run_quicktype(
             self.response_struct_name,
-            f"output/responses/{self.category}__{self.name}__*",
+            f"output/inputs/{self.category}__{self.name}__*",
         )
 
         # Generate the chunk response struct
         if self.chunks_sampled:
-            chunk_struct_name = to_camel_case(
+            plural_chunk_struct_name = to_camel_case(
                 f"{self.category}__{self.name}__Response__Chunks"
             )
 
             chunk_struct, chunk_imports = run_quicktype(
-                chunk_struct_name,
+                plural_chunk_struct_name,
                 f"output/responses/chunks__{self.category}__{self.name}__*",
             )
 
-            # Find the string "Chunks ... string" in the main response struct and replace it with the chunk struct name
-            pattern = r'Chunks [^\n]+string'
-            replacement = f"Chunks {chunk_struct_name}"
+            self.chunk_struct_name = plural_chunk_struct_name.rstrip("s")
+
+            # Find the Chunks and ChunkInfo fields and replace their types
+            pattern = r"Chunks [^\n]+string"
+            replacement = f"Chunks []{self.chunk_struct_name}"
             self.response_struct = re.sub(pattern, replacement, self.response_struct)
 
+            pattern = r"ChunkInfo [^\n]+string"
+            replacement = f"ChunkInfo client.IRacingChunkInfo"
+            self.response_struct = re.sub(pattern, replacement, self.response_struct)
+
+            # Remove the plural chunk struct
+            chunk_struct = "\n".join(
+                [
+                    x
+                    for x in chunk_struct.split("\n")
+                    if plural_chunk_struct_name not in x
+                ]
+            )
+
+            # Append the chunk struct to the response struct
             self.response_struct += f"\n\n{chunk_struct}"
             self.required_imports.update(chunk_imports)
-
-            # TODO: fetch chunks in the client's api call
+            self.required_imports.add("github.com/riccardotornesello/irapi-go/client")
 
 
 def _parse_iracing_notes(notes) -> list[str]:
@@ -320,6 +356,11 @@ def fetch_sample_chunks(
 
 def generate_go_types(endpoints: list[Endpoint], workers: int = 20):
     logging.info("Generating Go types...")
+
+    # Remove and recreate the inputs folder
+    if os.path.exists("output/inputs"):
+        shutil.rmtree("output/inputs")
+    os.makedirs("output/inputs", exist_ok=True)
 
     thread_map(
         lambda endpoint: endpoint.generate_go_types(),
