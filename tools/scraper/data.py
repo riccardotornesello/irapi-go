@@ -1,7 +1,20 @@
+"""
+Configuration overrides for API endpoint behavior.
+
+This module contains the OVERRIDES dictionary which specifies custom behavior
+for specific API endpoints, including:
+- Response format (json/csv)
+- S3 caching behavior
+- Required parameters and sample values for testing
+
+The overrides are organized hierarchically by category and endpoint name.
+"""
+
 OVERRIDES = {
+    # Configuration overrides by category and endpoint
     "constants": {
         "categories": {
-            "s3_cache": False,
+            "s3_cache": False,  # Don't follow S3 links for this endpoint
         },
         "divisions": {
             "s3_cache": False,
@@ -11,6 +24,7 @@ OVERRIDES = {
         },
     },
     "driver_stats_by_category": {
+        # CSV format endpoints
         "dirt_oval": {"format": "csv"},
         "dirt_road": {"format": "csv"},
         "formula_car": {"format": "csv"},
@@ -20,6 +34,7 @@ OVERRIDES = {
     },
     "league": {
         "get": {
+            # Sample parameters for endpoints that require them
             "params": [
                 {
                     "league_id": 4403,
@@ -34,6 +49,7 @@ OVERRIDES = {
             ],
         },
         "roster": {
+            # Multiple parameter sets to test different response types
             "params": [
                 {
                     "league_id": 4403,

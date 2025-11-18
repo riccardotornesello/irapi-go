@@ -1,3 +1,14 @@
+"""
+Module for generating Go API client code from Jinja2 templates.
+
+This module uses Jinja2 templates to generate:
+- Category-level API files (main.go for each category)
+- Endpoint-level struct files (structs.go for each endpoint)
+- API method implementations
+
+Templates are loaded from the templates/ directory.
+"""
+
 import os
 import logging
 
@@ -7,14 +18,25 @@ from format import to_camel_case
 from endpoints_parsing import Endpoint
 
 
+# Initialize Jinja2 environment with template directory
 jinja2_environment = jinja2.Environment(loader=jinja2.FileSystemLoader("templates/"))
 
+# Load templates
 endpoint_call_template = jinja2_environment.get_template("endpoint_call.j2")
 endpoint_structs_template = jinja2_environment.get_template("endpoint_structs.j2")
 category_template = jinja2_environment.get_template("category.j2")
 
 
 def write_category_apis(endpoints: list[Endpoint]):
+    """
+    Generate category-level API files.
+    
+    Creates main.go files for each category, containing an API struct with
+    methods for all endpoints in that category.
+    
+    Args:
+        endpoints (list[Endpoint]): List of all endpoints to process.
+    """
     logging.info("Generating category APIs...")
 
     # Group endpoints by category
@@ -65,6 +87,15 @@ def write_category_apis(endpoints: list[Endpoint]):
 
 
 def write_endpoint_api(endpoint: Endpoint):
+    """
+    Generate structs.go file for a single endpoint.
+    
+    Creates a file containing the parameter and response struct definitions
+    for the endpoint.
+    
+    Args:
+        endpoint (Endpoint): The endpoint to generate structs for.
+    """
     if not endpoint.response_struct:
         logging.warning(
             f"Skipped: {endpoint.category}__{endpoint.name} (no response struct)"
@@ -86,6 +117,14 @@ def write_endpoint_api(endpoint: Endpoint):
 
 
 def write_endpoint_apis(endpoints: list[Endpoint]):
+    """
+    Generate structs.go files for all endpoints.
+    
+    Processes all endpoints and creates their respective struct definition files.
+    
+    Args:
+        endpoints (list[Endpoint]): List of all endpoints to generate structs for.
+    """
     logging.info("Generating endpoint APIs...")
 
     for endpoint in endpoints:

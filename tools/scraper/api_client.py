@@ -1,5 +1,10 @@
 """
-This module contains the function to authenticate with the iRacing API.
+This module provides authentication and API communication for the iRacing API.
+
+The APIClient class handles:
+- Authentication using email/password credentials
+- Making authenticated requests to API endpoints
+- Handling S3-cached responses
 """
 
 import requests
@@ -8,7 +13,26 @@ import base64
 
 
 class APIClient:
+    """
+    Client for interacting with the iRacing API.
+    
+    This client handles authentication and provides methods to call API endpoints.
+    It supports both direct API responses and S3-cached responses.
+    
+    Attributes:
+        api_client (requests.Session): Authenticated session for making API requests.
+    """
     def __init__(self, email, password):
+        """
+        Initialize the API client and authenticate with iRacing.
+        
+        Args:
+            email (str): iRacing account email address.
+            password (str): iRacing account password.
+            
+        Raises:
+            Exception: If authentication fails or credentials are invalid.
+        """
         token = hashlib.sha256(f"{password}{email}".encode()).digest()
         base64_token = base64.b64encode(token).decode()
 
@@ -27,6 +51,21 @@ class APIClient:
             raise Exception(f"Failed to authenticate: {response.text}")
 
     def call_endpoint(self, url, params=None, s3_cache=True) -> str:
+        """
+        Call an API endpoint and return the response text.
+        
+        Args:
+            url (str): The API endpoint URL to call.
+            params (dict, optional): Query parameters for the request. Defaults to None.
+            s3_cache (bool, optional): If True, follows S3 link from response. 
+                                      If False, returns direct response. Defaults to True.
+        
+        Returns:
+            str: The response text from the API or S3 bucket.
+            
+        Raises:
+            Exception: If the API call fails or returns a non-200 status code.
+        """
         response = self.api_client.get(url, params=params)
         if response.status_code != 200:
             raise Exception(f"API call failed: {response.text}")

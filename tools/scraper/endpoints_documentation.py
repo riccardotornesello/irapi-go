@@ -1,3 +1,10 @@
+"""
+Module for fetching and parsing iRacing API endpoint documentation.
+
+This module retrieves the list of available API endpoints from iRacing
+and creates Endpoint objects that can be used to generate Go client code.
+"""
+
 import requests
 import logging
 import os
@@ -10,6 +17,18 @@ from endpoints_parsing import Endpoint
 
 
 def _get_available_endpoints_documentation(session: requests.Session) -> dict:
+    """
+    Fetch the API documentation from iRacing.
+    
+    Args:
+        session (requests.Session): Authenticated session to use for the request.
+        
+    Returns:
+        dict: Dictionary containing all available endpoints organized by category.
+        
+    Raises:
+        Exception: If the API documentation cannot be fetched.
+    """
     res = session.get("https://members-ng.iracing.com/data/doc")
     if res.status_code != 200:
         raise Exception(f"Failed to fetch API definition: {res.text}")
@@ -18,6 +37,18 @@ def _get_available_endpoints_documentation(session: requests.Session) -> dict:
 
 
 def generate_endpoints_list(api_client: APIClient) -> list[Endpoint]:
+    """
+    Generate a list of Endpoint objects from the iRacing API documentation.
+    
+    Fetches the complete API documentation from iRacing, saves it locally,
+    and creates Endpoint objects for each discovered endpoint.
+    
+    Args:
+        api_client (APIClient): Authenticated API client to use for fetching.
+        
+    Returns:
+        list[Endpoint]: List of parsed Endpoint objects ready for code generation.
+    """
     endpoints = []
 
     logging.info("Fetching available endpoints documentation...")
