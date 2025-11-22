@@ -27,7 +27,7 @@ endpoint_structs_template = jinja2_environment.get_template("endpoint_structs.j2
 category_template = jinja2_environment.get_template("category.j2")
 
 
-def write_category_apis(endpoints: list[Endpoint]):
+def write_category_apis(endpoints: list[Endpoint]) -> None:
     """
     Generate category-level API files.
     
@@ -86,7 +86,7 @@ def write_category_apis(endpoints: list[Endpoint]):
     logging.info("Category APIs generated successfully.")
 
 
-def write_endpoint_api(endpoint: Endpoint):
+def write_endpoint_api(endpoint: Endpoint) -> None:
     """
     Generate structs.go file for a single endpoint.
     
@@ -116,7 +116,7 @@ def write_endpoint_api(endpoint: Endpoint):
         )
 
 
-def write_endpoint_apis(endpoints: list[Endpoint]):
+def write_endpoint_apis(endpoints: list[Endpoint]) -> None:
     """
     Generate structs.go files for all endpoints.
     

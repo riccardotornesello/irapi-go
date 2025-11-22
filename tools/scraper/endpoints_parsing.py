@@ -67,7 +67,7 @@ class EndpointParameter:
         endpoint_name: str,
         param_name: str,
         param_data: dict,
-    ):
+    ) -> None:
         """
         Initialize an endpoint parameter from API documentation.
         
@@ -157,7 +157,7 @@ class Endpoint:
         category_name: str,
         endpoint_name: str,
         endpoint_data: dict,
-    ):
+    ) -> None:
         """
         Initialize an endpoint from API documentation data.
         
@@ -211,7 +211,7 @@ class Endpoint:
             f"type {self.parameters_struct_name} struct {{\n    {struct_body}\n}}"
         )
 
-    def add_required_import(self, import_path: str):
+    def add_required_import(self, import_path: str) -> None:
         """
         Add a Go package import path to the required imports set.
         
@@ -347,7 +347,7 @@ class Endpoint:
 
         return True
 
-    def generate_go_types(self):
+    def generate_go_types(self) -> None:
         """
         Generate Go type definitions from sample responses.
         
@@ -435,7 +435,7 @@ class Endpoint:
             self.required_imports.add("github.com/riccardotornesello/irapi-go/client")
 
 
-def _parse_iracing_notes(notes) -> list[str]:
+def _parse_iracing_notes(notes: str | list[str] | None) -> list[str]:
     """
     Parse notes from the iRacing API documentation.
     
@@ -460,7 +460,7 @@ def _parse_iracing_notes(notes) -> list[str]:
 
 def fetch_sample_responses(
     endpoints: list[Endpoint], skip_cached: bool = True, workers: int = 5
-):
+) -> None:
     """
     Fetch sample responses for all endpoints in parallel.
     
@@ -484,7 +484,7 @@ def fetch_sample_responses(
     logging.info("Sample responses fetched.")
 
 
-def generate_go_types(endpoints: list[Endpoint], workers: int = 20):
+def generate_go_types(endpoints: list[Endpoint], workers: int = 20) -> None:
     """
     Generate Go type definitions for all endpoints in parallel.
     

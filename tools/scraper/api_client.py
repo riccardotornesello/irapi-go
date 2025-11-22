@@ -22,7 +22,7 @@ class APIClient:
     Attributes:
         api_client (requests.Session): Authenticated session for making API requests.
     """
-    def __init__(self, email, password):
+    def __init__(self, email: str, password: str) -> None:
         """
         Initialize the API client and authenticate with iRacing.
         
@@ -50,7 +50,7 @@ class APIClient:
         if auth_code == 0:
             raise Exception(f"Failed to authenticate: {response.text}")
 
-    def call_endpoint(self, url, params=None, s3_cache=True) -> str:
+    def call_endpoint(self, url: str, params: dict | None = None, s3_cache: bool = True) -> str:
         """
         Call an API endpoint and return the response text.
         

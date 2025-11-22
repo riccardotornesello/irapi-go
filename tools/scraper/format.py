@@ -10,7 +10,7 @@ import subprocess
 import os
 
 
-def to_camel_case(snake_str):
+def to_camel_case(snake_str: str) -> str:
     """
     Convert a snake_case string to CamelCase.
     
@@ -23,7 +23,7 @@ def to_camel_case(snake_str):
     return "".join(x.title() for x in snake_str.split("_"))
 
 
-def format_go_code():
+def format_go_code() -> None:
     """
     Format all generated Go code using 'go fmt'.
     
