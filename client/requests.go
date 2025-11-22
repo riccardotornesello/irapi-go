@@ -41,6 +41,12 @@ func (c *ApiClient) GetResourceUrl(path string, parameters interface{}) (string,
 
 	// TODO: max retries
 	for {
+		// Ensure we have a valid access token before making the request
+		err := c.ensureValidToken()
+		if err != nil {
+			return "", fmt.Errorf("error ensuring valid token for %s: %w", path, err)
+		}
+
 		// Check if we are currently in a "Rate Limit Pause" state.
 		c.mutex.Lock()
 		waitTime := time.Until(c.retryAfter)
