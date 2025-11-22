@@ -1,3 +1,17 @@
+{#
+  Template: endpoint_structs.j2
+  
+  Generates the structs.go file for a single endpoint.
+  
+  This template creates Go struct definitions for an endpoint's
+  parameters and response types, including necessary imports.
+  
+  Variables:
+    - package_name: The Go package name (endpoint name)
+    - imports: Set of Go package imports needed (optional)
+    - parameters_struct_code: Parameters struct definition (optional)
+    - response_struct_code: Response struct definition
+#}
 package {{package_name}}
 
 {% if imports %}

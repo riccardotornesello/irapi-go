@@ -1,3 +1,20 @@
+{#
+  Template: endpoint_call.j2
+  
+  Generates a method implementation for a single API endpoint.
+  
+  This template creates a Go method that calls an API endpoint,
+  handles the response, and optionally fetches chunked data.
+  
+  Variables:
+    - api_name: Name of the API struct the method belongs to
+    - method_name: Name of the method (CamelCase endpoint name)
+    - endpoint_name: Original endpoint name (for package reference)
+    - parameters_struct_name: Name of the parameters struct (if any)
+    - response_struct_name: Name of the response struct
+    - endpoint_url: API endpoint URL path
+    - response_chunk_type: Name of chunk type struct (if applicable)
+#}
 func (api *{{api_name}}) {{method_name}}({% if parameters_struct_name %}parameters *{{endpoint_name}}.{{parameters_struct_name}}{% endif %}) (*{{endpoint_name}}.{{response_struct_name}}, error) {
 	resp, err := client.GetJson[{{endpoint_name}}.{{response_struct_name}}](api.Client, "{{endpoint_url}}", {% if parameters_struct_name %}parameters{% else %}nil{% endif %})
 	if err != nil {

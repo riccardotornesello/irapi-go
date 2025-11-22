@@ -1,3 +1,16 @@
+"""
+Main module for the iRacing API scraper tool.
+
+This tool automates the generation of Go client code for the iRacing API by:
+1. Fetching API endpoint documentation from iRacing
+2. Retrieving sample responses from each endpoint
+3. Generating Go type definitions from JSON responses
+4. Creating Go API client methods using templates
+5. Formatting the generated code
+
+The tool requires iRacing credentials to be set in environment variables.
+"""
+
 import os
 import logging
 
@@ -15,7 +28,19 @@ logging.basicConfig(
 )
 
 
-def main():
+def main() -> None:
+    """
+    Main entry point for the scraper tool.
+    
+    Orchestrates the complete workflow of generating Go API client code:
+    1. Loads environment variables (IRACING_EMAIL, IRACING_PASSWORD)
+    2. Authenticates with the iRacing API
+    3. Fetches and parses available endpoints
+    4. Retrieves sample responses for endpoints
+    5. Generates Go type definitions from responses
+    6. Generates API client code from templates
+    7. Formats the generated Go code
+    """
     # Load environment variables
     load_dotenv()
 

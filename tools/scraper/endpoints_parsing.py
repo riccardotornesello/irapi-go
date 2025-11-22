@@ -1,3 +1,17 @@
+"""
+Module for parsing API endpoints and generating Go type definitions.
+
+This module contains classes and functions for:
+- Representing API endpoints and their parameters
+- Fetching sample responses from endpoints
+- Generating Go struct definitions from JSON responses
+- Managing endpoint metadata and type information
+
+The main classes are:
+- EndpointParameter: Represents a single parameter for an endpoint
+- Endpoint: Represents a complete API endpoint with all metadata
+"""
+
 import os
 import logging
 import shutil
@@ -15,6 +29,7 @@ from data import OVERRIDES
 from utils.quicktype import run_quicktype
 
 
+# Mapping of iRacing parameter types to Go types
 PARAM_TYPES = {
     "string": {
         "type": "string",
@@ -32,6 +47,15 @@ PARAM_TYPES = {
 
 
 class EndpointParameter:
+    """
+    Represents a parameter for an API endpoint.
+    
+    Attributes:
+        name (str): The parameter name as used in the API.
+        type (str): The parameter type (string, number, boolean, numbers).
+        required (bool): Whether this parameter is required for the API call.
+        notes (list[str]): Additional notes about the parameter from documentation.
+    """
     name: str
     type: str
     required: bool
@@ -43,7 +67,19 @@ class EndpointParameter:
         endpoint_name: str,
         param_name: str,
         param_data: dict,
-    ):
+    ) -> None:
+        """
+        Initialize an endpoint parameter from API documentation.
+        
+        Args:
+            category_name (str): The category this endpoint belongs to.
+            endpoint_name (str): The name of the endpoint.
+            param_name (str): The name of this parameter.
+            param_data (dict): Parameter metadata from API documentation.
+            
+        Raises:
+            Exception: If the parameter type is not recognized.
+        """
         self.name = param_name
         self.type = param_data["type"]
         self.required = param_data.get("required", False)
@@ -54,6 +90,12 @@ class EndpointParameter:
             raise Exception(f"Unknown type: {self.type}")
 
     def get_param_struct_row(self) -> str:
+        """
+        Generate a Go struct field definition for this parameter.
+        
+        Returns:
+            str: Go struct field with proper type and tags for URL encoding.
+        """
         go_type = PARAM_TYPES[self.type]["type"]
         return (
             f'{to_camel_case(self.name)} {go_type} `url:"{self.name},omitempty,comma"`'
@@ -61,6 +103,30 @@ class EndpointParameter:
 
 
 class Endpoint:
+    """
+    Represents an API endpoint with all its metadata and generated code.
+    
+    This class manages the complete lifecycle of an endpoint from documentation
+    to code generation, including fetching sample responses and generating Go types.
+    
+    Attributes:
+        api_client (APIClient): Client for making API requests.
+        category (str): Category name (e.g., 'league', 'member').
+        name (str): Endpoint name within the category.
+        link (str): Full URL of the API endpoint.
+        notes (list[str]): Documentation notes for this endpoint.
+        parameters (list[EndpointParameter]): List of parameters this endpoint accepts.
+        format (Literal["json", "csv"]): Response format (default: "json").
+        s3_cache (bool): Whether responses are cached in S3.
+        sample_responses_parsed (bool): Whether sample responses have been fetched.
+        chunks_sampled (bool): Whether chunked responses have been sampled.
+        response_struct_name (str | None): Name of the generated Go response struct.
+        chunk_struct_name (str | None): Name of the generated Go chunk struct.
+        response_struct (str | None): Generated Go struct code for responses.
+        parameters_struct_name (str | None): Name of the generated Go parameters struct.
+        parameters_struct (str | None): Generated Go struct code for parameters.
+        required_imports (set[str]): Set of Go package imports needed.
+    """
     api_client: APIClient
 
     category: str
@@ -91,7 +157,16 @@ class Endpoint:
         category_name: str,
         endpoint_name: str,
         endpoint_data: dict,
-    ):
+    ) -> None:
+        """
+        Initialize an endpoint from API documentation data.
+        
+        Args:
+            api_client (APIClient): Authenticated API client for requests.
+            category_name (str): The category this endpoint belongs to.
+            endpoint_name (str): The name of this endpoint.
+            endpoint_data (dict): Endpoint metadata from API documentation.
+        """
         self.api_client = api_client
         self.category = category_name
         self.name = endpoint_name
@@ -110,6 +185,15 @@ class Endpoint:
         self.generate_params_struct()
 
     def generate_params_struct(self) -> str | None:
+        """
+        Generate a Go struct definition for endpoint parameters.
+        
+        Creates a struct with fields for each parameter, including proper
+        Go naming conventions and URL encoding tags.
+        
+        Returns:
+            str | None: The generated struct code, or None if no parameters exist.
+        """
         if not self.parameters or len(self.parameters) == 0:
             return None
 
@@ -127,10 +211,30 @@ class Endpoint:
             f"type {self.parameters_struct_name} struct {{\n    {struct_body}\n}}"
         )
 
-    def add_required_import(self, import_path: str):
+    def add_required_import(self, import_path: str) -> None:
+        """
+        Add a Go package import path to the required imports set.
+        
+        Args:
+            import_path (str): Full Go package import path.
+        """
         self.required_imports.add(import_path)
 
     def fetch_sample_responses(self, cached: bool = True) -> bool:
+        """
+        Fetch sample responses from the API endpoint.
+        
+        Retrieves actual responses from the endpoint using sample parameters
+        defined in the OVERRIDES configuration. Saves responses to disk for
+        type generation.
+        
+        Args:
+            cached (bool): If True, skip fetching if responses already exist. 
+                          Defaults to True.
+        
+        Returns:
+            bool: True if successful, False if fetching failed or was skipped.
+        """
         # TODO: handle driver_stats_by_category
         if self.category == "driver_stats_by_category":
             logging.warning(
@@ -202,6 +306,20 @@ class Endpoint:
     def fetch_sample_chunks(
         self, chunk_info: dict, timestamp: str, sample_index: int
     ) -> bool:
+        """
+        Fetch chunked response data from S3.
+        
+        Some endpoints return large datasets split into multiple chunks.
+        This method fetches a sample of those chunks for type analysis.
+        
+        Args:
+            chunk_info (dict): Chunk metadata from the API response.
+            timestamp (str): Timestamp for file naming.
+            sample_index (int): Index of the sample being processed.
+            
+        Returns:
+            bool: True if successful, False on error.
+        """
         MAX_CHUNKS_PER_SAMPLE = 5
 
         base_url = chunk_info["base_download_url"]
@@ -229,7 +347,14 @@ class Endpoint:
 
         return True
 
-    def generate_go_types(self):
+    def generate_go_types(self) -> None:
+        """
+        Generate Go type definitions from sample responses.
+        
+        Uses quicktype to analyze JSON responses and generate strongly-typed
+        Go structs. Handles both regular responses and chunked responses,
+        properly linking chunk types to the main response struct.
+        """
         if not self.sample_responses_parsed:
             logging.warning(
                 f"Skipped: {self.category}__{self.name} (no sample response)"
@@ -310,10 +435,18 @@ class Endpoint:
             self.required_imports.add("github.com/riccardotornesello/irapi-go/client")
 
 
-def _parse_iracing_notes(notes) -> list[str]:
+def _parse_iracing_notes(notes: str | list[str] | None) -> list[str]:
     """
-    Gets the notes from the endpoint or the parameter's data and returns a list of notes.
-    The list is empty if there are no notes.
+    Parse notes from the iRacing API documentation.
+    
+    Gets the notes from endpoint or parameter data and returns a list of notes.
+    Handles both single notes and arrays of notes.
+    
+    Args:
+        notes: Notes from API documentation (string, list, or None).
+        
+    Returns:
+        list[str]: List of note strings, empty if no notes exist.
     """
 
     if not notes:
@@ -327,7 +460,19 @@ def _parse_iracing_notes(notes) -> list[str]:
 
 def fetch_sample_responses(
     endpoints: list[Endpoint], skip_cached: bool = True, workers: int = 5
-):
+) -> None:
+    """
+    Fetch sample responses for all endpoints in parallel.
+    
+    Uses a thread pool to efficiently fetch responses from multiple endpoints
+    simultaneously. Shows progress bar during execution.
+    
+    Args:
+        endpoints (list[Endpoint]): List of endpoints to fetch responses for.
+        skip_cached (bool): If True, skip endpoints with existing responses. 
+                           Defaults to True.
+        workers (int): Number of parallel workers to use. Defaults to 5.
+    """
     logging.info("Fetching sample responses...")
 
     thread_map(
@@ -339,7 +484,17 @@ def fetch_sample_responses(
     logging.info("Sample responses fetched.")
 
 
-def generate_go_types(endpoints: list[Endpoint], workers: int = 20):
+def generate_go_types(endpoints: list[Endpoint], workers: int = 20) -> None:
+    """
+    Generate Go type definitions for all endpoints in parallel.
+    
+    Processes sample responses to create strongly-typed Go structs using
+    quicktype. Runs in parallel for efficiency.
+    
+    Args:
+        endpoints (list[Endpoint]): List of endpoints to generate types for.
+        workers (int): Number of parallel workers to use. Defaults to 20.
+    """
     logging.info("Generating Go types...")
 
     # Remove the inputs folder
