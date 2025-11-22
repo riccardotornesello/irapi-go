@@ -45,11 +45,8 @@ func TestEnsureValidToken_ValidToken(t *testing.T) {
 
 func TestEnsureValidToken_ExpiredTokenWithValidRefresh(t *testing.T) {
 	// Create a mock OAuth server for token refresh
-	refreshCalled := false
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/oauth2/token" {
-			refreshCalled = true
-			
 			// Verify it's a refresh token request
 			r.ParseForm()
 			if r.Form.Get("grant_type") != "refresh_token" {
@@ -68,8 +65,6 @@ func TestEnsureValidToken_ExpiredTokenWithValidRefresh(t *testing.T) {
 		}
 	}))
 	defer server.Close()
-
-	_ = refreshCalled // Mark as used to avoid compiler error
 
 	// Create a client with an expired access token but valid refresh token
 	expiredExpiry := time.Now().Add(-1 * time.Hour)

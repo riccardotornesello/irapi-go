@@ -74,7 +74,7 @@ func NewPasswordLimitedApiClient(clientId, clientSecret, username, password stri
 }
 
 func NewApiClient(accessToken, refreshToken string) *ApiClient {
-	// Extract expiry times from JTW tokens.
+	// Extract expiry times from JWT tokens.
 	expAccess, err := getExpiryFromJwt(accessToken)
 	if err != nil {
 		expAccess = time.Time{}
