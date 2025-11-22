@@ -31,7 +31,8 @@ The scraper performs these steps:
 3. **Sampling** - Retrieves sample responses from each endpoint
 4. **Type Generation** - Uses quicktype to generate Go structs from JSON
 5. **Code Generation** - Creates API methods using Jinja2 templates
-6. **Formatting** - Runs `go fmt` on generated code
+6. **Test Generation** - Generates test suites for each endpoint
+7. **Formatting** - Runs `go fmt` on generated code
 
 ## Project Structure
 
@@ -49,7 +50,8 @@ tools/scraper/
 ├── templates/
 │   ├── category.j2             # Category API template
 │   ├── endpoint_call.j2        # Endpoint method template
-│   └── endpoint_structs.j2     # Struct definitions template
+│   ├── endpoint_structs.j2     # Struct definitions template
+│   └── endpoint_test.j2        # Test suite template
 ├── requirements.txt            # Python dependencies
 └── package.json                # Node.js dependencies (quicktype)
 ```
@@ -79,7 +81,8 @@ api/
 ├── category_name/
 │   ├── main.go              # Category API with all methods
 │   └── endpoint_name/
-│       └── structs.go       # Request/response structs
+│       ├── structs.go       # Request/response structs
+│       └── structs_test.go  # Test suite for structs
 ```
 
 ## Module Documentation

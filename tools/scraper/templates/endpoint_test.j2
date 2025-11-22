@@ -1,0 +1,71 @@
+{#
+  Template: endpoint_test.j2
+  
+  Generates a test file for a single API endpoint.
+  
+  This template creates Go test functions for testing an endpoint,
+  including tests for struct marshaling/unmarshaling and basic validation.
+  
+  Variables:
+    - package_name: The Go package name (endpoint name)
+    - parameters_struct_name: Name of the parameters struct (if any)
+    - response_struct_name: Name of the response struct
+    - endpoint_name: Original endpoint name
+    - category: Category name
+    - has_parameters: Boolean indicating if endpoint has parameters
+    - sample_params: Sample parameter values for testing (if applicable)
+#}
+package {{package_name}}
+
+import (
+	"encoding/json"
+	"testing"
+)
+
+{% if has_parameters %}
+// TestUnmarshalParameters tests that the parameters struct can be properly unmarshaled from JSON
+func TestUnmarshalParameters(t *testing.T) {
+	jsonData := `{}` // Empty JSON for basic structure test
+	
+	var params {{parameters_struct_name}}
+	err := json.Unmarshal([]byte(jsonData), &params)
+	
+	if err != nil {
+		t.Fatalf("Failed to unmarshal parameters: %v", err)
+	}
+}
+
+// TestMarshalParameters tests that the parameters struct can be properly marshaled to JSON
+func TestMarshalParameters(t *testing.T) {
+	params := {{parameters_struct_name}}{}
+	
+	_, err := json.Marshal(params)
+	
+	if err != nil {
+		t.Fatalf("Failed to marshal parameters: %v", err)
+	}
+}
+{% endif %}
+
+// TestUnmarshalResponse tests that the response struct can be properly unmarshaled from JSON
+func TestUnmarshalResponse(t *testing.T) {
+	jsonData := `{}` // Empty JSON for basic structure test
+	
+	var response {{response_struct_name}}
+	err := json.Unmarshal([]byte(jsonData), &response)
+	
+	if err != nil {
+		t.Fatalf("Failed to unmarshal response: %v", err)
+	}
+}
+
+// TestMarshalResponse tests that the response struct can be properly marshaled to JSON
+func TestMarshalResponse(t *testing.T) {
+	response := {{response_struct_name}}{}
+	
+	_, err := json.Marshal(response)
+	
+	if err != nil {
+		t.Fatalf("Failed to marshal response: %v", err)
+	}
+}

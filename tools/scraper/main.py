@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 from api_client import APIClient
 from endpoints_documentation import generate_endpoints_list
 from endpoints_parsing import fetch_sample_responses, generate_go_types
-from templating import write_category_apis, write_endpoint_apis
+from templating import write_category_apis, write_endpoint_apis, write_endpoint_tests
 from format import format_go_code
 
 
@@ -39,7 +39,8 @@ def main() -> None:
     4. Retrieves sample responses for endpoints
     5. Generates Go type definitions from responses
     6. Generates API client code from templates
-    7. Formats the generated Go code
+    7. Generates test suites for each endpoint
+    8. Formats the generated Go code
     """
     # Load environment variables
     load_dotenv()
@@ -63,6 +64,9 @@ def main() -> None:
     # Generate the APIs
     write_category_apis(endpoints)
     write_endpoint_apis(endpoints)
+    
+    # Generate the test suites
+    write_endpoint_tests(endpoints)
 
     # Format the code
     format_go_code()
