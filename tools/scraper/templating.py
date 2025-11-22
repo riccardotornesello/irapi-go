@@ -24,6 +24,7 @@ jinja2_environment = jinja2.Environment(loader=jinja2.FileSystemLoader("template
 # Load templates
 endpoint_call_template = jinja2_environment.get_template("endpoint_call.j2")
 endpoint_structs_template = jinja2_environment.get_template("endpoint_structs.j2")
+endpoint_test_template = jinja2_environment.get_template("endpoint_test.j2")
 category_template = jinja2_environment.get_template("category.j2")
 
 
@@ -131,3 +132,52 @@ def write_endpoint_apis(endpoints: list[Endpoint]) -> None:
         write_endpoint_api(endpoint)
 
     logging.info("Endpoint APIs generated successfully.")
+
+
+def write_endpoint_test(endpoint: Endpoint) -> None:
+    """
+    Generate test file for a single endpoint.
+    
+    Creates a test file containing unit tests for the endpoint's structs,
+    including marshaling and unmarshaling tests.
+    
+    Args:
+        endpoint (Endpoint): The endpoint to generate tests for.
+    """
+    if not endpoint.response_struct:
+        logging.warning(
+            f"Skipped test: {endpoint.category}__{endpoint.name} (no response struct)"
+        )
+        return
+
+    os.makedirs(f"../../api/{endpoint.category}/{endpoint.name}", exist_ok=True)
+    with open(
+        f"../../api/{endpoint.category}/{endpoint.name}/structs_test.go", "w"
+    ) as output_file:
+        output_file.write(
+            endpoint_test_template.render(
+                package_name=endpoint.name,
+                parameters_struct_name=endpoint.parameters_struct_name,
+                response_struct_name=endpoint.response_struct_name,
+                endpoint_name=endpoint.name,
+                category=endpoint.category,
+                has_parameters=endpoint.parameters_struct_name is not None,
+            )
+        )
+
+
+def write_endpoint_tests(endpoints: list[Endpoint]) -> None:
+    """
+    Generate test files for all endpoints.
+    
+    Processes all endpoints and creates their respective test files.
+    
+    Args:
+        endpoints (list[Endpoint]): List of all endpoints to generate tests for.
+    """
+    logging.info("Generating endpoint tests...")
+
+    for endpoint in endpoints:
+        write_endpoint_test(endpoint)
+
+    logging.info("Endpoint tests generated successfully.")

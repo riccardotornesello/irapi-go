@@ -51,7 +51,7 @@ Here are the highest priority tasks:
 
 ## Scraping Tool
 
-The scraping tool in `tools/scraper` is used to automatically generate Go client code for the iRacing API. It works by discovering available endpoints, fetching sample responses, and generating strongly-typed Go structs and API methods.
+The scraping tool in `tools/scraper` is used to automatically generate Go client code for the iRacing API. It works by discovering available endpoints, fetching sample responses, and generating strongly-typed Go structs, API methods, and test suites.
 
 ### Overview
 
@@ -62,7 +62,8 @@ The scraper performs the following steps:
 3. **Sample Collection**: Retrieves sample responses from each endpoint
 4. **Type Generation**: Uses quicktype to generate Go structs from JSON responses
 5. **Code Generation**: Creates API client methods using Jinja2 templates
-6. **Formatting**: Runs `go fmt` to format the generated code
+6. **Test Generation**: Generates test suites for each endpoint
+7. **Formatting**: Runs `go fmt` to format the generated code
 
 ### Prerequisites
 
@@ -141,7 +142,8 @@ api/
 ├── category_name/
 │   ├── main.go              # Category API with all endpoint methods
 │   └── endpoint_name/
-│       └── structs.go       # Parameter and response structs
+│       ├── structs.go       # Parameter and response structs
+│       └── structs_test.go  # Test suite for structs
 ```
 
 ### Architecture
