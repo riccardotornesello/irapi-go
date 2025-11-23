@@ -1,0 +1,31 @@
+{#
+  Template: endpoint_test.j2
+  
+  Generates a test method for a single API endpoint.
+  
+  This template creates a Go test function that initializes the API client,
+  calls the endpoint method, and checks for errors.
+  
+  Variables:
+    - api_name: Name of the API struct the method belongs to
+    - method_name: Name of the method (CamelCase endpoint name)
+    - endpoint_name: Original endpoint name (for package reference)
+	- parameters_struct_name: Name of the struct for method parameters (if any)
+#}
+func Test{{ method_name }}(t *testing.T) {
+	apiClient := testutil.GetApiClient(t)
+
+	api := &{{ api_name }}{Client: apiClient}
+
+	{% if parameters_struct_name %}
+	// TODO: example data
+	_, err := api.{{ method_name }}(&{{endpoint_name}}.{{ parameters_struct_name }}{}){% else %}
+	_, err := api.{{ method_name }}(){% endif %}
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log("Test{{ method_name }} passed")
+
+	// TODO: validate response contents
+}

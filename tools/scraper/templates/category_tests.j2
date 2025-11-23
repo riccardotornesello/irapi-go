@@ -1,0 +1,26 @@
+{#
+  Template: category_tests.j2
+
+  Generates the test file for an API category.
+
+  This template creates a Go test file that includes test functions
+  for all endpoints within a specific API category.
+
+  Variables:
+    - package_name: The Go package name (category name)
+    - endpoint_tests: List of generated test method code snippets
+    - test_packages: Set of Go package imports needed for tests
+#}
+package {{package_name}}
+
+import (
+  "testing"
+
+	"github.com/riccardotornesello/irapi-go/internal/testutil"
+	{% for imp in test_packages %}"{{imp}}"
+	{% endfor %}
+)
+
+{% for endpoint_test in endpoint_tests %}
+{{endpoint_test}}
+{% endfor %}

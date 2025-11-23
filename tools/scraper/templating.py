@@ -25,15 +25,17 @@ jinja2_environment = jinja2.Environment(loader=jinja2.FileSystemLoader("template
 endpoint_call_template = jinja2_environment.get_template("endpoint_call.j2")
 endpoint_structs_template = jinja2_environment.get_template("endpoint_structs.j2")
 category_template = jinja2_environment.get_template("category.j2")
+category_tests_template = jinja2_environment.get_template("category_tests.j2")
+endpoint_test_template = jinja2_environment.get_template("endpoint_test.j2")
 
 
 def write_category_apis(endpoints: list[Endpoint]) -> None:
     """
     Generate category-level API files.
-    
+
     Creates main.go files for each category, containing an API struct with
     methods for all endpoints in that category.
-    
+
     Args:
         endpoints (list[Endpoint]): List of all endpoints to process.
     """
@@ -51,7 +53,9 @@ def write_category_apis(endpoints: list[Endpoint]) -> None:
         api_name = to_camel_case(category) + "Api"
 
         endpoint_calls = []
+        endpoint_tests = []
         required_imports = {"github.com/riccardotornesello/irapi-go/client"}
+        test_packages = []
         for endpoint in endpoints:
             if not endpoint.response_struct:
                 continue
@@ -73,15 +77,37 @@ def write_category_apis(endpoints: list[Endpoint]) -> None:
                 f"github.com/riccardotornesello/irapi-go/api/{category}/{endpoint.name}"
             )
 
+            endpoint_tests.append(
+                endpoint_test_template.render(
+                    api_name=api_name,
+                    method_name=to_camel_case(endpoint.name),
+                    endpoint_name=endpoint.name,
+                    parameters_struct_name=endpoint.parameters_struct_name,
+                )
+            )
+            if endpoint.parameters_struct_name:
+                test_packages.append(
+                    f"github.com/riccardotornesello/irapi-go/api/{category}/{endpoint.name}"
+                )
+
         api_code = category_template.render(
             package_name=category,
             api_name=api_name,
             endpoint_calls=endpoint_calls,
             imports=required_imports,
         )
+        tests_code = category_tests_template.render(
+            package_name=category,
+            endpoint_tests=endpoint_tests,
+            test_packages=test_packages,
+        )
+
         os.makedirs(f"../../api/{category}", exist_ok=True)
         with open(f"../../api/{category}/main.go", "w") as f:
             f.write(api_code)
+        if len(endpoint_tests) > 0:
+            with open(f"../../api/{category}/main_test.go", "w") as f:
+                f.write(tests_code)
 
     logging.info("Category APIs generated successfully.")
 
@@ -89,10 +115,10 @@ def write_category_apis(endpoints: list[Endpoint]) -> None:
 def write_endpoint_api(endpoint: Endpoint) -> None:
     """
     Generate structs.go file for a single endpoint.
-    
+
     Creates a file containing the parameter and response struct definitions
     for the endpoint.
-    
+
     Args:
         endpoint (Endpoint): The endpoint to generate structs for.
     """
@@ -119,9 +145,9 @@ def write_endpoint_api(endpoint: Endpoint) -> None:
 def write_endpoint_apis(endpoints: list[Endpoint]) -> None:
     """
     Generate structs.go files for all endpoints.
-    
+
     Processes all endpoints and creates their respective struct definition files.
-    
+
     Args:
         endpoints (list[Endpoint]): List of all endpoints to generate structs for.
     """
