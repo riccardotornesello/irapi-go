@@ -27,6 +27,14 @@ func mask(secret string, id string) string {
 }
 
 func getPasswordLimitedAccessToken(clientId, clientSecret, username, password string) (*iRacingTokenResponse, error) {
+	if clientId == "" || clientSecret == "" {
+		return nil, fmt.Errorf("clientId and clientSecret are required for password_limited grant type")
+	}
+
+	if username == "" || password == "" {
+		return nil, fmt.Errorf("username and password are required for password_limited grant type")
+	}
+
 	res, err := http.PostForm(tokenUrl, map[string][]string{
 		"grant_type":    {"password_limited"},
 		"client_id":     {clientId},

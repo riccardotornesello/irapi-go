@@ -61,7 +61,10 @@ func genClient(apiClient *client.ApiClient) *IRacingApiClient {
 }
 
 func NewIRacingPasswordLimitedApiClient(clientId, clientSecret, username, password string) (*IRacingApiClient, error) {
-	apiClient, err := client.NewPasswordLimitedApiClient(clientId, clientSecret, username, password)
+	apiClient, err := client.NewPasswordLimitedApiClient(username, password, &client.ApiClientOptions{
+		ClientId:     clientId,
+		ClientSecret: clientSecret,
+	})
 	if err != nil {
 		return nil, err
 	}
