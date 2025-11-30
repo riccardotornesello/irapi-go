@@ -15,15 +15,15 @@ import (
 // Helper function to create a mock JWT token with specific expiry
 func createMockJWT(expiryTime time.Time) string {
 	header := base64.RawURLEncoding.EncodeToString([]byte(`{"alg":"HS256","typ":"JWT"}`))
-	
+
 	claims := map[string]interface{}{
 		"exp": expiryTime.Unix(),
 	}
 	claimsJSON, _ := json.Marshal(claims)
 	payload := base64.RawURLEncoding.EncodeToString(claimsJSON)
-	
+
 	signature := base64.RawURLEncoding.EncodeToString([]byte("mock-signature"))
-	
+
 	return fmt.Sprintf("%s.%s.%s", header, payload, signature)
 }
 
@@ -52,7 +52,7 @@ func TestEnsureValidToken_ExpiredTokenWithValidRefresh(t *testing.T) {
 			if r.Form.Get("grant_type") != "refresh_token" {
 				t.Errorf("Expected grant_type=refresh_token, got %s", r.Form.Get("grant_type"))
 			}
-			
+
 			// Return new tokens
 			response := iRacingTokenResponse{
 				AccessToken:           "new-access-token",
@@ -69,7 +69,7 @@ func TestEnsureValidToken_ExpiredTokenWithValidRefresh(t *testing.T) {
 	// Create a client with an expired access token but valid refresh token
 	expiredExpiry := time.Now().Add(-1 * time.Hour)
 	validRefreshExpiry := time.Now().Add(1 * time.Hour)
-	
+
 	client := &ApiClient{
 		accessToken:        createMockJWT(expiredExpiry),
 		accessTokenExpiry:  expiredExpiry,
@@ -95,7 +95,7 @@ func TestEnsureValidToken_ExpiredTokenWithValidRefresh(t *testing.T) {
 func TestEnsureValidToken_ExpiredRefreshToken(t *testing.T) {
 	// Create a client with both access and refresh tokens expired
 	expiredExpiry := time.Now().Add(-1 * time.Hour)
-	
+
 	client := &ApiClient{
 		accessToken:        createMockJWT(expiredExpiry),
 		accessTokenExpiry:  expiredExpiry,
@@ -118,7 +118,7 @@ func TestEnsureValidToken_NoClientCredentials(t *testing.T) {
 	// Create a client with expired token but no client credentials
 	expiredExpiry := time.Now().Add(-1 * time.Hour)
 	validRefreshExpiry := time.Now().Add(1 * time.Hour)
-	
+
 	client := &ApiClient{
 		accessToken:        createMockJWT(expiredExpiry),
 		accessTokenExpiry:  expiredExpiry,
@@ -174,15 +174,15 @@ func TestNewPasswordLimitedApiClient_StoresCredentials(t *testing.T) {
 	// This test verifies that client credentials are stored
 	// We can't actually test the full flow without valid credentials
 	// So we just verify the structure is set up correctly
-	
+
 	client := createApiClientWithToken(
 		"access-token",
 		"refresh-token",
-		time.Now().Add(1*time.Hour),
-		time.Now().Add(2*time.Hour),
-		"test-client-id",
-		"test-client-secret",
-		10,
+		&ApiClientOptions{
+			ClientId:     "test-client-id",
+			ClientSecret: "test-client-secret",
+			Concurrency:  10,
+		},
 	)
 
 	if client.clientId != "test-client-id" {
@@ -197,8 +197,8 @@ func TestNewApiClient_NoCredentials(t *testing.T) {
 	// Test that NewApiClient doesn't store credentials
 	accessToken := createMockJWT(time.Now().Add(1 * time.Hour))
 	refreshToken := createMockJWT(time.Now().Add(2 * time.Hour))
-	
-	client := NewApiClient(accessToken, refreshToken)
+
+	client := NewApiClient(accessToken, refreshToken, nil)
 
 	if client.clientId != "" {
 		t.Errorf("Expected clientId to be empty, got '%s'", client.clientId)
@@ -213,7 +213,7 @@ func TestTokenMutexPreventsRaceConditions(t *testing.T) {
 	expiry := time.Now().Add(-1 * time.Hour)
 	refreshCount := 0
 	var mu sync.Mutex
-	
+
 	// Create a custom client that counts refresh attempts
 	client := &ApiClient{
 		accessToken:        createMockJWT(expiry),
@@ -239,7 +239,7 @@ func TestTokenMutexPreventsRaceConditions(t *testing.T) {
 		mu.Lock()
 		refreshCount++
 		mu.Unlock()
-		
+
 		// Update the token expiry to simulate successful refresh
 		client.accessTokenExpiry = time.Now().Add(1 * time.Hour)
 		return nil

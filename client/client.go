@@ -16,8 +16,9 @@ type ApiClient struct {
 	accessTokenExpiry  time.Time
 	refreshTokenExpiry time.Time
 
-	// Client credentials for token refresh
-	clientId     string
+	// clientId is required for token refresh
+	clientId string
+	// clientSecret is required for token refresh
 	clientSecret string
 
 	client     *http.Client
@@ -30,11 +31,27 @@ type ApiClient struct {
 	tokenMutex sync.Mutex
 }
 
-func createApiClientWithToken(accessToken, refreshToken string, accessTokenExpiry, refreshTokenExpiry time.Time, clientId, clientSecret string, concurrency int) *ApiClient {
-	var semaphore chan struct{}
-	if concurrency > 0 {
-		semaphore = make(chan struct{}, concurrency)
+type ApiClientOptions struct {
+	Concurrency  int
+	ClientId     string
+	ClientSecret string
+}
+
+func createApiClientWithToken(accessToken, refreshToken string, options *ApiClientOptions) *ApiClient {
+	// Use default options if none provided
+	if options == nil {
+		options = &ApiClientOptions{}
 	}
+
+	// Create the semaphore channel if concurrency limit is set
+	var semaphore chan struct{}
+	if options.Concurrency > 0 {
+		semaphore = make(chan struct{}, options.Concurrency)
+	}
+
+	// Extract expiry times from JWT tokens.
+	accessTokenExpiry, _ := getExpiryFromJwt(accessToken)
+	refreshTokenExpiry, _ := getExpiryFromJwt(refreshToken)
 
 	return &ApiClient{
 		accessToken:        accessToken,
@@ -42,22 +59,29 @@ func createApiClientWithToken(accessToken, refreshToken string, accessTokenExpir
 		accessTokenExpiry:  accessTokenExpiry,
 		refreshTokenExpiry: refreshTokenExpiry,
 
-		clientId:     clientId,
-		clientSecret: clientSecret,
+		clientId:     options.ClientId,
+		clientSecret: options.ClientSecret,
 
 		client: &http.Client{
 			Timeout: 60 * time.Second, // TODO: allow customization
 		},
 
-		concurrency: concurrency,
+		concurrency: options.Concurrency,
 		semaphore:   semaphore,
 		mutex:       sync.Mutex{},
 		tokenMutex:  sync.Mutex{},
 	}
 }
 
-func NewPasswordLimitedApiClient(clientId, clientSecret, username, password string) (*ApiClient, error) {
-	tokenResponse, err := getPasswordLimitedAccessToken(clientId, clientSecret, username, password)
+func NewPasswordLimitedApiClient(username, password string, options *ApiClientOptions) (*ApiClient, error) {
+	if options == nil {
+		options = &ApiClientOptions{}
+	}
+	if options.ClientId == "" || options.ClientSecret == "" {
+		return nil, fmt.Errorf("clientId and clientSecret must be provided in options")
+	}
+
+	tokenResponse, err := getPasswordLimitedAccessToken(options.ClientId, options.ClientSecret, username, password)
 	if err != nil {
 		return nil, err
 	}
@@ -65,34 +89,15 @@ func NewPasswordLimitedApiClient(clientId, clientSecret, username, password stri
 	return createApiClientWithToken(
 		tokenResponse.AccessToken,
 		tokenResponse.RefreshToken,
-		time.Now().Add(time.Duration(tokenResponse.ExpiresIn)*time.Second),
-		time.Now().Add(time.Duration(tokenResponse.RefreshTokenExpiresIn)*time.Second),
-		clientId,
-		clientSecret,
-		10, // TODO: allow customization
+		options,
 	), nil
 }
 
-func NewApiClient(accessToken, refreshToken string) *ApiClient {
-	// Extract expiry times from JWT tokens.
-	expAccess, err := getExpiryFromJwt(accessToken)
-	if err != nil {
-		expAccess = time.Time{}
-	}
-
-	expRefresh, err := getExpiryFromJwt(refreshToken)
-	if err != nil {
-		expRefresh = time.Time{}
-	}
-
+func NewApiClient(accessToken, refreshToken string, options *ApiClientOptions) *ApiClient {
 	return createApiClientWithToken(
 		accessToken,
 		refreshToken,
-		expAccess,
-		expRefresh,
-		"", // No client credentials for manual token client
-		"", // No client credentials for manual token client
-		10, // TODO: allow customization
+		options,
 	)
 }
 
