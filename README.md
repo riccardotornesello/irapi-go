@@ -10,26 +10,32 @@ It is capable of connecting to most of the API endpoints and parsing the respons
 package main
 
 import (
-	"github.com/riccardotornesello/irapi-go"
-	"github.com/riccardotornesello/irapi-go/api/member"
+	irapi "github.com/riccardotornesello/irapi-go"
+	"github.com/riccardotornesello/irapi-go/api/member/get"
 )
 
 func main() {
-	irClient, err := irapi.NewIRacingApiClient("myemail", "mypassword")
+	// Create a client using OAuth credentials
+	irClient, err := irapi.NewIRacingPasswordLimitedApiClient(
+		"your-client-id",
+		"your-client-secret",
+		"your-email@example.com",
+		"your-password",
+	)
 	if err != nil {
 		panic(err)
 	}
 
-	// Get the user info
-	params := member.MemberGetParams{
+	// Get member info
+	params := &get.MemberGetParams{
 		CustIds: []int{911231},
 	}
-	userInfo, err := irClient.Member.GetMember(params)
+	userInfo, err := irClient.Member.Get(params)
 	if err != nil {
 		panic(err)
 	}
 
-	// Print the user info
+	// Print the member info
 	for _, member := range userInfo.Members {
 		println(member.DisplayName)
 	}
@@ -91,7 +97,6 @@ This project is in its early stages and will grow a lot in the coming period.
 
 Here are the highest priority tasks:
 
-- update documentation with new version
 - document the scraping tool and update it to work with the new oauth flow
 - generate more endpoints with the scraping tool
 - add tests to endpoints and client generation
