@@ -18,7 +18,19 @@ func GetApiClient(t *testing.T) *client.ApiClient {
 		t.Fatal("Error loading .env file")
 	}
 
-	client, err := client.NewPasswordLimitedApiClient("", "", "", "") // TODO
+	username := os.Getenv("IRACING_USERNAME")
+	password := os.Getenv("IRACING_PASSWORD")
+	clientId := os.Getenv("IRACING_CLIENT_ID")
+	clientSecret := os.Getenv("IRACING_CLIENT_SECRET")
+
+	if username == "" || password == "" || clientId == "" || clientSecret == "" {
+		t.Fatal("Missing required environment variables for API client")
+	}
+
+	client, err := client.NewPasswordLimitedApiClient(username, password, &client.ApiClientOptions{
+		ClientId:     clientId,
+		ClientSecret: clientSecret,
+	})
 	if err != nil {
 		t.Fatalf("Error creating API client: %v", err)
 	}
