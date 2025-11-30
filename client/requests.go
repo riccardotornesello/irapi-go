@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/google/go-querystring/query"
+	"github.com/riccardotornesello/irapi-go/client/logger"
 )
 
 type iRacingResponse struct {
@@ -54,7 +55,7 @@ func (c *ApiClient) GetResourceUrl(path string, parameters interface{}) (string,
 
 		// If a global pause is active, sleep for the remaining duration.
 		if waitTime > 0 {
-			fmt.Printf("[Wait] Pausing request to %s for %v due to global rate limit...\n", path, waitTime)
+			logger.Debug("pausing request due to rate limit", "path", path, "wait_time", waitTime)
 			time.Sleep(waitTime)
 		}
 
@@ -88,7 +89,7 @@ func (c *ApiClient) GetResourceUrl(path string, parameters interface{}) (string,
 			c.mutex.Lock()
 			if wakeUpTime.After(c.retryAfter) {
 				c.retryAfter = wakeUpTime
-				fmt.Printf("[429 HIT] Rate limit hit on %s. Stopping all requests until %v\n", path, wakeUpTime)
+				logger.Warn("rate limit exceeded", "path", path, "retry_after", wakeUpTime)
 			}
 			c.mutex.Unlock()
 

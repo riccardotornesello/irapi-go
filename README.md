@@ -36,6 +36,55 @@ func main() {
 }
 ```
 
+## Logging
+
+The client uses structured logging with support for multiple log levels and output formats. By default, the logger outputs INFO level messages in text format to stderr.
+
+### Configuration Options
+
+```go
+// Enable debug logging
+irapi.ConfigureLogger(&irapi.LoggerOptions{
+    Level: irapi.LogLevelDebug,
+})
+
+// Enable JSON logging for production
+irapi.ConfigureLogger(&irapi.LoggerOptions{
+    Level: irapi.LogLevelInfo,
+    JSON:  true,
+})
+
+// Custom output writer
+irapi.ConfigureLogger(&irapi.LoggerOptions{
+    Level:  irapi.LogLevelInfo,
+    Output: myCustomWriter,
+})
+
+// Disable all logging
+irapi.DisableLogging()
+```
+
+### Log Levels
+
+- `LogLevelDebug`: Detailed debugging information (e.g., rate limit pauses)
+- `LogLevelInfo`: General operational information (e.g., token refresh events)
+- `LogLevelWarn`: Warning messages (e.g., rate limit exceeded)
+- `LogLevelError`: Error messages
+
+### Example Log Output
+
+Text format:
+```
+time=2024-01-15T10:30:00.000Z level=INFO msg="refreshing access token"
+time=2024-01-15T10:30:01.000Z level=INFO msg="token refreshed successfully" expiry=2024-01-15T11:30:01.000Z
+```
+
+JSON format:
+```json
+{"time":"2024-01-15T10:30:00.000Z","level":"INFO","msg":"refreshing access token"}
+{"time":"2024-01-15T10:30:01.000Z","level":"INFO","msg":"token refreshed successfully","expiry":"2024-01-15T11:30:01.000Z"}
+```
+
 ## Next steps
 
 This project is in its early stages and will grow a lot in the coming period.
