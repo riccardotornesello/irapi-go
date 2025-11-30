@@ -36,7 +36,7 @@ type ApiClient struct {
 	tokenMutex sync.Mutex
 }
 
-type ApiClientOptions struct {
+type Options struct {
 	Concurrency int
 
 	ClientId     string
@@ -45,10 +45,10 @@ type ApiClientOptions struct {
 	AutoRefreshDisabled bool
 }
 
-func createApiClientWithToken(accessToken, refreshToken string, options *ApiClientOptions) *ApiClient {
+func createApiClientWithToken(accessToken, refreshToken string, options *Options) *ApiClient {
 	// Use default options if none provided
 	if options == nil {
-		options = &ApiClientOptions{}
+		options = &Options{}
 	}
 
 	// Create the semaphore channel if concurrency limit is set
@@ -83,9 +83,9 @@ func createApiClientWithToken(accessToken, refreshToken string, options *ApiClie
 	}
 }
 
-func NewPasswordLimitedApiClient(username, password string, options *ApiClientOptions) (*ApiClient, error) {
+func NewPasswordLimitedApiClient(username, password string, options *Options) (*ApiClient, error) {
 	if options == nil {
-		options = &ApiClientOptions{}
+		options = &Options{}
 	}
 	if options.ClientId == "" || options.ClientSecret == "" {
 		return nil, fmt.Errorf("clientId and clientSecret must be provided in options")
@@ -103,7 +103,7 @@ func NewPasswordLimitedApiClient(username, password string, options *ApiClientOp
 	), nil
 }
 
-func NewApiClient(accessToken, refreshToken string, options *ApiClientOptions) *ApiClient {
+func NewApiClient(accessToken, refreshToken string, options *Options) *ApiClient {
 	return createApiClientWithToken(
 		accessToken,
 		refreshToken,

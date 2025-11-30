@@ -178,7 +178,7 @@ func TestNewPasswordLimitedApiClient_StoresCredentials(t *testing.T) {
 	client := createApiClientWithToken(
 		"access-token",
 		"refresh-token",
-		&ApiClientOptions{
+		&Options{
 			ClientId:     "test-client-id",
 			ClientSecret: "test-client-secret",
 			Concurrency:  10,

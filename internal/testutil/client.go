@@ -27,7 +27,7 @@ func GetApiClient(t *testing.T) *client.ApiClient {
 		t.Fatal("Missing required environment variables for API client")
 	}
 
-	client, err := client.NewPasswordLimitedApiClient(username, password, &client.ApiClientOptions{
+	client, err := client.NewPasswordLimitedApiClient(username, password, &client.Options{
 		ClientId:     clientId,
 		ClientSecret: clientSecret,
 	})
