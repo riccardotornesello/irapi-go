@@ -8,6 +8,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/riccardotornesello/irapi-go/client/logger"
 )
 
 type ApiClient struct {
@@ -164,7 +166,7 @@ func (c *ApiClient) ensureValidToken() error {
 	}
 
 	// Perform token refresh
-	fmt.Printf("[Token Refresh] Refreshing access token...\n")
+	logger.Info("refreshing access token")
 	tokenResponse, err := refreshToken(c.clientId, c.clientSecret, c.refreshToken)
 	if err != nil {
 		return fmt.Errorf("failed to refresh token: %w", err)
@@ -176,6 +178,6 @@ func (c *ApiClient) ensureValidToken() error {
 	c.accessTokenExpiry = time.Now().Add(time.Duration(tokenResponse.ExpiresIn) * time.Second)
 	c.refreshTokenExpiry = time.Now().Add(time.Duration(tokenResponse.RefreshTokenExpiresIn) * time.Second)
 
-	fmt.Printf("[Token Refresh] Token refreshed successfully. New expiry: %v\n", c.accessTokenExpiry)
+	logger.Info("token refreshed successfully", "expiry", c.accessTokenExpiry)
 	return nil
 }
