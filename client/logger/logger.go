@@ -23,6 +23,8 @@ const (
 	LevelWarn Level = Level(slog.LevelWarn)
 	// LevelError is used for error messages.
 	LevelError Level = Level(slog.LevelError)
+	// LevelDisabled disables all logging output.
+	LevelDisabled Level = Level(slog.LevelError + 1000)
 )
 
 // Options configures the logger behavior.
@@ -74,17 +76,12 @@ func Configure(opts *Options) {
 	mu.Unlock()
 }
 
-// SetLevel changes the minimum log level for the logger.
-// This is a convenience function that reconfigures the logger with the new level.
-func SetLevel(level Level) {
-	Configure(&Options{Level: level})
-}
-
-// Disable silences all log output by setting the output to io.Discard.
+// Disable silences all log output by setting the level to LevelDisabled
+// and directing output to io.Discard.
 func Disable() {
 	Configure(&Options{
 		Output: io.Discard,
-		Level:  LevelError + 1, // Set level higher than any log level
+		Level:  LevelDisabled,
 	})
 }
 

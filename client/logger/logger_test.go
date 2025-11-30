@@ -127,7 +127,7 @@ func TestLogLevels(t *testing.T) {
 	}
 }
 
-func TestSetLevel(t *testing.T) {
+func TestConfigureLevelChange(t *testing.T) {
 	var buf bytes.Buffer
 	Configure(&Options{
 		Output: &buf,
@@ -219,7 +219,7 @@ func TestDisable_ToDiscard(t *testing.T) {
 	// Configure to discard output
 	Configure(&Options{
 		Output: io.Discard,
-		Level:  LevelError + 1,
+		Level:  LevelDisabled,
 	})
 
 	// These should not panic even though output is discarded
