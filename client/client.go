@@ -27,14 +27,20 @@ type ApiClient struct {
 	concurrency int
 	semaphore   chan struct{}
 	mutex       sync.Mutex
+
+	// autoRefreshDisabled indicates whether automatic token refresh is disabled
+	autoRefreshDisabled bool
 	// tokenMutex is used to synchronize token refresh operations
 	tokenMutex sync.Mutex
 }
 
 type ApiClientOptions struct {
-	Concurrency  int
+	Concurrency int
+
 	ClientId     string
 	ClientSecret string
+
+	AutoRefreshDisabled bool
 }
 
 func createApiClientWithToken(accessToken, refreshToken string, options *ApiClientOptions) *ApiClient {
@@ -69,7 +75,9 @@ func createApiClientWithToken(accessToken, refreshToken string, options *ApiClie
 		concurrency: options.Concurrency,
 		semaphore:   semaphore,
 		mutex:       sync.Mutex{},
-		tokenMutex:  sync.Mutex{},
+
+		autoRefreshDisabled: options.AutoRefreshDisabled,
+		tokenMutex:          sync.Mutex{},
 	}
 }
 
@@ -129,6 +137,11 @@ func (c *ApiClient) ensureValidToken() error {
 	// Check if access token is still valid (with 30 second buffer to avoid edge cases)
 	if time.Now().Add(30 * time.Second).Before(c.accessTokenExpiry) {
 		return nil
+	}
+
+	// Check if auto-refresh is disabled
+	if c.autoRefreshDisabled {
+		return fmt.Errorf("automatic token refresh is disabled")
 	}
 
 	// Access token is expired or about to expire, need to refresh
