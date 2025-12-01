@@ -1,7 +1,7 @@
 package member_bests
 
 import (
-	"time"
+	"github.com/riccardotornesello/irapi-go/pkg/types"
 )
 
 type StatsMemberBestsParams struct {
@@ -17,13 +17,13 @@ type StatsMemberBestsResponse struct {
 }
 
 type Best struct {
-	Track         Track     `json:"track"`
-	EventType     string    `json:"event_type"`
-	BestLapTime   int64     `json:"best_lap_time"`
-	SubsessionID  int64     `json:"subsession_id"`
-	EndTime       time.Time `json:"end_time"`
-	SeasonYear    int64     `json:"season_year"`
-	SeasonQuarter int64     `json:"season_quarter"`
+	Track         Track          `json:"track"`
+	EventType     string         `json:"event_type"`
+	BestLapTime   int64          `json:"best_lap_time"`
+	SubsessionID  int64          `json:"subsession_id"`
+	EndTime       types.DateTime `json:"end_time"`
+	SeasonYear    int64          `json:"season_year"`
+	SeasonQuarter int64          `json:"season_quarter"`
 }
 
 type Track struct {

@@ -1,7 +1,7 @@
 package race_guide
 
 import (
-	"time"
+	"github.com/riccardotornesello/irapi-go/pkg/types"
 )
 
 type SeasonRaceGuideParams struct {
@@ -10,20 +10,20 @@ type SeasonRaceGuideParams struct {
 }
 
 type SeasonRaceGuideResponse struct {
-	Subscribed     bool      `json:"subscribed"`
-	Sessions       []Session `json:"sessions"`
-	BlockBeginTime time.Time `json:"block_begin_time"`
-	BlockEndTime   time.Time `json:"block_end_time"`
-	Success        bool      `json:"success"`
+	Subscribed     bool           `json:"subscribed"`
+	Sessions       []Session      `json:"sessions"`
+	BlockBeginTime types.DateTime `json:"block_begin_time"`
+	BlockEndTime   types.DateTime `json:"block_end_time"`
+	Success        bool           `json:"success"`
 }
 
 type Session struct {
-	SeasonID     int64     `json:"season_id"`
-	StartTime    time.Time `json:"start_time"`
-	SuperSession bool      `json:"super_session"`
-	SeriesID     int64     `json:"series_id"`
-	RaceWeekNum  int64     `json:"race_week_num"`
-	EndTime      time.Time `json:"end_time"`
-	SessionID    *int64    `json:"session_id,omitempty"`
-	EntryCount   int64     `json:"entry_count"`
+	SeasonID     int64          `json:"season_id"`
+	StartTime    types.DateTime `json:"start_time"`
+	SuperSession bool           `json:"super_session"`
+	SeriesID     int64          `json:"series_id"`
+	RaceWeekNum  int64          `json:"race_week_num"`
+	EndTime      types.DateTime `json:"end_time"`
+	SessionID    *int64         `json:"session_id,omitempty"`
+	EntryCount   int64          `json:"entry_count"`
 }

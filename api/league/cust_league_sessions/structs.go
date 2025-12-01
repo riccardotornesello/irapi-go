@@ -1,7 +1,7 @@
 package cust_league_sessions
 
 import (
-	"time"
+	"github.com/riccardotornesello/irapi-go/pkg/types"
 )
 
 type LeagueCustLeagueSessionsParams struct {
@@ -37,8 +37,9 @@ type Session struct {
 	SubsessionID                      *int64             `json:"subsession_id,omitempty"`
 	PasswordProtected                 bool               `json:"password_protected"`
 	SessionName                       string             `json:"session_name"`
-	OpenRegExpires                    *time.Time         `json:"open_reg_expires,omitempty"`
-	LaunchAt                          time.Time          `json:"launch_at"`
+	SessionDesc                       *string            `json:"session_desc,omitempty"`
+	OpenRegExpires                    *types.DateTime    `json:"open_reg_expires,omitempty"`
+	LaunchAt                          types.DateTime     `json:"launch_at"`
 	FullCourseCautions                bool               `json:"full_course_cautions"`
 	NumFastTows                       int64              `json:"num_fast_tows"`
 	RollingStarts                     bool               `json:"rolling_starts"`
@@ -125,17 +126,17 @@ type Session struct {
 	Image                             *Image             `json:"image,omitempty"`
 	Owner                             bool               `json:"owner"`
 	Admin                             bool               `json:"admin"`
-	Friends                           []interface{}      `json:"friends,omitempty"`
+	Friends                           []Friend           `json:"friends,omitempty"`
 	Watched                           []interface{}      `json:"watched,omitempty"`
-	EndTime                           time.Time          `json:"end_time"`
+	EndTime                           types.DateTime     `json:"end_time"`
+	Populated                         bool               `json:"populated"`
 	TeamEntryCount                    int64              `json:"team_entry_count"`
 	IsHeatRacing                      bool               `json:"is_heat_racing"`
-	Populated                         bool               `json:"populated"`
 	Broadcaster                       bool               `json:"broadcaster"`
 	MinIR                             int64              `json:"min_ir"`
 	MaxIR                             int64              `json:"max_ir"`
-	SessionDesc                       *string            `json:"session_desc,omitempty"`
 	HeatSesInfo                       *HeatSesInfo       `json:"heat_ses_info,omitempty"`
+	AltAssetID                        *int64             `json:"alt_asset_id,omitempty"`
 	RaceLengthType                    *int64             `json:"race_length_type,omitempty"`
 }
 
@@ -168,10 +169,10 @@ type Car struct {
 	PowerAdjustPct    int64   `json:"power_adjust_pct"`
 	MaxDryTireSets    int64   `json:"max_dry_tire_sets"`
 	PackageID         int64   `json:"package_id"`
-	RaceSetupID       *int64  `json:"race_setup_id,omitempty"`
-	RaceSetupFilename *string `json:"race_setup_filename,omitempty"`
 	QualSetupID       *int64  `json:"qual_setup_id,omitempty"`
 	QualSetupFilename *string `json:"qual_setup_filename,omitempty"`
+	RaceSetupID       *int64  `json:"race_setup_id,omitempty"`
+	RaceSetupFilename *string `json:"race_setup_filename,omitempty"`
 }
 
 type Elig struct {
@@ -198,50 +199,55 @@ type Farm struct {
 	Displayed   bool   `json:"displayed"`
 }
 
+type Friend struct {
+	CustID      int64  `json:"cust_id"`
+	DisplayName string `json:"display_name"`
+}
+
 type HeatSesInfo struct {
-	ConsolationDeltaMaxFieldSize         int64     `json:"consolation_delta_max_field_size"`
-	ConsolationDeltaSessionLaps          int64     `json:"consolation_delta_session_laps"`
-	ConsolationDeltaSessionLengthMinutes int64     `json:"consolation_delta_session_length_minutes"`
-	ConsolationFirstMaxFieldSize         int64     `json:"consolation_first_max_field_size"`
-	ConsolationFirstSessionLaps          int64     `json:"consolation_first_session_laps"`
-	ConsolationFirstSessionLengthMinutes int64     `json:"consolation_first_session_length_minutes"`
-	ConsolationNumPositionToInvert       int64     `json:"consolation_num_position_to_invert"`
-	ConsolationNumToConsolation          int64     `json:"consolation_num_to_consolation"`
-	ConsolationNumToMain                 int64     `json:"consolation_num_to_main"`
-	ConsolationRunAlways                 bool      `json:"consolation_run_always"`
-	ConsolationScoresChampPoints         bool      `json:"consolation_scores_champ_points"`
-	Created                              time.Time `json:"created"`
-	CustID                               int64     `json:"cust_id"`
-	HeatCautionType                      int64     `json:"heat_caution_type"`
-	HeatInfoID                           int64     `json:"heat_info_id"`
-	HeatInfoName                         string    `json:"heat_info_name"`
-	HeatLaps                             int64     `json:"heat_laps"`
-	HeatLengthMinutes                    int64     `json:"heat_length_minutes"`
-	HeatMaxFieldSize                     int64     `json:"heat_max_field_size"`
-	HeatNumFromEachToMain                int64     `json:"heat_num_from_each_to_main"`
-	HeatNumPositionToInvert              int64     `json:"heat_num_position_to_invert"`
-	HeatScoresChampPoints                bool      `json:"heat_scores_champ_points"`
-	HeatSessionMinutesEstimate           int64     `json:"heat_session_minutes_estimate"`
-	Hidden                               bool      `json:"hidden"`
-	MainLaps                             int64     `json:"main_laps"`
-	MainLengthMinutes                    int64     `json:"main_length_minutes"`
-	MainMaxFieldSize                     int64     `json:"main_max_field_size"`
-	MainNumPositionToInvert              int64     `json:"main_num_position_to_invert"`
-	MaxEntrants                          int64     `json:"max_entrants"`
-	OpenPractice                         bool      `json:"open_practice"`
-	PreMainPracticeLengthMinutes         int64     `json:"pre_main_practice_length_minutes"`
-	PreQualNumToMain                     int64     `json:"pre_qual_num_to_main"`
-	PreQualPracticeLengthMinutes         int64     `json:"pre_qual_practice_length_minutes"`
-	QualCautionType                      int64     `json:"qual_caution_type"`
-	QualLaps                             int64     `json:"qual_laps"`
-	QualLengthMinutes                    int64     `json:"qual_length_minutes"`
-	QualNumToMain                        int64     `json:"qual_num_to_main"`
-	QualOpenDelaySeconds                 int64     `json:"qual_open_delay_seconds"`
-	QualScoresChampPoints                bool      `json:"qual_scores_champ_points"`
-	QualScoring                          int64     `json:"qual_scoring"`
-	QualStyle                            int64     `json:"qual_style"`
-	RaceStyle                            int64     `json:"race_style"`
-	Description                          *string   `json:"description,omitempty"`
+	ConsolationDeltaMaxFieldSize         int64          `json:"consolation_delta_max_field_size"`
+	ConsolationDeltaSessionLaps          int64          `json:"consolation_delta_session_laps"`
+	ConsolationDeltaSessionLengthMinutes int64          `json:"consolation_delta_session_length_minutes"`
+	ConsolationFirstMaxFieldSize         int64          `json:"consolation_first_max_field_size"`
+	ConsolationFirstSessionLaps          int64          `json:"consolation_first_session_laps"`
+	ConsolationFirstSessionLengthMinutes int64          `json:"consolation_first_session_length_minutes"`
+	ConsolationNumPositionToInvert       int64          `json:"consolation_num_position_to_invert"`
+	ConsolationNumToConsolation          int64          `json:"consolation_num_to_consolation"`
+	ConsolationNumToMain                 int64          `json:"consolation_num_to_main"`
+	ConsolationRunAlways                 bool           `json:"consolation_run_always"`
+	ConsolationScoresChampPoints         bool           `json:"consolation_scores_champ_points"`
+	Created                              types.DateTime `json:"created"`
+	CustID                               int64          `json:"cust_id"`
+	Description                          string         `json:"description"`
+	HeatCautionType                      int64          `json:"heat_caution_type"`
+	HeatInfoID                           int64          `json:"heat_info_id"`
+	HeatInfoName                         string         `json:"heat_info_name"`
+	HeatLaps                             int64          `json:"heat_laps"`
+	HeatLengthMinutes                    int64          `json:"heat_length_minutes"`
+	HeatMaxFieldSize                     int64          `json:"heat_max_field_size"`
+	HeatNumFromEachToMain                int64          `json:"heat_num_from_each_to_main"`
+	HeatNumPositionToInvert              int64          `json:"heat_num_position_to_invert"`
+	HeatScoresChampPoints                bool           `json:"heat_scores_champ_points"`
+	HeatSessionMinutesEstimate           int64          `json:"heat_session_minutes_estimate"`
+	Hidden                               bool           `json:"hidden"`
+	MainLaps                             int64          `json:"main_laps"`
+	MainLengthMinutes                    int64          `json:"main_length_minutes"`
+	MainMaxFieldSize                     int64          `json:"main_max_field_size"`
+	MainNumPositionToInvert              int64          `json:"main_num_position_to_invert"`
+	MaxEntrants                          int64          `json:"max_entrants"`
+	OpenPractice                         bool           `json:"open_practice"`
+	PreMainPracticeLengthMinutes         int64          `json:"pre_main_practice_length_minutes"`
+	PreQualNumToMain                     int64          `json:"pre_qual_num_to_main"`
+	PreQualPracticeLengthMinutes         int64          `json:"pre_qual_practice_length_minutes"`
+	QualCautionType                      int64          `json:"qual_caution_type"`
+	QualLaps                             int64          `json:"qual_laps"`
+	QualLengthMinutes                    int64          `json:"qual_length_minutes"`
+	QualNumToMain                        int64          `json:"qual_num_to_main"`
+	QualOpenDelaySeconds                 int64          `json:"qual_open_delay_seconds"`
+	QualScoresChampPoints                bool           `json:"qual_scores_champ_points"`
+	QualScoring                          int64          `json:"qual_scoring"`
+	QualStyle                            int64          `json:"qual_style"`
+	RaceStyle                            int64          `json:"race_style"`
 }
 
 type Image struct {
@@ -259,9 +265,9 @@ type SessionType struct {
 
 type Track struct {
 	CategoryID int64   `json:"category_id"`
-	ConfigName *string `json:"config_name,omitempty"`
 	TrackID    int64   `json:"track_id"`
 	TrackName  string  `json:"track_name"`
+	ConfigName *string `json:"config_name,omitempty"`
 }
 
 type TrackState struct {
@@ -281,7 +287,7 @@ type Weather struct {
 	ForecastOptions         *ForecastOptions `json:"forecast_options,omitempty"`
 	PrecipOption            int64            `json:"precip_option"`
 	RelHumidity             int64            `json:"rel_humidity"`
-	SimulatedStartTime      time.Time        `json:"simulated_start_time"`
+	SimulatedStartTime      types.DateTime   `json:"simulated_start_time"`
 	SimulatedTimeMultiplier int64            `json:"simulated_time_multiplier"`
 	SimulatedTimeOffsets    []int64          `json:"simulated_time_offsets"`
 	Skies                   int64            `json:"skies"`

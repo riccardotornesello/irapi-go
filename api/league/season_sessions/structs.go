@@ -1,7 +1,7 @@
 package season_sessions
 
 import (
-	"time"
+	"github.com/riccardotornesello/irapi-go/pkg/types"
 )
 
 type LeagueSeasonSessionsParams struct {
@@ -19,33 +19,33 @@ type LeagueSeasonSessionsResponse struct {
 }
 
 type Session struct {
-	Cars              []Car       `json:"cars"`
-	DriverChanges     bool        `json:"driver_changes"`
-	EntryCount        int64       `json:"entry_count"`
-	HasResults        bool        `json:"has_results"`
-	LaunchAt          time.Time   `json:"launch_at"`
-	LeagueID          int64       `json:"league_id"`
-	LeagueSeasonID    int64       `json:"league_season_id"`
-	LoneQualify       bool        `json:"lone_qualify"`
-	PaceCarClassID    interface{} `json:"pace_car_class_id"`
-	PaceCarID         interface{} `json:"pace_car_id"`
-	PasswordProtected bool        `json:"password_protected"`
-	PracticeLength    int64       `json:"practice_length"`
-	PrivateSessionID  int64       `json:"private_session_id"`
-	QualifyLaps       int64       `json:"qualify_laps"`
-	QualifyLength     int64       `json:"qualify_length"`
-	RaceLaps          int64       `json:"race_laps"`
-	RaceLength        int64       `json:"race_length"`
-	SessionID         int64       `json:"session_id"`
-	Status            int64       `json:"status"`
-	SubsessionID      int64       `json:"subsession_id"`
-	TeamEntryCount    int64       `json:"team_entry_count"`
-	TimeLimit         int64       `json:"time_limit"`
-	Track             Track       `json:"track"`
-	TrackState        TrackState  `json:"track_state"`
-	Weather           Weather     `json:"weather"`
-	WinnerID          int64       `json:"winner_id"`
-	WinnerName        string      `json:"winner_name"`
+	Cars              []Car          `json:"cars"`
+	DriverChanges     bool           `json:"driver_changes"`
+	EntryCount        int64          `json:"entry_count"`
+	HasResults        bool           `json:"has_results"`
+	LaunchAt          types.DateTime `json:"launch_at"`
+	LeagueID          int64          `json:"league_id"`
+	LeagueSeasonID    int64          `json:"league_season_id"`
+	LoneQualify       bool           `json:"lone_qualify"`
+	PaceCarClassID    interface{}    `json:"pace_car_class_id"`
+	PaceCarID         interface{}    `json:"pace_car_id"`
+	PasswordProtected bool           `json:"password_protected"`
+	PracticeLength    int64          `json:"practice_length"`
+	PrivateSessionID  int64          `json:"private_session_id"`
+	QualifyLaps       int64          `json:"qualify_laps"`
+	QualifyLength     int64          `json:"qualify_length"`
+	RaceLaps          int64          `json:"race_laps"`
+	RaceLength        int64          `json:"race_length"`
+	SessionID         int64          `json:"session_id"`
+	Status            int64          `json:"status"`
+	SubsessionID      int64          `json:"subsession_id"`
+	TeamEntryCount    int64          `json:"team_entry_count"`
+	TimeLimit         int64          `json:"time_limit"`
+	Track             Track          `json:"track"`
+	TrackState        TrackState     `json:"track_state"`
+	Weather           Weather        `json:"weather"`
+	WinnerID          int64          `json:"winner_id"`
+	WinnerName        string         `json:"winner_name"`
 }
 
 type Car struct {

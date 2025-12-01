@@ -2,7 +2,7 @@ package lap_data
 
 import (
 	"github.com/riccardotornesello/irapi-go/client"
-	"time"
+	"github.com/riccardotornesello/irapi-go/pkg/types"
 )
 
 type ResultsLapDataParams struct {
@@ -23,7 +23,7 @@ type ResultsLapDataResponse struct {
 	BestQualLapTime int64                         `json:"best_qual_lap_time"`
 	BestQualLapAt   interface{}                   `json:"best_qual_lap_at"`
 	ChunkInfo       client.IRacingChunkInfo       `json:"chunk_info"`
-	LastUpdated     time.Time                     `json:"last_updated"`
+	LastUpdated     types.DateTime                `json:"last_updated"`
 	GroupID         int64                         `json:"group_id"`
 	CustID          int64                         `json:"cust_id"`
 	Name            string                        `json:"name"`
@@ -52,24 +52,24 @@ type Livery struct {
 }
 
 type SessionInfo struct {
-	SubsessionID          int64     `json:"subsession_id"`
-	SessionID             int64     `json:"session_id"`
-	SimsessionNumber      int64     `json:"simsession_number"`
-	SimsessionType        int64     `json:"simsession_type"`
-	SimsessionName        string    `json:"simsession_name"`
-	NumLapsForQualAverage int64     `json:"num_laps_for_qual_average"`
-	NumLapsForSoloAverage int64     `json:"num_laps_for_solo_average"`
-	EventType             int64     `json:"event_type"`
-	EventTypeName         string    `json:"event_type_name"`
-	PrivateSessionID      int64     `json:"private_session_id"`
-	SeasonName            string    `json:"season_name"`
-	SeasonShortName       string    `json:"season_short_name"`
-	SeriesName            string    `json:"series_name"`
-	SeriesShortName       string    `json:"series_short_name"`
-	SessionName           string    `json:"session_name"`
-	RestrictResults       bool      `json:"restrict_results"`
-	StartTime             time.Time `json:"start_time"`
-	Track                 Track     `json:"track"`
+	SubsessionID          int64          `json:"subsession_id"`
+	SessionID             int64          `json:"session_id"`
+	SimsessionNumber      int64          `json:"simsession_number"`
+	SimsessionType        int64          `json:"simsession_type"`
+	SimsessionName        string         `json:"simsession_name"`
+	NumLapsForQualAverage int64          `json:"num_laps_for_qual_average"`
+	NumLapsForSoloAverage int64          `json:"num_laps_for_solo_average"`
+	EventType             int64          `json:"event_type"`
+	EventTypeName         string         `json:"event_type_name"`
+	PrivateSessionID      int64          `json:"private_session_id"`
+	SeasonName            string         `json:"season_name"`
+	SeasonShortName       string         `json:"season_short_name"`
+	SeriesName            string         `json:"series_name"`
+	SeriesShortName       string         `json:"series_short_name"`
+	SessionName           string         `json:"session_name"`
+	RestrictResults       bool           `json:"restrict_results"`
+	StartTime             types.DateTime `json:"start_time"`
+	Track                 Track          `json:"track"`
 }
 
 type Track struct {

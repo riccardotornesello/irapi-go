@@ -1,7 +1,7 @@
 package get
 
 import (
-	"time"
+	"github.com/riccardotornesello/irapi-go/pkg/types"
 )
 
 type TeamGetParams struct {
@@ -10,29 +10,29 @@ type TeamGetParams struct {
 }
 
 type TeamGetResponse struct {
-	TeamID           int64         `json:"team_id"`
-	OwnerID          int64         `json:"owner_id"`
-	TeamName         string        `json:"team_name"`
-	Created          time.Time     `json:"created"`
-	Hidden           bool          `json:"hidden"`
-	About            string        `json:"about"`
-	URL              string        `json:"url"`
-	RosterCount      int64         `json:"roster_count"`
-	Recruiting       bool          `json:"recruiting"`
-	PrivateWall      bool          `json:"private_wall"`
-	IsDefault        bool          `json:"is_default"`
-	IsOwner          bool          `json:"is_owner"`
-	IsAdmin          bool          `json:"is_admin"`
-	Suit             Suit          `json:"suit"`
-	Owner            Owner         `json:"owner"`
-	Tags             Tags          `json:"tags"`
-	TeamApplications []interface{} `json:"team_applications"`
-	PendingRequests  []interface{} `json:"pending_requests"`
-	IsMember         bool          `json:"is_member"`
-	IsApplicant      bool          `json:"is_applicant"`
-	IsInvite         bool          `json:"is_invite"`
-	IsIgnored        bool          `json:"is_ignored"`
-	Roster           []Owner       `json:"roster"`
+	TeamID           int64          `json:"team_id"`
+	OwnerID          int64          `json:"owner_id"`
+	TeamName         string         `json:"team_name"`
+	Created          types.DateTime `json:"created"`
+	Hidden           bool           `json:"hidden"`
+	About            string         `json:"about"`
+	URL              string         `json:"url"`
+	RosterCount      int64          `json:"roster_count"`
+	Recruiting       bool           `json:"recruiting"`
+	PrivateWall      bool           `json:"private_wall"`
+	IsDefault        bool           `json:"is_default"`
+	IsOwner          bool           `json:"is_owner"`
+	IsAdmin          bool           `json:"is_admin"`
+	Suit             Suit           `json:"suit"`
+	Owner            Owner          `json:"owner"`
+	Tags             Tags           `json:"tags"`
+	TeamApplications []interface{}  `json:"team_applications"`
+	PendingRequests  []interface{}  `json:"pending_requests"`
+	IsMember         bool           `json:"is_member"`
+	IsApplicant      bool           `json:"is_applicant"`
+	IsInvite         bool           `json:"is_invite"`
+	IsIgnored        bool           `json:"is_ignored"`
+	Roster           []Owner        `json:"roster"`
 }
 
 type Owner struct {

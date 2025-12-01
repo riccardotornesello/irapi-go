@@ -1,7 +1,7 @@
 package get
 
 import (
-	"time"
+	"github.com/riccardotornesello/irapi-go/pkg/types"
 )
 
 type LeagueGetParams struct {
@@ -10,32 +10,32 @@ type LeagueGetParams struct {
 }
 
 type LeagueGetResponse struct {
-	LeagueID           int64         `json:"league_id"`
-	OwnerID            int64         `json:"owner_id"`
-	LeagueName         string        `json:"league_name"`
-	Created            time.Time     `json:"created"`
-	Hidden             bool          `json:"hidden"`
-	Message            string        `json:"message"`
-	About              string        `json:"about"`
-	URL                string        `json:"url"`
-	Recruiting         bool          `json:"recruiting"`
-	PrivateWall        bool          `json:"private_wall"`
-	PrivateRoster      bool          `json:"private_roster"`
-	PrivateSchedule    bool          `json:"private_schedule"`
-	PrivateResults     bool          `json:"private_results"`
-	IsOwner            bool          `json:"is_owner"`
-	IsAdmin            bool          `json:"is_admin"`
-	RosterCount        int64         `json:"roster_count"`
-	Owner              Owner         `json:"owner"`
-	Image              Image         `json:"image"`
-	Tags               Tags          `json:"tags"`
-	LeagueApplications []interface{} `json:"league_applications"`
-	PendingRequests    []interface{} `json:"pending_requests"`
-	IsMember           bool          `json:"is_member"`
-	IsApplicant        bool          `json:"is_applicant"`
-	IsInvite           bool          `json:"is_invite"`
-	IsIgnored          bool          `json:"is_ignored"`
-	Roster             []Roster      `json:"roster"`
+	LeagueID           int64          `json:"league_id"`
+	OwnerID            int64          `json:"owner_id"`
+	LeagueName         string         `json:"league_name"`
+	Created            types.DateTime `json:"created"`
+	Hidden             bool           `json:"hidden"`
+	Message            string         `json:"message"`
+	About              string         `json:"about"`
+	URL                string         `json:"url"`
+	Recruiting         bool           `json:"recruiting"`
+	PrivateWall        bool           `json:"private_wall"`
+	PrivateRoster      bool           `json:"private_roster"`
+	PrivateSchedule    bool           `json:"private_schedule"`
+	PrivateResults     bool           `json:"private_results"`
+	IsOwner            bool           `json:"is_owner"`
+	IsAdmin            bool           `json:"is_admin"`
+	RosterCount        int64          `json:"roster_count"`
+	Owner              Owner          `json:"owner"`
+	Image              Image          `json:"image"`
+	Tags               Tags           `json:"tags"`
+	LeagueApplications []interface{}  `json:"league_applications"`
+	PendingRequests    []interface{}  `json:"pending_requests"`
+	IsMember           bool           `json:"is_member"`
+	IsApplicant        bool           `json:"is_applicant"`
+	IsInvite           bool           `json:"is_invite"`
+	IsIgnored          bool           `json:"is_ignored"`
+	Roster             []Roster       `json:"roster"`
 }
 
 type Image struct {
@@ -61,16 +61,16 @@ type Helmet struct {
 }
 
 type Roster struct {
-	CustID            int64     `json:"cust_id"`
-	DisplayName       string    `json:"display_name"`
-	Helmet            Helmet    `json:"helmet"`
-	Owner             bool      `json:"owner"`
-	Admin             bool      `json:"admin"`
-	LeagueMailOptOut  bool      `json:"league_mail_opt_out"`
-	LeaguePmOptOut    bool      `json:"league_pm_opt_out"`
-	LeagueMemberSince time.Time `json:"league_member_since"`
-	CarNumber         string    `json:"car_number"`
-	NickName          *string   `json:"nick_name"`
+	CustID            int64          `json:"cust_id"`
+	DisplayName       string         `json:"display_name"`
+	Helmet            Helmet         `json:"helmet"`
+	Owner             bool           `json:"owner"`
+	Admin             bool           `json:"admin"`
+	LeagueMailOptOut  bool           `json:"league_mail_opt_out"`
+	LeaguePmOptOut    bool           `json:"league_pm_opt_out"`
+	LeagueMemberSince types.DateTime `json:"league_member_since"`
+	CarNumber         string         `json:"car_number"`
+	NickName          *string        `json:"nick_name"`
 }
 
 type Tags struct {

@@ -1,7 +1,7 @@
 package profile
 
 import (
-	"time"
+	"github.com/riccardotornesello/irapi-go/pkg/types"
 )
 
 type MemberProfileParams struct {
@@ -53,18 +53,18 @@ type License struct {
 }
 
 type MemberInfo struct {
-	AI             bool      `json:"ai"`
-	Country        string    `json:"country"`
-	CountryCode    string    `json:"country_code"`
-	CustID         int64     `json:"cust_id"`
-	DisplayName    string    `json:"display_name"`
-	FlairID        int64     `json:"flair_id"`
-	FlairName      string    `json:"flair_name"`
-	FlairShortname string    `json:"flair_shortname"`
-	Helmet         Helmet    `json:"helmet"`
-	LastLogin      time.Time `json:"last_login"`
-	Licenses       []License `json:"licenses"`
-	MemberSince    string    `json:"member_since"`
+	AI             bool           `json:"ai"`
+	Country        string         `json:"country"`
+	CountryCode    string         `json:"country_code"`
+	CustID         int64          `json:"cust_id"`
+	DisplayName    string         `json:"display_name"`
+	FlairID        int64          `json:"flair_id"`
+	FlairName      string         `json:"flair_name"`
+	FlairShortname string         `json:"flair_shortname"`
+	Helmet         Helmet         `json:"helmet"`
+	LastLogin      types.DateTime `json:"last_login"`
+	Licenses       []License      `json:"licenses"`
+	MemberSince    string         `json:"member_since"`
 }
 
 type Helmet struct {
@@ -77,46 +77,41 @@ type Helmet struct {
 }
 
 type RecentAward struct {
-	MemberAwardID      int64   `json:"member_award_id"`
-	AwardID            int64   `json:"award_id"`
-	Achievement        bool    `json:"achievement"`
-	AwardCount         int64   `json:"award_count"`
-	AwardDate          string  `json:"award_date"`
-	AwardOrder         int64   `json:"award_order"`
-	AwardedDescription string  `json:"awarded_description"`
-	CustID             int64   `json:"cust_id"`
-	Description        string  `json:"description"`
-	GroupName          string  `json:"group_name"`
-	HasPDF             bool    `json:"has_pdf"`
-	IconURLLarge       string  `json:"icon_url_large"`
-	IconURLSmall       string  `json:"icon_url_small"`
-	IconURLUnawarded   string  `json:"icon_url_unawarded"`
-	Name               string  `json:"name"`
-	SubsessionID       *int64  `json:"subsession_id,omitempty"`
-	Viewed             bool    `json:"viewed"`
-	Weight             int64   `json:"weight"`
-	Progress           *int64  `json:"progress,omitempty"`
-	ProgressLabel      *string `json:"progress_label,omitempty"`
-	ProgressText       *string `json:"progress_text,omitempty"`
-	ProgressTextLabel  *string `json:"progress_text_label,omitempty"`
-	Threshold          *int64  `json:"threshold,omitempty"`
+	MemberAwardID      int64  `json:"member_award_id"`
+	AwardID            int64  `json:"award_id"`
+	Achievement        bool   `json:"achievement"`
+	AwardCount         int64  `json:"award_count"`
+	AwardDate          string `json:"award_date"`
+	AwardOrder         int64  `json:"award_order"`
+	AwardedDescription string `json:"awarded_description"`
+	CustID             int64  `json:"cust_id"`
+	Description        string `json:"description"`
+	GroupName          string `json:"group_name"`
+	HasPDF             bool   `json:"has_pdf"`
+	IconURLLarge       string `json:"icon_url_large"`
+	IconURLSmall       string `json:"icon_url_small"`
+	IconURLUnawarded   string `json:"icon_url_unawarded"`
+	Name               string `json:"name"`
+	SubsessionID       int64  `json:"subsession_id"`
+	Viewed             bool   `json:"viewed"`
+	Weight             int64  `json:"weight"`
 }
 
 type RecentEvent struct {
-	EventType        string      `json:"event_type"`
-	SubsessionID     int64       `json:"subsession_id"`
-	StartTime        time.Time   `json:"start_time"`
-	EventID          int64       `json:"event_id"`
-	EventName        string      `json:"event_name"`
-	SimsessionType   int64       `json:"simsession_type"`
-	StartingPosition int64       `json:"starting_position"`
-	FinishPosition   int64       `json:"finish_position"`
-	BestLapTime      int64       `json:"best_lap_time"`
-	PercentRank      int64       `json:"percent_rank"`
-	CarID            int64       `json:"car_id"`
-	CarName          string      `json:"car_name"`
-	LogoURL          interface{} `json:"logo_url"`
-	Track            Track       `json:"track"`
+	EventType        string         `json:"event_type"`
+	SubsessionID     int64          `json:"subsession_id"`
+	StartTime        types.DateTime `json:"start_time"`
+	EventID          int64          `json:"event_id"`
+	EventName        string         `json:"event_name"`
+	SimsessionType   int64          `json:"simsession_type"`
+	StartingPosition int64          `json:"starting_position"`
+	FinishPosition   int64          `json:"finish_position"`
+	BestLapTime      int64          `json:"best_lap_time"`
+	PercentRank      int64          `json:"percent_rank"`
+	CarID            int64          `json:"car_id"`
+	CarName          string         `json:"car_name"`
+	LogoURL          interface{}    `json:"logo_url"`
+	Track            Track          `json:"track"`
 }
 
 type Track struct {

@@ -1,7 +1,7 @@
 package spectator_subsessionids_detail
 
 import (
-	"time"
+	"github.com/riccardotornesello/irapi-go/pkg/types"
 )
 
 type SeasonSpectatorSubsessionidsDetailParams struct {
@@ -17,10 +17,10 @@ type SeasonSpectatorSubsessionidsDetailResponse struct {
 }
 
 type Subsession struct {
-	SubsessionID int64     `json:"subsession_id"`
-	SessionID    int64     `json:"session_id"`
-	SeasonID     int64     `json:"season_id"`
-	StartTime    time.Time `json:"start_time"`
-	RaceWeekNum  int64     `json:"race_week_num"`
-	EventType    int64     `json:"event_type"`
+	SubsessionID int64          `json:"subsession_id"`
+	SessionID    int64          `json:"session_id"`
+	SeasonID     int64          `json:"season_id"`
+	StartTime    types.DateTime `json:"start_time"`
+	RaceWeekNum  int64          `json:"race_week_num"`
+	EventType    int64          `json:"event_type"`
 }

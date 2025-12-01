@@ -1,7 +1,7 @@
 package get
 
 import (
-	"time"
+	"github.com/riccardotornesello/irapi-go/pkg/types"
 )
 
 type CarGetResponse []CarGetResponseElement
@@ -23,8 +23,8 @@ type CarGetResponseElement struct {
 	CarTypes                []CarType      `json:"car_types"`
 	CarWeight               int64          `json:"car_weight"`
 	Categories              []string       `json:"categories"`
-	Created                 time.Time      `json:"created"`
-	FirstSale               time.Time      `json:"first_sale"`
+	Created                 types.DateTime `json:"created"`
+	FirstSale               types.DateTime `json:"first_sale"`
 	Folder                  string         `json:"folder"`
 	ForumURL                *string        `json:"forum_url,omitempty"`
 	FreeWithSubscription    bool           `json:"free_with_subscription"`

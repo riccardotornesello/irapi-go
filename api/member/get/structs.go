@@ -1,7 +1,7 @@
 package get
 
 import (
-	"time"
+	"github.com/riccardotornesello/irapi-go/pkg/types"
 )
 
 type MemberGetParams struct {
@@ -16,16 +16,16 @@ type MemberGetResponse struct {
 }
 
 type Member struct {
-	CustID         int64     `json:"cust_id"`
-	DisplayName    string    `json:"display_name"`
-	Helmet         Helmet    `json:"helmet"`
-	LastLogin      time.Time `json:"last_login"`
-	MemberSince    string    `json:"member_since"`
-	FlairID        int64     `json:"flair_id"`
-	FlairName      string    `json:"flair_name"`
-	FlairShortname string    `json:"flair_shortname"`
-	AI             bool      `json:"ai"`
-	Licenses       []License `json:"licenses,omitempty"`
+	CustID         int64          `json:"cust_id"`
+	DisplayName    string         `json:"display_name"`
+	Helmet         Helmet         `json:"helmet"`
+	LastLogin      types.DateTime `json:"last_login"`
+	MemberSince    string         `json:"member_since"`
+	FlairID        int64          `json:"flair_id"`
+	FlairName      string         `json:"flair_name"`
+	FlairShortname string         `json:"flair_shortname"`
+	AI             bool           `json:"ai"`
+	Licenses       []License      `json:"licenses,omitempty"`
 }
 
 type Helmet struct {

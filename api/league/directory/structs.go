@@ -1,7 +1,7 @@
 package directory
 
 import (
-	"time"
+	"github.com/riccardotornesello/irapi-go/pkg/types"
 )
 
 type LeagueDirectoryParams struct {
@@ -28,19 +28,19 @@ type LeagueDirectoryResponse struct {
 }
 
 type ResultsPage struct {
-	LeagueID           int64     `json:"league_id"`
-	OwnerID            int64     `json:"owner_id"`
-	LeagueName         string    `json:"league_name"`
-	Created            time.Time `json:"created"`
-	About              *string   `json:"about,omitempty"`
-	URL                *string   `json:"url,omitempty"`
-	RosterCount        int64     `json:"roster_count"`
-	Recruiting         bool      `json:"recruiting"`
-	IsAdmin            bool      `json:"is_admin"`
-	IsMember           bool      `json:"is_member"`
-	PendingApplication bool      `json:"pending_application"`
-	PendingInvitation  bool      `json:"pending_invitation"`
-	Owner              Owner     `json:"owner"`
+	LeagueID           int64          `json:"league_id"`
+	OwnerID            int64          `json:"owner_id"`
+	LeagueName         string         `json:"league_name"`
+	Created            types.DateTime `json:"created"`
+	About              *string        `json:"about,omitempty"`
+	URL                *string        `json:"url,omitempty"`
+	RosterCount        int64          `json:"roster_count"`
+	Recruiting         bool           `json:"recruiting"`
+	IsAdmin            bool           `json:"is_admin"`
+	IsMember           bool           `json:"is_member"`
+	PendingApplication bool           `json:"pending_application"`
+	PendingInvitation  bool           `json:"pending_invitation"`
+	Owner              Owner          `json:"owner"`
 }
 
 type Owner struct {

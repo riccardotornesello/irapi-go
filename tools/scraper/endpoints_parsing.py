@@ -211,15 +211,6 @@ class Endpoint:
             f"type {self.parameters_struct_name} struct {{\n    {struct_body}\n}}"
         )
 
-    def add_required_import(self, import_path: str) -> None:
-        """
-        Add a Go package import path to the required imports set.
-        
-        Args:
-            import_path (str): Full Go package import path.
-        """
-        self.required_imports.add(import_path)
-
     def fetch_sample_responses(self, cached: bool = True) -> bool:
         """
         Fetch sample responses from the API endpoint.
@@ -434,6 +425,13 @@ class Endpoint:
             self.required_imports.update(chunk_imports)
             self.required_imports.add("github.com/riccardotornesello/irapi-go/client")
 
+        # Replace Go's Time type with irapi-go's IRacingTime
+        if "time.Time" in self.response_struct:
+            self.response_struct = self.response_struct.replace(
+                "time.Time", "types.DateTime"
+            )
+            self.required_imports.add("github.com/riccardotornesello/irapi-go/pkg/types")
+            self.required_imports.remove("time")
 
 def _parse_iracing_notes(notes: str | list[str] | None) -> list[str]:
     """
