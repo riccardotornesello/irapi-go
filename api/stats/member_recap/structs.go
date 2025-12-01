@@ -1,9 +1,9 @@
 package member_recap
 
 type StatsMemberRecapParams struct {
-	CustId int `url:"cust_id,omitempty,comma"`
-	Year   int `url:"year,omitempty,comma"`
-	Season int `url:"season,omitempty,comma"`
+	CustId *int `url:"cust_id,omitempty,comma"`
+	Year   *int `url:"year,omitempty,comma"`
+	Season *int `url:"season,omitempty,comma"`
 }
 
 type StatsMemberRecapResponse struct {

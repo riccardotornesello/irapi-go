@@ -6,10 +6,10 @@ import (
 )
 
 type ResultsLapDataParams struct {
-	SubsessionId     int `url:"subsession_id,omitempty,comma"`
-	SimsessionNumber int `url:"simsession_number,omitempty,comma"`
-	CustId           int `url:"cust_id,omitempty,comma"`
-	TeamId           int `url:"team_id,omitempty,comma"`
+	SubsessionId     int  `url:"subsession_id,comma"`
+	SimsessionNumber int  `url:"simsession_number,comma"`
+	CustId           *int `url:"cust_id,omitempty,comma"`
+	TeamId           *int `url:"team_id,omitempty,comma"`
 }
 
 type ResultsLapDataResponse struct {

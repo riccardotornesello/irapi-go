@@ -1,8 +1,8 @@
 package roster
 
 type LeagueRosterParams struct {
-	LeagueId        int  `url:"league_id,omitempty,comma"`
-	IncludeLicenses bool `url:"include_licenses,omitempty,comma"`
+	LeagueId        int   `url:"league_id,comma"`
+	IncludeLicenses *bool `url:"include_licenses,omitempty,comma"`
 }
 
 type LeagueRosterResponse struct {

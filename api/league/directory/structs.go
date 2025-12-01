@@ -5,18 +5,18 @@ import (
 )
 
 type LeagueDirectoryParams struct {
-	Search               string `url:"search,omitempty,comma"`
-	Tag                  string `url:"tag,omitempty,comma"`
-	RestrictToMember     bool   `url:"restrict_to_member,omitempty,comma"`
-	RestrictToRecruiting bool   `url:"restrict_to_recruiting,omitempty,comma"`
-	RestrictToFriends    bool   `url:"restrict_to_friends,omitempty,comma"`
-	RestrictToWatched    bool   `url:"restrict_to_watched,omitempty,comma"`
-	MinimumRosterCount   int    `url:"minimum_roster_count,omitempty,comma"`
-	MaximumRosterCount   int    `url:"maximum_roster_count,omitempty,comma"`
-	Lowerbound           int    `url:"lowerbound,omitempty,comma"`
-	Upperbound           int    `url:"upperbound,omitempty,comma"`
-	Sort                 string `url:"sort,omitempty,comma"`
-	Order                string `url:"order,omitempty,comma"`
+	Search               *string `url:"search,omitempty,comma"`
+	Tag                  *string `url:"tag,omitempty,comma"`
+	RestrictToMember     *bool   `url:"restrict_to_member,omitempty,comma"`
+	RestrictToRecruiting *bool   `url:"restrict_to_recruiting,omitempty,comma"`
+	RestrictToFriends    *bool   `url:"restrict_to_friends,omitempty,comma"`
+	RestrictToWatched    *bool   `url:"restrict_to_watched,omitempty,comma"`
+	MinimumRosterCount   *int    `url:"minimum_roster_count,omitempty,comma"`
+	MaximumRosterCount   *int    `url:"maximum_roster_count,omitempty,comma"`
+	Lowerbound           *int    `url:"lowerbound,omitempty,comma"`
+	Upperbound           *int    `url:"upperbound,omitempty,comma"`
+	Sort                 *string `url:"sort,omitempty,comma"`
+	Order                *string `url:"order,omitempty,comma"`
 }
 
 type LeagueDirectoryResponse struct {

@@ -1,8 +1,8 @@
 package get_points_systems
 
 type LeagueGetPointsSystemsParams struct {
-	LeagueId int `url:"league_id,omitempty,comma"`
-	SeasonId int `url:"season_id,omitempty,comma"`
+	LeagueId int  `url:"league_id,comma"`
+	SeasonId *int `url:"season_id,omitempty,comma"`
 }
 
 type LeagueGetPointsSystemsResponse struct {

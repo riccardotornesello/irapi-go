@@ -1,8 +1,8 @@
 package seasons
 
 type LeagueSeasonsParams struct {
-	LeagueId int  `url:"league_id,omitempty,comma"`
-	Retired  bool `url:"retired,omitempty,comma"`
+	LeagueId int   `url:"league_id,comma"`
+	Retired  *bool `url:"retired,omitempty,comma"`
 }
 
 type LeagueSeasonsResponse struct {

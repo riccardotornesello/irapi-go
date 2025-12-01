@@ -5,8 +5,8 @@ import (
 )
 
 type TeamGetParams struct {
-	TeamId          int  `url:"team_id,omitempty,comma"`
-	IncludeLicenses bool `url:"include_licenses,omitempty,comma"`
+	TeamId          int   `url:"team_id,comma"`
+	IncludeLicenses *bool `url:"include_licenses,omitempty,comma"`
 }
 
 type TeamGetResponse struct {

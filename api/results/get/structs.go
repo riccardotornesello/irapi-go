@@ -5,8 +5,8 @@ import (
 )
 
 type ResultsGetParams struct {
-	SubsessionId    int  `url:"subsession_id,omitempty,comma"`
-	IncludeLicenses bool `url:"include_licenses,omitempty,comma"`
+	SubsessionId    int   `url:"subsession_id,comma"`
+	IncludeLicenses *bool `url:"include_licenses,omitempty,comma"`
 }
 
 type ResultsGetResponse struct {

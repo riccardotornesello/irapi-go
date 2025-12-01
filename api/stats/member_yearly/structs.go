@@ -1,7 +1,7 @@
 package member_yearly
 
 type StatsMemberYearlyParams struct {
-	CustId int `url:"cust_id,omitempty,comma"`
+	CustId *int `url:"cust_id,omitempty,comma"`
 }
 
 type StatsMemberYearlyResponse struct {

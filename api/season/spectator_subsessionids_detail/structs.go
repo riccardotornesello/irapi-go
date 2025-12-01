@@ -5,8 +5,8 @@ import (
 )
 
 type SeasonSpectatorSubsessionidsDetailParams struct {
-	EventTypes []int `url:"event_types,omitempty,comma"`
-	SeasonIds  []int `url:"season_ids,omitempty,comma"`
+	EventTypes *[]int `url:"event_types,omitempty,comma"`
+	SeasonIds  *[]int `url:"season_ids,omitempty,comma"`
 }
 
 type SeasonSpectatorSubsessionidsDetailResponse struct {

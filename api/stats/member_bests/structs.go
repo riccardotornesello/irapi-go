@@ -5,8 +5,8 @@ import (
 )
 
 type StatsMemberBestsParams struct {
-	CustId int `url:"cust_id,omitempty,comma"`
-	CarId  int `url:"car_id,omitempty,comma"`
+	CustId *int `url:"cust_id,omitempty,comma"`
+	CarId  *int `url:"car_id,omitempty,comma"`
 }
 
 type StatsMemberBestsResponse struct {

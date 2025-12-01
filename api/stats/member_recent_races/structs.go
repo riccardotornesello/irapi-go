@@ -5,7 +5,7 @@ import (
 )
 
 type StatsMemberRecentRacesParams struct {
-	CustId int `url:"cust_id,omitempty,comma"`
+	CustId *int `url:"cust_id,omitempty,comma"`
 }
 
 type StatsMemberRecentRacesResponse struct {

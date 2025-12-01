@@ -5,8 +5,8 @@ import (
 )
 
 type LeagueCustLeagueSessionsParams struct {
-	Mine      bool `url:"mine,omitempty,comma"`
-	PackageId int  `url:"package_id,omitempty,comma"`
+	Mine      *bool `url:"mine,omitempty,comma"`
+	PackageId *int  `url:"package_id,omitempty,comma"`
 }
 
 type LeagueCustLeagueSessionsResponse struct {
@@ -97,7 +97,7 @@ type Session struct {
 	MaxAIDrivers                      int64              `json:"max_ai_drivers"`
 	AIAvoidPlayers                    bool               `json:"ai_avoid_players"`
 	AdaptiveAIEnabled                 bool               `json:"adaptive_ai_enabled"`
-	AdaptiveAIDifficulty              int64              `json:"adaptive_ai_difficulty"`
+	AdaptiveAIDifficulty              *int64             `json:"adaptive_ai_difficulty,omitempty"`
 	MustUseDiffTireTypesInRace        bool               `json:"must_use_diff_tire_types_in_race"`
 	StartZone                         bool               `json:"start_zone"`
 	EnablePitlaneCollisions           bool               `json:"enable_pitlane_collisions"`
@@ -138,6 +138,9 @@ type Session struct {
 	HeatSesInfo                       *HeatSesInfo       `json:"heat_ses_info,omitempty"`
 	AltAssetID                        *int64             `json:"alt_asset_id,omitempty"`
 	RaceLengthType                    *int64             `json:"race_length_type,omitempty"`
+	AIMinSkill                        *int64             `json:"ai_min_skill,omitempty"`
+	AIMaxSkill                        *int64             `json:"ai_max_skill,omitempty"`
+	AIRosterName                      *string            `json:"ai_roster_name,omitempty"`
 }
 
 type Host struct {
@@ -218,7 +221,7 @@ type HeatSesInfo struct {
 	ConsolationScoresChampPoints         bool           `json:"consolation_scores_champ_points"`
 	Created                              types.DateTime `json:"created"`
 	CustID                               int64          `json:"cust_id"`
-	Description                          string         `json:"description"`
+	Description                          *string        `json:"description,omitempty"`
 	HeatCautionType                      int64          `json:"heat_caution_type"`
 	HeatInfoID                           int64          `json:"heat_info_id"`
 	HeatInfoName                         string         `json:"heat_info_name"`

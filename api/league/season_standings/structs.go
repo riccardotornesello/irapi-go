@@ -1,10 +1,10 @@
 package season_standings
 
 type LeagueSeasonStandingsParams struct {
-	LeagueId   int `url:"league_id,omitempty,comma"`
-	SeasonId   int `url:"season_id,omitempty,comma"`
-	CarClassId int `url:"car_class_id,omitempty,comma"`
-	CarId      int `url:"car_id,omitempty,comma"`
+	LeagueId   int  `url:"league_id,comma"`
+	SeasonId   int  `url:"season_id,comma"`
+	CarClassId *int `url:"car_class_id,omitempty,comma"`
+	CarId      *int `url:"car_id,omitempty,comma"`
 }
 
 type LeagueSeasonStandingsResponse struct {

@@ -1,7 +1,7 @@
 package awards
 
 type MemberAwardsParams struct {
-	CustId int `url:"cust_id,omitempty,comma"`
+	CustId *int `url:"cust_id,omitempty,comma"`
 }
 
 type MemberAwardsResponse struct {

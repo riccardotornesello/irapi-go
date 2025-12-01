@@ -5,8 +5,8 @@ import (
 )
 
 type MemberGetParams struct {
-	CustIds         []int `url:"cust_ids,omitempty,comma"`
-	IncludeLicenses bool  `url:"include_licenses,omitempty,comma"`
+	CustIds         []int `url:"cust_ids,comma"`
+	IncludeLicenses *bool `url:"include_licenses,omitempty,comma"`
 }
 
 type MemberGetResponse struct {

@@ -1,7 +1,7 @@
 package member_career
 
 type StatsMemberCareerParams struct {
-	CustId int `url:"cust_id,omitempty,comma"`
+	CustId *int `url:"cust_id,omitempty,comma"`
 }
 
 type StatsMemberCareerResponse struct {

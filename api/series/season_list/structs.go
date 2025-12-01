@@ -5,9 +5,9 @@ import (
 )
 
 type SeriesSeasonListParams struct {
-	IncludeSeries bool `url:"include_series,omitempty,comma"`
-	SeasonYear    int  `url:"season_year,omitempty,comma"`
-	SeasonQuarter int  `url:"season_quarter,omitempty,comma"`
+	IncludeSeries *bool `url:"include_series,omitempty,comma"`
+	SeasonYear    *int  `url:"season_year,omitempty,comma"`
+	SeasonQuarter *int  `url:"season_quarter,omitempty,comma"`
 }
 
 type SeriesSeasonListResponse struct {
