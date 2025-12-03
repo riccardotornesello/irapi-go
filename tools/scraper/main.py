@@ -48,6 +48,8 @@ def main() -> None:
     api_client = APIClient(
         email=os.getenv("IRACING_EMAIL"),
         password=os.getenv("IRACING_PASSWORD"),
+        client_id=os.getenv("IRACING_CLIENT_ID"),
+        client_secret=os.getenv("IRACING_CLIENT_SECRET"),
     )
 
     # Get the list of available endpoints and parse them

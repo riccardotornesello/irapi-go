@@ -97,7 +97,6 @@ This project is in its early stages and will grow a lot in the coming period.
 
 Here are the highest priority tasks:
 
-- document the scraping tool and update it to work with the new oauth flow
 - generate more endpoints with the scraping tool
 - add tests to endpoints and client generation
 - parse csv endpoints and add types
