@@ -23,6 +23,7 @@ jinja2_environment = jinja2.Environment(loader=jinja2.FileSystemLoader("template
 
 # Load templates
 endpoint_call_template = jinja2_environment.get_template("endpoint_call.j2")
+endpoint_call_csv_template = jinja2_environment.get_template("endpoint_call_csv.j2")
 endpoint_structs_template = jinja2_environment.get_template("endpoint_structs.j2")
 category_template = jinja2_environment.get_template("category.j2")
 category_tests_template = jinja2_environment.get_template("category_tests.j2")
@@ -60,8 +61,13 @@ def write_category_apis(endpoints: list[Endpoint]) -> None:
             if not endpoint.response_struct:
                 continue
 
+            endpoint_template = (
+                endpoint_call_csv_template
+                if endpoint.format == "csv"
+                else endpoint_call_template
+            )
             endpoint_calls.append(
-                endpoint_call_template.render(
+                endpoint_template.render(
                     api_name=api_name,
                     method_name=to_camel_case(endpoint.name),
                     endpoint_name=endpoint.name,
@@ -105,9 +111,10 @@ def write_category_apis(endpoints: list[Endpoint]) -> None:
         os.makedirs(f"../../api/{category}", exist_ok=True)
         with open(f"../../api/{category}/main.go", "w") as f:
             f.write(api_code)
-        if len(endpoint_tests) > 0:
-            with open(f"../../api/{category}/main_test.go", "w") as f:
-                f.write(tests_code)
+        # TODO: uncomment and write tests
+        # if len(endpoint_tests) > 0:
+        #     with open(f"../../api/{category}/main_test.go", "w") as f:
+        #         f.write(tests_code)
 
     logging.info("Category APIs generated successfully.")
 

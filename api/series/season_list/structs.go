@@ -62,7 +62,6 @@ type Season struct {
 	OpenPracticeSessionTypeID  int64                `json:"open_practice_session_type_id"`
 	QualifierMustStartRace     bool                 `json:"qualifier_must_start_race"`
 	RaceWeek                   int64                `json:"race_week"`
-	RaceWeekCarClassIDS        []RaceWeekCarClassID `json:"race_week_car_class_ids,omitempty"`
 	RaceWeekToMakeDivisions    int64                `json:"race_week_to_make_divisions"`
 	RegUserCount               int64                `json:"reg_user_count"`
 	RegionCompetition          bool                 `json:"region_competition"`
@@ -70,7 +69,6 @@ type Season struct {
 	RestrictToCar              bool                 `json:"restrict_to_car"`
 	RestrictViewing            bool                 `json:"restrict_viewing"`
 	ScheduleDescription        string               `json:"schedule_description"`
-	ScoreAsCarclassid          *int64               `json:"score_as_carclassid,omitempty"`
 	SeasonQuarter              int64                `json:"season_quarter"`
 	SeasonShortName            string               `json:"season_short_name"`
 	SeasonYear                 int64                `json:"season_year"`
@@ -82,9 +80,11 @@ type Season struct {
 	StartZone                  bool                 `json:"start_zone"`
 	TrackTypes                 []TrackType          `json:"track_types"`
 	UnsportConductRuleMode     int64                `json:"unsport_conduct_rule_mode"`
+	RaceWeekCarClassIDS        []RaceWeekCarClassID `json:"race_week_car_class_ids,omitempty"`
+	ScoreAsCarclassid          *int64               `json:"score_as_carclassid,omitempty"`
+	HeatSesInfo                *HeatSesInfo         `json:"heat_ses_info,omitempty"`
 	RookieSeason               *string              `json:"rookie_season,omitempty"`
 	RegOpenMinutes             *int64               `json:"reg_open_minutes,omitempty"`
-	HeatSesInfo                *HeatSesInfo         `json:"heat_ses_info,omitempty"`
 }
 
 type CarType struct {
@@ -107,17 +107,17 @@ type CarRestriction struct {
 	MaxDryTireSets  int64   `json:"max_dry_tire_sets"`
 	MaxPctFuelFill  int64   `json:"max_pct_fuel_fill"`
 	PowerAdjustPct  float64 `json:"power_adjust_pct"`
-	RaceSetupID     *int64  `json:"race_setup_id,omitempty"`
 	WeightPenaltyKg int64   `json:"weight_penalty_kg"`
+	RaceSetupID     *int64  `json:"race_setup_id,omitempty"`
 	QualSetupID     *int64  `json:"qual_setup_id,omitempty"`
 }
 
 type Track struct {
 	Category   string  `json:"category"`
 	CategoryID int64   `json:"category_id"`
+	ConfigName *string `json:"config_name,omitempty"`
 	TrackID    int64   `json:"track_id"`
 	TrackName  string  `json:"track_name"`
-	ConfigName *string `json:"config_name,omitempty"`
 }
 
 type Elig struct {

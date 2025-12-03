@@ -66,7 +66,6 @@ type SeriesSeasonsResponseElement struct {
 	RestrictViewing            bool               `json:"restrict_viewing"`
 	ScheduleDescription        string             `json:"schedule_description"`
 	Schedules                  []Schedule         `json:"schedules"`
-	ScoreAsCarclassid          *int64             `json:"score_as_carclassid,omitempty"`
 	SeasonQuarter              int64              `json:"season_quarter"`
 	SeasonShortName            string             `json:"season_short_name"`
 	SeasonYear                 int64              `json:"season_year"`
@@ -78,9 +77,10 @@ type SeriesSeasonsResponseElement struct {
 	StartZone                  bool               `json:"start_zone"`
 	TrackTypes                 []TrackType        `json:"track_types"`
 	UnsportConductRuleMode     int64              `json:"unsport_conduct_rule_mode"`
+	ScoreAsCarclassid          *int64             `json:"score_as_carclassid,omitempty"`
+	HeatSesInfo                *HeatSesInfo       `json:"heat_ses_info,omitempty"`
 	RookieSeason               *string            `json:"rookie_season,omitempty"`
 	RegOpenMinutes             *int64             `json:"reg_open_minutes,omitempty"`
-	HeatSesInfo                *HeatSesInfo       `json:"heat_ses_info,omitempty"`
 }
 
 type CarType struct {
@@ -176,20 +176,20 @@ type CarRestriction struct {
 	MaxDryTireSets  int64   `json:"max_dry_tire_sets"`
 	MaxPctFuelFill  int64   `json:"max_pct_fuel_fill"`
 	PowerAdjustPct  float64 `json:"power_adjust_pct"`
-	RaceSetupID     *int64  `json:"race_setup_id,omitempty"`
 	WeightPenaltyKg int64   `json:"weight_penalty_kg"`
+	RaceSetupID     *int64  `json:"race_setup_id,omitempty"`
 	QualSetupID     *int64  `json:"qual_setup_id,omitempty"`
 }
 
 type RaceTimeDescriptor struct {
-	Repeating        bool             `json:"repeating"`
-	SessionMinutes   int64            `json:"session_minutes"`
-	SessionTimes     []types.DateTime `json:"session_times,omitempty"`
-	SuperSession     bool             `json:"super_session"`
 	DayOffset        []int64          `json:"day_offset,omitempty"`
 	FirstSessionTime *string          `json:"first_session_time,omitempty"`
 	RepeatMinutes    *int64           `json:"repeat_minutes,omitempty"`
+	Repeating        bool             `json:"repeating"`
+	SessionMinutes   int64            `json:"session_minutes"`
 	StartDate        *string          `json:"start_date,omitempty"`
+	SuperSession     bool             `json:"super_session"`
+	SessionTimes     []types.DateTime `json:"session_times,omitempty"`
 }
 
 type RaceWeekCar struct {
@@ -201,14 +201,15 @@ type RaceWeekCar struct {
 type Track struct {
 	Category   string  `json:"category"`
 	CategoryID int64   `json:"category_id"`
+	ConfigName *string `json:"config_name,omitempty"`
 	TrackID    int64   `json:"track_id"`
 	TrackName  string  `json:"track_name"`
-	ConfigName *string `json:"config_name,omitempty"`
 }
 
 type TrackState struct {
 	LeaveMarbles   bool   `json:"leave_marbles"`
 	PracticeRubber *int64 `json:"practice_rubber,omitempty"`
+	RaceRubber     *int64 `json:"race_rubber,omitempty"`
 }
 
 type Weather struct {
@@ -237,15 +238,15 @@ type Weather struct {
 }
 
 type ForecastOptions struct {
-	AllowFog      bool  `json:"allow_fog"`
-	ForecastType  int64 `json:"forecast_type"`
-	Precipitation int64 `json:"precipitation"`
-	Skies         int64 `json:"skies"`
-	StopPrecip    int64 `json:"stop_precip"`
-	Temperature   int64 `json:"temperature"`
-	WeatherSeed   int64 `json:"weather_seed"`
-	WindDir       int64 `json:"wind_dir"`
-	WindSpeed     int64 `json:"wind_speed"`
+	AllowFog      bool   `json:"allow_fog"`
+	ForecastType  int64  `json:"forecast_type"`
+	Precipitation int64  `json:"precipitation"`
+	Skies         int64  `json:"skies"`
+	StopPrecip    int64  `json:"stop_precip"`
+	Temperature   int64  `json:"temperature"`
+	WeatherSeed   *int64 `json:"weather_seed,omitempty"`
+	WindDir       int64  `json:"wind_dir"`
+	WindSpeed     int64  `json:"wind_speed"`
 }
 
 type WeatherSummary struct {

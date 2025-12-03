@@ -6,3 +6,5 @@ require (
 	github.com/google/go-querystring v1.1.0
 	github.com/joho/godotenv v1.5.1
 )
+
+require github.com/jszwec/csvutil v1.10.0 // indirect

@@ -26,6 +26,7 @@ from format import to_camel_case
 from api_client import APIClient
 from typing import Literal
 from data import OVERRIDES
+from utils.infer_schema import infer_schema
 from utils.quicktype import run_quicktype
 
 
@@ -136,7 +137,7 @@ class Endpoint:
     notes: list[str]
     parameters: list[EndpointParameter]
 
-    format: Literal["json", "csv"] = "json"
+    format: Literal["json", "csv"]
     s3_cache: bool
 
     sample_responses_parsed: bool = False
@@ -176,6 +177,7 @@ class Endpoint:
             EndpointParameter(category_name, endpoint_name, param_name, param_data)
             for param_name, param_data in endpoint_data.get("parameters", {}).items()
         ]
+        self.format = OVERRIDES.get(self.category, {}).get(self.name, {}).get("format", "json")
 
         self.required_imports = set()
         self.s3_cache = (
@@ -226,15 +228,14 @@ class Endpoint:
         Returns:
             bool: True if successful, False if fetching failed or was skipped.
         """
-        # TODO: handle driver_stats_by_category
-        if self.category == "driver_stats_by_category":
-            logging.warning(
-                f"Skipping sample response fetch for {self.category}__{self.name} due to complexity."
-            )
-            return False
-
         responses_folder = f"output/responses/{self.category}/{self.name}"
         os.makedirs(responses_folder, exist_ok=True)
+        
+        # If the file is a CSV and is already cached, skip fetching
+        if self.format == "csv":
+            if len(os.listdir(responses_folder)) > 0:
+                self.sample_responses_parsed = True
+                return True
 
         # If the cache is enabled and we have files, skip fetching
         if len(os.listdir(responses_folder)) > 0 and cached:
@@ -286,10 +287,11 @@ class Endpoint:
                 f.write(sample_response)
 
             # Save the chunks if any
-            response_data = json.loads(sample_response)
-            if isinstance(response_data, dict) and response_data.get("chunk_info"):
-                if not self.fetch_sample_chunks(response_data["chunk_info"], timestamp, i):
-                    return False
+            if self.format == "json":
+                response_data = json.loads(sample_response)
+                if isinstance(response_data, dict) and response_data.get("chunk_info"):
+                    if not self.fetch_sample_chunks(response_data["chunk_info"], timestamp, i):
+                        return False
 
         self.sample_responses_parsed = True
         return True
@@ -351,11 +353,45 @@ class Endpoint:
                 f"Skipped: {self.category}__{self.name} (no sample response)"
             )
             return
-
+        
         # Generate the files used as input for quicktype
         responses_folder = f"output/responses/{self.category}/{self.name}"
         inputs_folder = f"output/inputs/{self.category}/{self.name}"
         os.makedirs(inputs_folder, exist_ok=True)
+
+        self.response_struct_name = to_camel_case(
+            f"{self.category}__{self.name}__Response"
+        )
+
+        if self.format == "csv":
+            csv_schema_folder = f"output/csv_schemas/{self.category}/"
+            os.makedirs(csv_schema_folder, exist_ok=True)
+
+            response_file_name = f"{responses_folder}/{os.listdir(responses_folder)[0]}"
+            csv_schema_file_name = f"{csv_schema_folder}/{self.name}__schema.json"
+
+            with open(csv_schema_file_name, "w") as f:
+                res = infer_schema(response_file_name)
+
+                del res["description"]
+                del res["title"]
+                res["type"] = "object"
+                for c in res["properties"].keys():
+                    del res["properties"][c]["description"]
+
+                for c in res["properties"].keys():
+                    if res["properties"][c]["type"] == ["integer", "number"]:
+                        res["properties"][c]["type"] = "number"
+
+                f.write(json.dumps(res, sort_keys=True, indent=2))
+
+            self.response_struct, self.required_imports = run_quicktype(
+                self.response_struct_name,
+                csv_schema_file_name,
+                "schema",
+            )
+
+            return
 
         for f in os.listdir(responses_folder):
             if not f.startswith(f"response__"):
@@ -380,10 +416,6 @@ class Endpoint:
                 )
 
         # Generate the response struct
-        self.response_struct_name = to_camel_case(
-            f"{self.category}__{self.name}__Response"
-        )
-
         self.response_struct, self.required_imports = run_quicktype(
             self.response_struct_name,
             f"output/inputs/{self.category}/{self.name}/response__*",

@@ -13,7 +13,9 @@ import subprocess
 
 
 def run_quicktype(
-    struct_name: str, source_files: str
+    struct_name: str,
+    source_files: str,
+    src_lang: str = "json",
 ) -> tuple[set[str], str] | tuple[None, None]:
     """
     Run the quicktype command to generate Go types from JSON files.
@@ -24,6 +26,7 @@ def run_quicktype(
     Args:
         struct_name (str): Name for the root struct to generate.
         source_files (str): Glob pattern for JSON source files to analyze.
+        src_lang (str): Source language of the input files (default: "json").
         
     Returns:
         tuple[str, set[str]] | tuple[None, None]: A tuple containing:
@@ -39,7 +42,7 @@ def run_quicktype(
         "--src",
         source_files,
         "--src-lang",
-        "json",
+        src_lang,
         "--lang",
         "go",
         "--just-types",

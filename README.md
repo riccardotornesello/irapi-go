@@ -99,7 +99,6 @@ Here are the highest priority tasks:
 
 - generate more endpoints with the scraping tool
 - add tests to endpoints and client generation
-- parse csv endpoints and add types
 
 ## Scraping Tool
 

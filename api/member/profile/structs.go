@@ -77,24 +77,29 @@ type Helmet struct {
 }
 
 type RecentAward struct {
-	MemberAwardID      int64  `json:"member_award_id"`
-	AwardID            int64  `json:"award_id"`
-	Achievement        bool   `json:"achievement"`
-	AwardCount         int64  `json:"award_count"`
-	AwardDate          string `json:"award_date"`
-	AwardOrder         int64  `json:"award_order"`
-	AwardedDescription string `json:"awarded_description"`
-	CustID             int64  `json:"cust_id"`
-	Description        string `json:"description"`
-	GroupName          string `json:"group_name"`
-	HasPDF             bool   `json:"has_pdf"`
-	IconURLLarge       string `json:"icon_url_large"`
-	IconURLSmall       string `json:"icon_url_small"`
-	IconURLUnawarded   string `json:"icon_url_unawarded"`
-	Name               string `json:"name"`
-	SubsessionID       int64  `json:"subsession_id"`
-	Viewed             bool   `json:"viewed"`
-	Weight             int64  `json:"weight"`
+	MemberAwardID      int64   `json:"member_award_id"`
+	AwardID            int64   `json:"award_id"`
+	Achievement        bool    `json:"achievement"`
+	AwardCount         int64   `json:"award_count"`
+	AwardDate          string  `json:"award_date"`
+	AwardOrder         int64   `json:"award_order"`
+	AwardedDescription string  `json:"awarded_description"`
+	CustID             int64   `json:"cust_id"`
+	Description        string  `json:"description"`
+	GroupName          string  `json:"group_name"`
+	HasPDF             bool    `json:"has_pdf"`
+	IconURLLarge       string  `json:"icon_url_large"`
+	IconURLSmall       string  `json:"icon_url_small"`
+	IconURLUnawarded   string  `json:"icon_url_unawarded"`
+	Name               string  `json:"name"`
+	SubsessionID       *int64  `json:"subsession_id,omitempty"`
+	Viewed             bool    `json:"viewed"`
+	Weight             int64   `json:"weight"`
+	Progress           *int64  `json:"progress,omitempty"`
+	ProgressLabel      *string `json:"progress_label,omitempty"`
+	ProgressText       *string `json:"progress_text,omitempty"`
+	ProgressTextLabel  *string `json:"progress_text_label,omitempty"`
+	Threshold          *int64  `json:"threshold,omitempty"`
 }
 
 type RecentEvent struct {

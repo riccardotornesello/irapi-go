@@ -1,6 +1,7 @@
 package client
 
 import (
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -9,6 +10,7 @@ import (
 	"time"
 
 	"github.com/google/go-querystring/query"
+	"github.com/jszwec/csvutil"
 	"github.com/riccardotornesello/irapi-go/client/logger"
 )
 
@@ -177,4 +179,34 @@ func GetJson[T any](c *ApiClient, path string, parameters interface{}) (*T, erro
 	}
 
 	return response, nil
+}
+
+func GetCsv[T any](c *ApiClient, path string, parameters interface{}) ([]T, error) {
+	responseLink, err := c.GetResourceUrl(path, parameters)
+	if err != nil {
+		return nil, err
+	}
+
+	payloadRes, err := http.DefaultClient.Get(responseLink)
+	if err != nil {
+		return nil, err
+	}
+	defer payloadRes.Body.Close()
+
+	reader := csv.NewReader(payloadRes.Body)
+
+	var header T
+	userHeader, _ := csvutil.Header(header, "csv")
+	dec, _ := csvutil.NewDecoder(reader, userHeader...)
+
+	var rows []T
+	for {
+		var row T
+		if err := dec.Decode(&row); err == io.EOF {
+			break
+		}
+		rows = append(rows, row)
+	}
+
+	return rows, nil
 }
