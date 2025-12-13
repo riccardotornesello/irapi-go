@@ -11,7 +11,7 @@ package main
 
 import (
 	irapi "github.com/riccardotornesello/irapi-go"
-	"github.com/riccardotornesello/irapi-go/api/member/get"
+	"github.com/riccardotornesello/irapi-go/pkg/api/member/get"
 )
 
 func main() {

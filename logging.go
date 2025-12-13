@@ -3,7 +3,7 @@ package irapi
 import (
 	"io"
 
-	"github.com/riccardotornesello/irapi-go/client/logger"
+	"github.com/riccardotornesello/irapi-go/pkg/logger"
 )
 
 // LogLevel represents the logging level for the iRacing API client.

@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/joho/godotenv"
-	"github.com/riccardotornesello/irapi-go/client"
+	"github.com/riccardotornesello/irapi-go/pkg/client"
 )
 
 func GetApiClient(t *testing.T) *client.ApiClient {

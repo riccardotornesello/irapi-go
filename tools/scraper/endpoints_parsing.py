@@ -455,7 +455,7 @@ class Endpoint:
             # Append the chunk struct to the response struct
             self.response_struct += f"\n\n{chunk_struct}"
             self.required_imports.update(chunk_imports)
-            self.required_imports.add("github.com/riccardotornesello/irapi-go/client")
+            self.required_imports.add("github.com/riccardotornesello/irapi-go/pkg/client")
 
         # Replace Go's Time type with irapi-go's IRacingTime
         if "time.Time" in self.response_struct:

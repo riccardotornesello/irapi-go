@@ -55,7 +55,7 @@ def write_category_apis(endpoints: list[Endpoint]) -> None:
 
         endpoint_calls = []
         endpoint_tests = []
-        required_imports = {"github.com/riccardotornesello/irapi-go/client"}
+        required_imports = {"github.com/riccardotornesello/irapi-go/pkg/client"}
         test_packages = []
         for endpoint in endpoints:
             if not endpoint.response_struct:
@@ -80,7 +80,7 @@ def write_category_apis(endpoints: list[Endpoint]) -> None:
                 )
             )
             required_imports.add(
-                f"github.com/riccardotornesello/irapi-go/api/{category}/{endpoint.name}"
+                f"github.com/riccardotornesello/irapi-go/pkg/api/{category}/{endpoint.name}"
             )
 
             endpoint_tests.append(
@@ -93,7 +93,7 @@ def write_category_apis(endpoints: list[Endpoint]) -> None:
             )
             if endpoint.parameters_struct_name:
                 test_packages.append(
-                    f"github.com/riccardotornesello/irapi-go/api/{category}/{endpoint.name}"
+                    f"github.com/riccardotornesello/irapi-go/pkg/api/{category}/{endpoint.name}"
                 )
 
         api_code = category_template.render(
