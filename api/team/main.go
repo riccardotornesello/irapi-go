@@ -7,11 +7,17 @@ import (
 )
 
 type TeamApi struct {
-	Client *client.ApiClient
+	client *client.ApiClient
+}
+
+func NewTeamApi(client *client.ApiClient) *TeamApi {
+	return &TeamApi{
+		client: client,
+	}
 }
 
 func (api *TeamApi) Get(parameters *get.TeamGetParams) (*get.TeamGetResponse, error) {
-	resp, err := client.GetJson[get.TeamGetResponse](api.Client, "/data/team/get", parameters)
+	resp, err := client.GetJson[get.TeamGetResponse](api.client, "/data/team/get", parameters)
 	if err != nil {
 		return nil, err
 	}
@@ -20,7 +26,7 @@ func (api *TeamApi) Get(parameters *get.TeamGetParams) (*get.TeamGetResponse, er
 }
 
 func (api *TeamApi) Membership() (*membership.TeamMembershipResponse, error) {
-	resp, err := client.GetJson[membership.TeamMembershipResponse](api.Client, "/data/team/membership", nil)
+	resp, err := client.GetJson[membership.TeamMembershipResponse](api.client, "/data/team/membership", nil)
 	if err != nil {
 		return nil, err
 	}

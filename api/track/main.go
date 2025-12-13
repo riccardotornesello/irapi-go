@@ -7,11 +7,17 @@ import (
 )
 
 type TrackApi struct {
-	Client *client.ApiClient
+	client *client.ApiClient
+}
+
+func NewTrackApi(client *client.ApiClient) *TrackApi {
+	return &TrackApi{
+		client: client,
+	}
 }
 
 func (api *TrackApi) Assets() (*assets.TrackAssetsResponse, error) {
-	resp, err := client.GetJson[assets.TrackAssetsResponse](api.Client, "/data/track/assets", nil)
+	resp, err := client.GetJson[assets.TrackAssetsResponse](api.client, "/data/track/assets", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -20,7 +26,7 @@ func (api *TrackApi) Assets() (*assets.TrackAssetsResponse, error) {
 }
 
 func (api *TrackApi) Get() (*get.TrackGetResponse, error) {
-	resp, err := client.GetJson[get.TrackGetResponse](api.Client, "/data/track/get", nil)
+	resp, err := client.GetJson[get.TrackGetResponse](api.client, "/data/track/get", nil)
 	if err != nil {
 		return nil, err
 	}

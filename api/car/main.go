@@ -7,11 +7,17 @@ import (
 )
 
 type CarApi struct {
-	Client *client.ApiClient
+	client *client.ApiClient
+}
+
+func NewCarApi(client *client.ApiClient) *CarApi {
+	return &CarApi{
+		client: client,
+	}
 }
 
 func (api *CarApi) Assets() (*assets.CarAssetsResponse, error) {
-	resp, err := client.GetJson[assets.CarAssetsResponse](api.Client, "/data/car/assets", nil)
+	resp, err := client.GetJson[assets.CarAssetsResponse](api.client, "/data/car/assets", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -20,7 +26,7 @@ func (api *CarApi) Assets() (*assets.CarAssetsResponse, error) {
 }
 
 func (api *CarApi) Get() (*get.CarGetResponse, error) {
-	resp, err := client.GetJson[get.CarGetResponse](api.Client, "/data/car/get", nil)
+	resp, err := client.GetJson[get.CarGetResponse](api.client, "/data/car/get", nil)
 	if err != nil {
 		return nil, err
 	}

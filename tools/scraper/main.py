@@ -57,7 +57,7 @@ def main() -> None:
     logging.info(f"Found {len(endpoints)} endpoints")
 
     # Fetch sample responses for each endpoint
-    fetch_sample_responses(endpoints, skip_cached=False, workers=5)
+    fetch_sample_responses(endpoints, skip_cached=True, workers=5)
 
     # Generate Go types from JSON responses
     generate_go_types(endpoints, workers=20)

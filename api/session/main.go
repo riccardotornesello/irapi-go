@@ -5,5 +5,11 @@ import (
 )
 
 type SessionApi struct {
-	Client *client.ApiClient
+	client *client.ApiClient
+}
+
+func NewSessionApi(client *client.ApiClient) *SessionApi {
+	return &SessionApi{
+		client: client,
+	}
 }

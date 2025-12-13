@@ -21,7 +21,13 @@ import (
 )
 
 type {{api_name}} struct {
-	Client *client.ApiClient
+	client *client.ApiClient
+}
+
+func New{{api_name}}(client *client.ApiClient) *{{api_name}} {
+  return &{{api_name}}{
+    client: client,
+  }
 }
 
 {% for endpoint_call in endpoint_calls %}

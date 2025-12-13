@@ -15,7 +15,7 @@
     - endpoint_url: API endpoint URL path
 #}
 func (api *{{api_name}}) {{method_name}}({% if parameters_struct_name %}parameters *{{endpoint_name}}.{{parameters_struct_name}}{% endif %}) ([]{{endpoint_name}}.{{response_struct_name}}, error) {
-	resp, err := client.GetCsv[{{endpoint_name}}.{{response_struct_name}}](api.Client, "{{endpoint_url}}", {% if parameters_struct_name %}parameters{% else %}nil{% endif %})
+	resp, err := client.GetCsv[{{endpoint_name}}.{{response_struct_name}}](api.client, "{{endpoint_url}}", {% if parameters_struct_name %}parameters{% else %}nil{% endif %})
 	if err != nil {
 		return nil, err
 	}

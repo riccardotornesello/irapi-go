@@ -10,11 +10,17 @@ import (
 )
 
 type LookupApi struct {
-	Client *client.ApiClient
+	client *client.ApiClient
+}
+
+func NewLookupApi(client *client.ApiClient) *LookupApi {
+	return &LookupApi{
+		client: client,
+	}
 }
 
 func (api *LookupApi) Countries() (*countries.LookupCountriesResponse, error) {
-	resp, err := client.GetJson[countries.LookupCountriesResponse](api.Client, "/data/lookup/countries", nil)
+	resp, err := client.GetJson[countries.LookupCountriesResponse](api.client, "/data/lookup/countries", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -23,7 +29,7 @@ func (api *LookupApi) Countries() (*countries.LookupCountriesResponse, error) {
 }
 
 func (api *LookupApi) Drivers(parameters *drivers.LookupDriversParams) (*drivers.LookupDriversResponse, error) {
-	resp, err := client.GetJson[drivers.LookupDriversResponse](api.Client, "/data/lookup/drivers", parameters)
+	resp, err := client.GetJson[drivers.LookupDriversResponse](api.client, "/data/lookup/drivers", parameters)
 	if err != nil {
 		return nil, err
 	}
@@ -32,7 +38,7 @@ func (api *LookupApi) Drivers(parameters *drivers.LookupDriversParams) (*drivers
 }
 
 func (api *LookupApi) Flairs() (*flairs.LookupFlairsResponse, error) {
-	resp, err := client.GetJson[flairs.LookupFlairsResponse](api.Client, "/data/lookup/flairs", nil)
+	resp, err := client.GetJson[flairs.LookupFlairsResponse](api.client, "/data/lookup/flairs", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +47,7 @@ func (api *LookupApi) Flairs() (*flairs.LookupFlairsResponse, error) {
 }
 
 func (api *LookupApi) Get() (*get.LookupGetResponse, error) {
-	resp, err := client.GetJson[get.LookupGetResponse](api.Client, "/data/lookup/get", nil)
+	resp, err := client.GetJson[get.LookupGetResponse](api.client, "/data/lookup/get", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +56,7 @@ func (api *LookupApi) Get() (*get.LookupGetResponse, error) {
 }
 
 func (api *LookupApi) Licenses() (*licenses.LookupLicensesResponse, error) {
-	resp, err := client.GetJson[licenses.LookupLicensesResponse](api.Client, "/data/lookup/licenses", nil)
+	resp, err := client.GetJson[licenses.LookupLicensesResponse](api.client, "/data/lookup/licenses", nil)
 	if err != nil {
 		return nil, err
 	}

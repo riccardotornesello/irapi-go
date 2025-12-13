@@ -11,11 +11,17 @@ import (
 )
 
 type StatsApi struct {
-	Client *client.ApiClient
+	client *client.ApiClient
+}
+
+func NewStatsApi(client *client.ApiClient) *StatsApi {
+	return &StatsApi{
+		client: client,
+	}
 }
 
 func (api *StatsApi) MemberBests(parameters *member_bests.StatsMemberBestsParams) (*member_bests.StatsMemberBestsResponse, error) {
-	resp, err := client.GetJson[member_bests.StatsMemberBestsResponse](api.Client, "/data/stats/member_bests", parameters)
+	resp, err := client.GetJson[member_bests.StatsMemberBestsResponse](api.client, "/data/stats/member_bests", parameters)
 	if err != nil {
 		return nil, err
 	}
@@ -24,7 +30,7 @@ func (api *StatsApi) MemberBests(parameters *member_bests.StatsMemberBestsParams
 }
 
 func (api *StatsApi) MemberCareer(parameters *member_career.StatsMemberCareerParams) (*member_career.StatsMemberCareerResponse, error) {
-	resp, err := client.GetJson[member_career.StatsMemberCareerResponse](api.Client, "/data/stats/member_career", parameters)
+	resp, err := client.GetJson[member_career.StatsMemberCareerResponse](api.client, "/data/stats/member_career", parameters)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +39,7 @@ func (api *StatsApi) MemberCareer(parameters *member_career.StatsMemberCareerPar
 }
 
 func (api *StatsApi) MemberRecap(parameters *member_recap.StatsMemberRecapParams) (*member_recap.StatsMemberRecapResponse, error) {
-	resp, err := client.GetJson[member_recap.StatsMemberRecapResponse](api.Client, "/data/stats/member_recap", parameters)
+	resp, err := client.GetJson[member_recap.StatsMemberRecapResponse](api.client, "/data/stats/member_recap", parameters)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +48,7 @@ func (api *StatsApi) MemberRecap(parameters *member_recap.StatsMemberRecapParams
 }
 
 func (api *StatsApi) MemberRecentRaces(parameters *member_recent_races.StatsMemberRecentRacesParams) (*member_recent_races.StatsMemberRecentRacesResponse, error) {
-	resp, err := client.GetJson[member_recent_races.StatsMemberRecentRacesResponse](api.Client, "/data/stats/member_recent_races", parameters)
+	resp, err := client.GetJson[member_recent_races.StatsMemberRecentRacesResponse](api.client, "/data/stats/member_recent_races", parameters)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +57,7 @@ func (api *StatsApi) MemberRecentRaces(parameters *member_recent_races.StatsMemb
 }
 
 func (api *StatsApi) MemberSummary(parameters *member_summary.StatsMemberSummaryParams) (*member_summary.StatsMemberSummaryResponse, error) {
-	resp, err := client.GetJson[member_summary.StatsMemberSummaryResponse](api.Client, "/data/stats/member_summary", parameters)
+	resp, err := client.GetJson[member_summary.StatsMemberSummaryResponse](api.client, "/data/stats/member_summary", parameters)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +66,7 @@ func (api *StatsApi) MemberSummary(parameters *member_summary.StatsMemberSummary
 }
 
 func (api *StatsApi) MemberYearly(parameters *member_yearly.StatsMemberYearlyParams) (*member_yearly.StatsMemberYearlyResponse, error) {
-	resp, err := client.GetJson[member_yearly.StatsMemberYearlyResponse](api.Client, "/data/stats/member_yearly", parameters)
+	resp, err := client.GetJson[member_yearly.StatsMemberYearlyResponse](api.client, "/data/stats/member_yearly", parameters)
 	if err != nil {
 		return nil, err
 	}

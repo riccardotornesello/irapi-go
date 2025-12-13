@@ -12,11 +12,17 @@ import (
 )
 
 type MemberApi struct {
-	Client *client.ApiClient
+	client *client.ApiClient
+}
+
+func NewMemberApi(client *client.ApiClient) *MemberApi {
+	return &MemberApi{
+		client: client,
+	}
 }
 
 func (api *MemberApi) Awards(parameters *awards.MemberAwardsParams) (*awards.MemberAwardsResponse, error) {
-	resp, err := client.GetJson[awards.MemberAwardsResponse](api.Client, "/data/member/awards", parameters)
+	resp, err := client.GetJson[awards.MemberAwardsResponse](api.client, "/data/member/awards", parameters)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +31,7 @@ func (api *MemberApi) Awards(parameters *awards.MemberAwardsParams) (*awards.Mem
 }
 
 func (api *MemberApi) AwardInstances(parameters *award_instances.MemberAwardInstancesParams) (*award_instances.MemberAwardInstancesResponse, error) {
-	resp, err := client.GetJson[award_instances.MemberAwardInstancesResponse](api.Client, "/data/member/award_instances", parameters)
+	resp, err := client.GetJson[award_instances.MemberAwardInstancesResponse](api.client, "/data/member/award_instances", parameters)
 	if err != nil {
 		return nil, err
 	}
@@ -34,7 +40,7 @@ func (api *MemberApi) AwardInstances(parameters *award_instances.MemberAwardInst
 }
 
 func (api *MemberApi) ChartData(parameters *chart_data.MemberChartDataParams) (*chart_data.MemberChartDataResponse, error) {
-	resp, err := client.GetJson[chart_data.MemberChartDataResponse](api.Client, "/data/member/chart_data", parameters)
+	resp, err := client.GetJson[chart_data.MemberChartDataResponse](api.client, "/data/member/chart_data", parameters)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +49,7 @@ func (api *MemberApi) ChartData(parameters *chart_data.MemberChartDataParams) (*
 }
 
 func (api *MemberApi) Get(parameters *get.MemberGetParams) (*get.MemberGetResponse, error) {
-	resp, err := client.GetJson[get.MemberGetResponse](api.Client, "/data/member/get", parameters)
+	resp, err := client.GetJson[get.MemberGetResponse](api.client, "/data/member/get", parameters)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +58,7 @@ func (api *MemberApi) Get(parameters *get.MemberGetParams) (*get.MemberGetRespon
 }
 
 func (api *MemberApi) Info() (*info.MemberInfoResponse, error) {
-	resp, err := client.GetJson[info.MemberInfoResponse](api.Client, "/data/member/info", nil)
+	resp, err := client.GetJson[info.MemberInfoResponse](api.client, "/data/member/info", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +67,7 @@ func (api *MemberApi) Info() (*info.MemberInfoResponse, error) {
 }
 
 func (api *MemberApi) ParticipationCredits() (*participation_credits.MemberParticipationCreditsResponse, error) {
-	resp, err := client.GetJson[participation_credits.MemberParticipationCreditsResponse](api.Client, "/data/member/participation_credits", nil)
+	resp, err := client.GetJson[participation_credits.MemberParticipationCreditsResponse](api.client, "/data/member/participation_credits", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +76,7 @@ func (api *MemberApi) ParticipationCredits() (*participation_credits.MemberParti
 }
 
 func (api *MemberApi) Profile(parameters *profile.MemberProfileParams) (*profile.MemberProfileResponse, error) {
-	resp, err := client.GetJson[profile.MemberProfileResponse](api.Client, "/data/member/profile", parameters)
+	resp, err := client.GetJson[profile.MemberProfileResponse](api.client, "/data/member/profile", parameters)
 	if err != nil {
 		return nil, err
 	}

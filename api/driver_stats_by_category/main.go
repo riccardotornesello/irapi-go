@@ -11,11 +11,17 @@ import (
 )
 
 type DriverStatsByCategoryApi struct {
-	Client *client.ApiClient
+	client *client.ApiClient
+}
+
+func NewDriverStatsByCategoryApi(client *client.ApiClient) *DriverStatsByCategoryApi {
+	return &DriverStatsByCategoryApi{
+		client: client,
+	}
 }
 
 func (api *DriverStatsByCategoryApi) Oval() ([]oval.DriverStatsByCategoryOvalResponse, error) {
-	resp, err := client.GetCsv[oval.DriverStatsByCategoryOvalResponse](api.Client, "/data/driver_stats_by_category/oval", nil)
+	resp, err := client.GetCsv[oval.DriverStatsByCategoryOvalResponse](api.client, "/data/driver_stats_by_category/oval", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -24,7 +30,7 @@ func (api *DriverStatsByCategoryApi) Oval() ([]oval.DriverStatsByCategoryOvalRes
 }
 
 func (api *DriverStatsByCategoryApi) SportsCar() ([]sports_car.DriverStatsByCategorySportsCarResponse, error) {
-	resp, err := client.GetCsv[sports_car.DriverStatsByCategorySportsCarResponse](api.Client, "/data/driver_stats_by_category/sports_car", nil)
+	resp, err := client.GetCsv[sports_car.DriverStatsByCategorySportsCarResponse](api.client, "/data/driver_stats_by_category/sports_car", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +39,7 @@ func (api *DriverStatsByCategoryApi) SportsCar() ([]sports_car.DriverStatsByCate
 }
 
 func (api *DriverStatsByCategoryApi) FormulaCar() ([]formula_car.DriverStatsByCategoryFormulaCarResponse, error) {
-	resp, err := client.GetCsv[formula_car.DriverStatsByCategoryFormulaCarResponse](api.Client, "/data/driver_stats_by_category/formula_car", nil)
+	resp, err := client.GetCsv[formula_car.DriverStatsByCategoryFormulaCarResponse](api.client, "/data/driver_stats_by_category/formula_car", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +48,7 @@ func (api *DriverStatsByCategoryApi) FormulaCar() ([]formula_car.DriverStatsByCa
 }
 
 func (api *DriverStatsByCategoryApi) Road() ([]road.DriverStatsByCategoryRoadResponse, error) {
-	resp, err := client.GetCsv[road.DriverStatsByCategoryRoadResponse](api.Client, "/data/driver_stats_by_category/road", nil)
+	resp, err := client.GetCsv[road.DriverStatsByCategoryRoadResponse](api.client, "/data/driver_stats_by_category/road", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +57,7 @@ func (api *DriverStatsByCategoryApi) Road() ([]road.DriverStatsByCategoryRoadRes
 }
 
 func (api *DriverStatsByCategoryApi) DirtOval() ([]dirt_oval.DriverStatsByCategoryDirtOvalResponse, error) {
-	resp, err := client.GetCsv[dirt_oval.DriverStatsByCategoryDirtOvalResponse](api.Client, "/data/driver_stats_by_category/dirt_oval", nil)
+	resp, err := client.GetCsv[dirt_oval.DriverStatsByCategoryDirtOvalResponse](api.client, "/data/driver_stats_by_category/dirt_oval", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +66,7 @@ func (api *DriverStatsByCategoryApi) DirtOval() ([]dirt_oval.DriverStatsByCatego
 }
 
 func (api *DriverStatsByCategoryApi) DirtRoad() ([]dirt_road.DriverStatsByCategoryDirtRoadResponse, error) {
-	resp, err := client.GetCsv[dirt_road.DriverStatsByCategoryDirtRoadResponse](api.Client, "/data/driver_stats_by_category/dirt_road", nil)
+	resp, err := client.GetCsv[dirt_road.DriverStatsByCategoryDirtRoadResponse](api.client, "/data/driver_stats_by_category/dirt_road", nil)
 	if err != nil {
 		return nil, err
 	}

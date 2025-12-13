@@ -5,5 +5,11 @@ import (
 )
 
 type TimeAttackApi struct {
-	Client *client.ApiClient
+	client *client.ApiClient
+}
+
+func NewTimeAttackApi(client *client.ApiClient) *TimeAttackApi {
+	return &TimeAttackApi{
+		client: client,
+	}
 }

@@ -21,6 +21,8 @@ import (
 )
 
 type IRacingApiClient struct {
+	Client *client.ApiClient
+
 	Car                   *car.CarApi
 	Carclass              *carclass.CarclassApi
 	Constants             *constants.ConstantsApi
@@ -41,22 +43,24 @@ type IRacingApiClient struct {
 
 func genClient(apiClient *client.ApiClient) *IRacingApiClient {
 	return &IRacingApiClient{
-		Car:                   &car.CarApi{Client: apiClient},
-		Carclass:              &carclass.CarclassApi{Client: apiClient},
-		Constants:             &constants.ConstantsApi{Client: apiClient},
-		DriverStatsByCategory: &driver_stats_by_category.DriverStatsByCategoryApi{Client: apiClient},
-		Hosted:                &hosted.HostedApi{Client: apiClient},
-		League:                &league.LeagueApi{Client: apiClient},
-		Lookup:                &lookup.LookupApi{Client: apiClient},
-		Member:                &member.MemberApi{Client: apiClient},
-		Results:               &results.ResultsApi{Client: apiClient},
-		Season:                &season.SeasonApi{Client: apiClient},
-		Series:                &series.SeriesApi{Client: apiClient},
-		Session:               &session.SessionApi{Client: apiClient},
-		Stats:                 &stats.StatsApi{Client: apiClient},
-		Team:                  &team.TeamApi{Client: apiClient},
-		TimeAttack:            &time_attack.TimeAttackApi{Client: apiClient},
-		Track:                 &track.TrackApi{Client: apiClient},
+		Client: apiClient,
+
+		Car:                   car.NewCarApi(apiClient),
+		Carclass:              carclass.NewCarclassApi(apiClient),
+		Constants:             constants.NewConstantsApi(apiClient),
+		DriverStatsByCategory: driver_stats_by_category.NewDriverStatsByCategoryApi(apiClient),
+		Hosted:                hosted.NewHostedApi(apiClient),
+		League:                league.NewLeagueApi(apiClient),
+		Lookup:                lookup.NewLookupApi(apiClient),
+		Member:                member.NewMemberApi(apiClient),
+		Results:               results.NewResultsApi(apiClient),
+		Season:                season.NewSeasonApi(apiClient),
+		Series:                series.NewSeriesApi(apiClient),
+		Session:               session.NewSessionApi(apiClient),
+		Stats:                 stats.NewStatsApi(apiClient),
+		Team:                  team.NewTeamApi(apiClient),
+		TimeAttack:            time_attack.NewTimeAttackApi(apiClient),
+		Track:                 track.NewTrackApi(apiClient),
 	}
 }
 

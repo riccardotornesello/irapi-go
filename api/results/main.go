@@ -7,11 +7,17 @@ import (
 )
 
 type ResultsApi struct {
-	Client *client.ApiClient
+	client *client.ApiClient
+}
+
+func NewResultsApi(client *client.ApiClient) *ResultsApi {
+	return &ResultsApi{
+		client: client,
+	}
 }
 
 func (api *ResultsApi) Get(parameters *get.ResultsGetParams) (*get.ResultsGetResponse, error) {
-	resp, err := client.GetJson[get.ResultsGetResponse](api.Client, "/data/results/get", parameters)
+	resp, err := client.GetJson[get.ResultsGetResponse](api.client, "/data/results/get", parameters)
 	if err != nil {
 		return nil, err
 	}
@@ -20,7 +26,7 @@ func (api *ResultsApi) Get(parameters *get.ResultsGetParams) (*get.ResultsGetRes
 }
 
 func (api *ResultsApi) LapData(parameters *lap_data.ResultsLapDataParams) (*lap_data.ResultsLapDataResponse, error) {
-	resp, err := client.GetJson[lap_data.ResultsLapDataResponse](api.Client, "/data/results/lap_data", parameters)
+	resp, err := client.GetJson[lap_data.ResultsLapDataResponse](api.client, "/data/results/lap_data", parameters)
 	if err != nil {
 		return nil, err
 	}
