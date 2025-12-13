@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 )
 
 const tokenUrl = "https://oauth.iracing.com/oauth2/token"
@@ -94,4 +95,26 @@ func refreshToken(clientId, clientSecret, refreshToken string) (*iRacingTokenRes
 	}
 
 	return tokenResponse, nil
+}
+
+func getExpiryFromJwt(token string) (time.Time, error) {
+	parts := strings.Split(token, ".")
+	if len(parts) != 3 {
+		return time.Time{}, fmt.Errorf("invalid JWT token")
+	}
+
+	payload, err := base64.RawURLEncoding.DecodeString(parts[1])
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	var claims struct {
+		Exp int64 `json:"exp"`
+	}
+	err = json.Unmarshal(payload, &claims)
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	return time.Unix(claims.Exp, 0), nil
 }
