@@ -9,7 +9,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/google/go-querystring/query"
 	"github.com/riccardotornesello/irapi-go/pkg/logger"
 )
 
@@ -165,13 +164,8 @@ func (c *ApiClient) ensureValidToken() error {
 	return nil
 }
 
-func (c *ApiClient) GetResourceUrl(path string, parameters interface{}) (string, error) {
-	parametersData, err := query.Values(parameters)
-	if err != nil {
-		return "", fmt.Errorf("error encoding parameters for %s: %w", path, err)
-	}
-
-	url := "https://members-ng.iracing.com" + path + "?" + parametersData.Encode()
+func (c *ApiClient) GetResourceUrl(path string, parametersData string) (string, error) {
+	url := "https://members-ng.iracing.com" + path + "?" + parametersData
 
 	// If concurrency is enabled, acquire the semaphore
 	if c.concurrency > 0 {
@@ -258,8 +252,8 @@ func (c *ApiClient) GetResourceUrl(path string, parameters interface{}) (string,
 	}
 }
 
-func (c *ApiClient) Get(path string, parameters interface{}) (*http.Response, error) {
-	responseLink, err := c.GetResourceUrl(path, parameters)
+func (c *ApiClient) Get(path string, parametersData string) (*http.Response, error) {
+	responseLink, err := c.GetResourceUrl(path, parametersData)
 	if err != nil {
 		return nil, err
 	}

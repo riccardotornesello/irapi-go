@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/google/go-querystring/query"
 	"github.com/jszwec/csvutil"
 )
 
@@ -50,7 +51,12 @@ func GetChunks[T any](chunkInfo *IRacingChunkInfo) ([]T, error) {
 }
 
 func GetJson[T any](c *ApiClient, path string, parameters interface{}) (*T, error) {
-	payloadRes, err := c.Get(path, parameters)
+	parametersData, err := query.Values(parameters)
+	if err != nil {
+		return nil, fmt.Errorf("error encoding parameters for %s: %w", path, err)
+	}
+
+	payloadRes, err := c.Get(path, parametersData.Encode())
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +82,12 @@ func GetJson[T any](c *ApiClient, path string, parameters interface{}) (*T, erro
 }
 
 func GetCsv[T any](c *ApiClient, path string, parameters interface{}) ([]T, error) {
-	payloadRes, err := c.Get(path, parameters)
+	parametersData, err := query.Values(parameters)
+	if err != nil {
+		return nil, fmt.Errorf("error encoding parameters for %s: %w", path, err)
+	}
+
+	payloadRes, err := c.Get(path, parametersData.Encode())
 	if err != nil {
 		return nil, err
 	}
