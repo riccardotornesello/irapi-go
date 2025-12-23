@@ -1,9 +1,9 @@
 package chart_data
 
 type MemberChartDataParams struct {
-	CustId     *int `url:"cust_id,omitempty,comma"`
-	CategoryId int  `url:"category_id,comma"`
-	ChartType  int  `url:"chart_type,comma"`
+	CustId     *int `json:"cust_id,omitempty,comma"`
+	CategoryId int  `json:"category_id,comma"`
+	ChartType  int  `json:"chart_type,comma"`
 }
 
 type MemberChartDataResponse struct {

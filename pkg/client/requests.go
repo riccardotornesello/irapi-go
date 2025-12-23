@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/google/go-querystring/query"
+	"github.com/gorilla/schema"
 	"github.com/jszwec/csvutil"
 )
 
@@ -17,6 +18,15 @@ type IRacingChunkInfo struct {
 	Rows            int      `json:"rows"`
 	BaseDownloadUrl string   `json:"base_download_url"`
 	ChunkFileNames  []string `json:"chunk_file_names"`
+}
+
+var (
+	encoder *schema.Encoder
+)
+
+func init() {
+	encoder = schema.NewEncoder()
+	encoder.SetAliasTag("json")
 }
 
 func GetChunks[T any](chunkInfo *IRacingChunkInfo) ([]T, error) {

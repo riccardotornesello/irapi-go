@@ -1,8 +1,8 @@
 package drivers
 
 type LookupDriversParams struct {
-	SearchTerm string `url:"search_term,comma"`
-	LeagueId   *int   `url:"league_id,omitempty,comma"`
+	SearchTerm string `json:"search_term,comma"`
+	LeagueId   *int   `json:"league_id,omitempty,comma"`
 }
 
 type LookupDriversResponse []LookupDriversResponseElement

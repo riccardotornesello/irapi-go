@@ -5,9 +5,9 @@ import (
 )
 
 type LeagueSeasonSessionsParams struct {
-	LeagueId    int   `url:"league_id,comma"`
-	SeasonId    int   `url:"season_id,comma"`
-	ResultsOnly *bool `url:"results_only,omitempty,comma"`
+	LeagueId    int   `json:"league_id,comma"`
+	SeasonId    int   `json:"season_id,comma"`
+	ResultsOnly *bool `json:"results_only,omitempty,comma"`
 }
 
 type LeagueSeasonSessionsResponse struct {

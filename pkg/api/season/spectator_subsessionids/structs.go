@@ -1,7 +1,7 @@
 package spectator_subsessionids
 
 type SeasonSpectatorSubsessionidsParams struct {
-	EventTypes *[]int `url:"event_types,omitempty,comma"`
+	EventTypes *[]int `json:"event_types,omitempty,comma"`
 }
 
 type SeasonSpectatorSubsessionidsResponse struct {

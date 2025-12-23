@@ -99,7 +99,7 @@ class EndpointParameter:
         """
         go_type = PARAM_TYPES[self.type]["type"]
         return (
-            f'{to_camel_case(self.name)} {"" if self.required else "*"}{go_type} `url:"{self.name}{"" if self.required else ",omitempty"},comma"`'
+            f'{to_camel_case(self.name)} {"" if self.required else "*"}{go_type} `json:"{self.name}{"" if self.required else ",omitempty"},comma"`'
         )
 
 

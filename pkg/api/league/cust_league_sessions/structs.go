@@ -5,8 +5,8 @@ import (
 )
 
 type LeagueCustLeagueSessionsParams struct {
-	Mine      *bool `url:"mine,omitempty,comma"`
-	PackageId *int  `url:"package_id,omitempty,comma"`
+	Mine      *bool `json:"mine,omitempty,comma"`
+	PackageId *int  `json:"package_id,omitempty,comma"`
 }
 
 type LeagueCustLeagueSessionsResponse struct {

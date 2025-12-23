@@ -5,7 +5,7 @@ import (
 )
 
 type HostedCombinedSessionsParams struct {
-	PackageId *int `url:"package_id,omitempty,comma"`
+	PackageId *int `json:"package_id,omitempty,comma"`
 }
 
 type HostedCombinedSessionsResponse struct {

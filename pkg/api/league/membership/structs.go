@@ -1,8 +1,8 @@
 package membership
 
 type LeagueMembershipParams struct {
-	CustId        *int  `url:"cust_id,omitempty,comma"`
-	IncludeLeague *bool `url:"include_league,omitempty,comma"`
+	CustId        *int  `json:"cust_id,omitempty,comma"`
+	IncludeLeague *bool `json:"include_league,omitempty,comma"`
 }
 
 type LeagueMembershipResponse []LeagueMembershipResponseElement

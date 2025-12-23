@@ -5,8 +5,8 @@ import (
 )
 
 type SeasonRaceGuideParams struct {
-	From                *string `url:"from,omitempty,comma"`
-	IncludeEndAfterFrom *bool   `url:"include_end_after_from,omitempty,comma"`
+	From                *string `json:"from,omitempty,comma"`
+	IncludeEndAfterFrom *bool   `json:"include_end_after_from,omitempty,comma"`
 }
 
 type SeasonRaceGuideResponse struct {
